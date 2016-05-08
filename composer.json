@@ -1,0 +1,15 @@
+{
+  "name": "lilHermit/cakephp-plugin-bootstrap4",
+  "description": "Boostrap-4 plugin for CakePHP-3",
+  "type": "cakephp-plugin",
+  "require-dev": {
+    "php": ">=5.5.9",
+    "cakephp/cakephp": "~3.2",
+    "cakephp/plugin-installer": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "lilHermit\\Bootstrap4\\": "src/"
+    }
+  }
+}
