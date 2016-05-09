@@ -70,7 +70,7 @@ mkdir -p webroot/js/Bootstrap4
 **NOTE**
 `form-manipulation.js` requires jquery
 
-## Helpers &
+## Helpers & Components
 
 With the various Helpers & Components you can style various html elements see what below. If any have been missed please feel free to create an issue on bitbucket and I'll endeavour to add them.
 
