@@ -15,7 +15,7 @@ class FlashComponent extends \Cake\Controller\Component\FlashComponent {
 
     public function __call($name, $args) {
         if (!isset($args[1]['plugin'])) {
-            $args[1]['plugin'] = 'Bootstrap4';
+            $args[1]['plugin'] = 'lilHermit/Bootstrap4';
         }
         parent::__call($name, $args);
     }
