@@ -74,26 +74,9 @@ mkdir -p webroot/js/Bootstrap4
 
 With the various Helpers & Components you can style various html elements see what below. If any have been missed please feel free to create an issue on bitbucket and I'll endeavour to add them.
 
-### FormHelper
-
 **Styles**
 
-    - Form Elements (including submit button)
-
-### HtmlHelper
-
-**Styles**
-
-    - Crumblist
-
-### PaginatorHelper
-
-**Styles**
-
-    - Pagination
-
-### FlashComponent
-
-**Styles**
-
-    - Flash messages `error`, `info`, `warning` & `success` are styled as dismissable alerts
+    - Form Elements, including submit button (FormHelper + JS)
+    - Crumblist (HtmlHelper)
+    - Pagination (PaginationHelper)
+    - Flash messages `error`, `info`, `warning` & `success` are styled as dismissable alerts (FlashComponent)
