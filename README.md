@@ -4,26 +4,17 @@ This plugin helps render HTML elements so they are styled correctly for Bootstra
 
 ## Installation
 
-- Merge the following to your `require` section of composer.json, replacing {{version}} with any repo tags (eg `v1.0`, `v1.1`) or `dev-master` if you want the bleeding edge
+- Add this Bitbucket repository with the following:
 
 ```
-  "require": {
-    "lilhermit/cakephp-plugin-bootstrap4": "{{version}}"
-  }
+composer config repositories.lilhermit-cakephp-plugins-bootstrap4 vcs https://bitbucket.org/lilHermit/cakephp-plugins-bootstrap4.git
 ```
 
-- Merge the following to your `repositories` section of composer.json add if you don't have one
+- Add the plugin with the following command, replacing `1.*` with `dev-master` if you want the bleeding edge:
 
 ```
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://bitbucket.org/lilHermit/cakephp-plugins-bootstrap4.git"
-    }
-  ]
+composer require lilhermit/cakephp-plugin-bootstrap4:1.*
 ```
-
-- Perform a composer update
 
 - Load the plugin in your `bootstrap.php`
 
