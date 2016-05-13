@@ -1,9 +1,1 @@
-<?php
-$class = 'alert';
-if (!empty($params['class'])) {
-    $class .= ' ' . $params['class'];
-} else {
-    $class .= ' alert-info';
-}
-?>
-<div class="<?= h($class) ?>"><?= h($message) ?></div>
+<?= $this->element('lilHermit/Bootstrap4.Flash/info', ['message' => $message, 'params' => $params]);

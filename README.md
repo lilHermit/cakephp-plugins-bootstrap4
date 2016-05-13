@@ -71,3 +71,37 @@ With the various Helpers & Components you can style various html elements see wh
     - Crumblist (HtmlHelper)
     - Pagination (PaginationHelper)
     - Flash messages `error`, `info`, `warning` & `success` are styled as dismissable alerts (FlashComponent)
+
+## FlashComponent
+
+The standard `default`, `error` and `success` flash messages are styled to Bootstrap Alerts. I have also implemented `warning` and `info` (`default` will render `info`).
+
+Use the Flash component as you normally would:
+
+```
+$this->Flash->set('This is an alert, which will render as info');
+$this->Flash->info('This is an info alert');
+$this->Flash->error('Something bad happened');
+$this->Flash->success('Everything worked as expected');
+$this->Flash->warning('Warning: Might not have saved!');
+```
+would render as
+
+![alt text][alert-dismiss]
+
+You can drop the dismiss icon by passing `noDismiss` as `true`
+
+```
+$this->Flash->set('This is an alert, which will render as info', [ 'params' => [  'noDismiss' => true]]);
+$this->Flash->info('This is an info alert', [ 'params' => [  'noDismiss' => true]]);
+$this->Flash->error('Something bad happened', [ 'params' => [  'noDismiss' => true]]);
+$this->Flash->success('Everything worked as expected', [ 'params' => [  'noDismiss' => true]]);
+$this->Flash->warning('Warning: Might not have saved!', [ 'params' => [  'noDismiss' => true]]);
+```
+
+would render as
+
+![alt text][alert-not-dismiss]
+
+[alert-dismiss]: docs/img/alerts-dismissable.png "Dismissable Alerts"
+[alert-not-dismiss]: docs/img/alerts-not-dismissable.png "Non dismissable Alerts"
