@@ -7,7 +7,7 @@ use Cake\View\View;
 class FormHelper extends \Cake\View\Helper\FormHelper {
 
     private $bootstrapTemplates = [
-        'button' => '<button class="btn btn-secondary"{{attrs}}>{{text}}</button>',
+        'button' => '<button {{attrs}}>{{text}}</button>',
         'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}> ',
         'checkboxFormGroup' => ' {{label}}',
         'checkboxContainer' => '<div class="checkbox">{{content}}</div>',
@@ -36,4 +36,14 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         parent::__construct($View, $config);
     }
 
+    public function button($title, array $options = []) {
+        $class = ['btn', 'btn-secondary'];
+
+        if (isset($options['class'])) {
+            $class = array_merge($class, explode(' ', $options['class']));
+        }
+
+        $options['class'] = implode(' ', $class);
+        return parent::button($title, $options);
+    }
 }
