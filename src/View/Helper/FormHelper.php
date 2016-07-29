@@ -134,14 +134,58 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return parent::_getLabel($fieldName, $options);
     }
 
-    public function button($title, array $options = []) {
-        $class = ['btn', 'btn-secondary'];
+    /**
+     * Creates a bootstrap button.
+     *
+     * ### Options
+     *
+     * - `size` Can be `small`, `normal` or `large` (default is `normal`)
+     * - `class` Any additional css classes
+     * - `secondary` Boolean true if you want secondary colour.
+     * - `outline` Boolean true if you want button outlined.
+     *
+     * @param string $title The content to be used for the button.
+     * @param array $options Array of options and HTML attributes.
+     * @return string the element.
+     */
 
-        if (isset($options['class'])) {
-            $class = array_merge($class, explode(' ', $options['class']));
+    public function button($title, array $options = []) {
+
+        $options = $options + [
+                'size' => 'normal',
+                'secondary' => false,
+                'outline' => false,
+                'class' => []
+            ];
+
+        // Convert and sanitise the css class
+        if (is_array($options['class'])) {
+            $options['class'][] = 'btn';
+        } else if (is_string($options['class'])) {
+            $options['class'] = ['btn', $options['class']];
+        } else {
+            $options['class'] = ['btn'];
         }
 
-        $options['class'] = implode(' ', $class);
+        if ($options['outline']) {
+            $options['class'][] = $options['secondary'] ? 'btn-outline-secondary' : 'btn-outline-primary';
+        } else {
+            $options['class'][] = $options['secondary'] ? 'btn-secondary' : 'btn-primary';
+        }
+
+        switch ($options['size']) {
+            case 'large':
+            case 'lg':
+                $options['class'][] = 'btn-large';
+                break;
+            case 'small':
+            case 'sm':
+                $options['class'][] = 'btn-sm';
+                break;
+        }
+
+        unset($options['size'], $options['secondary']);
+
         return parent::button($title, $options);
     }
 

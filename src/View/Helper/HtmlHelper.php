@@ -61,4 +61,64 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
         ]);
     }
 
+    /**
+     * Creates a bootstrap button.
+     *
+     * If $url starts with "http://" this is treated as an external link. Else,
+     * it is treated as a path to controller/action and parsed with the
+     * UrlHelper::build() method.
+     *
+     * If the $url is empty, $title is used instead.
+     *
+     * ### Options
+     *
+     * - `size` Can be `small`, `normal` or `large` (default is `normal`)
+     * - `class` Any additional css classes
+     * - `secondary` Boolean true if you want secondary colour.
+     * - `outline` Boolean true if you want button outlined.
+     *
+     * @param string $title The content to be used for the button.
+     * @param string|array|null $url Cake-relative URL or array of URL parameters, or
+     *   external URL (starts with http://)
+     * @param array $options Array of options and HTML attributes.
+     * @return string the element.
+     */
+    public function button($title, $url = null, array $options = []) {
+        $options = $options + [
+                'size' => 'normal',
+                'secondary' => false,
+                'outline' => false,
+                'class' => []
+            ];
+
+        // Convert and sanitise the css class
+        if (is_array($options['class'])) {
+            $options['class'][] = 'btn';
+        } else if (is_string($options['class'])) {
+            $options['class'] = ['btn', $options['class']];
+        } else {
+            $options['class'] = ['btn'];
+        }
+
+        if ($options['outline']) {
+            $options['class'][] = $options['secondary'] ? 'btn-outline-secondary' : 'btn-outline-primary';
+        } else {
+            $options['class'][] = $options['secondary'] ? 'btn-secondary' : 'btn-primary';
+        }
+
+        switch ($options['size']) {
+            case 'large':
+            case 'lg':
+                $options['class'][] = 'btn-large';
+                break;
+            case 'small':
+            case 'sm':
+                $options['class'][] = 'btn-sm';
+                break;
+        }
+
+        unset($options['size'], $options['secondary']);
+        return $this->link($title, $url, $options);
+    }
+
 }
