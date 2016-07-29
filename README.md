@@ -105,3 +105,39 @@ would render as
 
 [alert-dismiss]: docs/img/alerts-dismissable.png "Dismissable Alerts"
 [alert-not-dismiss]: docs/img/alerts-not-dismissable.png "Non dismissable Alerts"
+
+## FormHelper
+
+### Addition input options
+
+Additional `$options` are now supported by FormHelper::input
+
+```
+$options = [
+    // This text appears when a text box is empty
+    'placeholder' => 'Currency',
+
+    // This text appears below the control
+    'help' => 'Enter the value you wish to donate',
+
+    // This text appears within the control at the start
+    'prefix' => '£',
+
+    // This text appears within the control at the end
+    'suffix' => '.00',
+];
+
+echo $this->Form->input('Donation', $options);
+```
+
+please see example below.
+
+![alt text](docs/img/input-example1.png "Input example")
+
+### Datetime elements
+
+This plugin now renders using HTML5 date functionality but you can go to CakePHP defaults of multiple dropdowns using the following `$option`
+
+```
+echo $this->Form->input('Date', [ 'html5Render' => false ]);
+```

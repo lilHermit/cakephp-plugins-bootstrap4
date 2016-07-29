@@ -8,6 +8,7 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
 
     private $bootstrapTemplates = [
         'breadCrumbOl' => '<ol class="breadcrumb"{{attrs}}>{{content}}</ol>',
+        'breadCrumbLi' => '<li class="breadcrumb-item"{{attrs}}>{{content}}</li>',
     ];
 
     public function __construct(View $View, array $config = []) {
@@ -49,7 +50,7 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
             if (!empty($separator) && ($crumbCount - $which >= 2)) {
                 $elementContent .= $separator;
             }
-            $result .= $this->formatTemplate('li', [
+            $result .= $this->formatTemplate('breadCrumbLi', [
                 'content' => $elementContent,
                 'attrs' => $this->templater()->formatAttributes($options)
             ]);
