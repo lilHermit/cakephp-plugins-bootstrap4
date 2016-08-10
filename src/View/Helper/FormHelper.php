@@ -151,6 +151,28 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     public function button($title, array $options = []) {
 
+        $options = $this->parseButtonClass($options);
+
+        return parent::button($title, $options);
+    }
+
+    /**
+     * Creates submit button but adds bootstrap styling
+     *
+     * @param string|null $caption The label appearing on the button OR if string contains :// or the
+     *  extension .jpg, .jpe, .jpeg, .gif, .png use an image if the extension
+     *  exists, AND the first character is /, image is relative to webroot,
+     *  OR if the first character is not /, image is relative to webroot/img.
+     * @param array $options Array of options. See above.
+     * @return string A HTML submit button
+     */
+    public function submit($caption = null, array $options = []) {
+        $options = $this->parseButtonClass($options);
+
+        return parent::submit($caption, $options);
+    }
+
+    private function parseButtonClass(&$options) {
         $options = $options + [
                 'size' => 'normal',
                 'secondary' => false,
@@ -176,7 +198,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         switch ($options['size']) {
             case 'large':
             case 'lg':
-                $options['class'][] = 'btn-large';
+                $options['class'][] = 'btn-lg';
                 break;
             case 'small':
             case 'sm':
@@ -184,9 +206,9 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                 break;
         }
 
-        unset($options['size'], $options['secondary']);
+        unset($options['size'], $options['secondary'],$options['outline']);
 
-        return parent::button($title, $options);
+        return $options;
     }
 
     private function formatDateTimes(&$options) {
