@@ -206,25 +206,30 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                 break;
         }
 
-        unset($options['size'], $options['secondary'],$options['outline']);
+        unset($options['size'], $options['secondary'], $options['outline']);
 
         return $options;
     }
 
     private function formatDateTimes(&$options) {
-        switch ($options['type']) {
-            case 'date':
-                $format = "yyyy-MM-dd";
-                break;
-            case 'time':
-                $format = "HH:mm";
-                break;
-            default:
-            case 'datetime-local':
-                $format = "yyyy-MM-dd'T'HH:mm";
-        }
 
-        $options['val'] = $options['val']->i18nFormat($format);
+        if (in_array(get_class($options['val']), ['Cake\I18n\Date', 'Cake\I18n\FrozenDate',
+            'Cake\I18n\Time', 'Cake\I18n\FrozenTime',])) {
+
+            switch ($options['type']) {
+                case 'date':
+                    $format = "yyyy-MM-dd";
+                    break;
+                case 'time':
+                    $format = "HH:mm";
+                    break;
+                default:
+                case 'datetime-local':
+                    $format = "yyyy-MM-dd'T'HH:mm";
+            }
+
+            $options['val'] = $options['val']->i18nFormat($format);
+        }
     }
 
     public function bootstrapDate($fieldName, array $options = []) {
