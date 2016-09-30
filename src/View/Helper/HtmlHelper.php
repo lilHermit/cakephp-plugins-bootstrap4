@@ -86,6 +86,7 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
     public function button($title, $url = null, array $options = []) {
         $options = $options + [
                 'size' => 'normal',
+                'type' => 'link',
                 'secondary' => false,
                 'outline' => false,
                 'class' => []
@@ -116,9 +117,13 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
                 $options['class'][] = 'btn-sm';
                 break;
         }
-
         unset($options['size'], $options['secondary']);
-        return $this->link($title, $url, $options);
+
+        if (in_array($options['type'], ['button', 'submit', 'reset'])) {
+            return $this->tag('button', $title, $options);
+        } else {
+            return $this->link($title, $url, $options);
+        }
     }
 
 }
