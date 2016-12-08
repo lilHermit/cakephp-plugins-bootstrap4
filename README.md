@@ -108,7 +108,7 @@ would render as
 
 ## FormHelper
 
-### Addition input options
+### Additional input options
 
 Additional `$options` are now supported by FormHelper::input
 
@@ -140,4 +140,75 @@ This plugin now renders using HTML5 date functionality but you can go to CakePHP
 
 ```
 echo $this->Form->input('Date', [ 'html5Render' => false ]);
+```
+
+### Custom controls (checkboxes and radios)
+
+By default checkboxes and radios are rendered using Bootstrap4 Custom Controls. To disable this either do at Form creation time or per input
+
+```
+echo $this->Form->create($registerUserForm, ['customControls' => false]);
+
+```
+or
+```
+echo $this->Form->input('terms_agreed', [
+  'label' => 'I agree to the terms of use',
+  'customControls' => false
+]);
+```
+You can create checkboxes via the normal input method (if the type is boolean) or by forcing type
+```
+echo $this->Form->input('communications_opt_in', [
+  'label' => 'Please send me promotional emails',
+]);
+echo $this->Form->input('terms_agreed', [
+  'label' => 'I agree to the terms of use',
+  'type' => 'checkbox'
+]);
+
+```
+You can create multiple checkboxes or radios via the `select` method (This creates the full label and container code)
+```
+echo $this->Form->input('checkbox1', [
+  'label' => 'My checkboxes',
+  'default' => 2,
+  'multiple' => 'checkbox',
+  'type' => 'select',
+  'options' => [
+    ['text' => 'First Checkbox', 'value' => 1],
+    ['text' => 'Second Checkbox', 'value' => 2]
+  ]
+]);
+```
+Or via the `multiCheckbox` or `radio` methods which just creates the checkboxes/radios so you need to add your container and labels separately
+```
+echo $this->Html->tag('div', null, ['class' => 'form-group clearfix']);
+echo $this->Form->label('My checkboxes');
+echo $this->Html->tag('div', null, ['class' => 'custom-controls-stacked']);
+
+echo $this->Form->multiCheckbox('checkbox2', [
+    ['text' => 'First Checkbox', 'value' => 1],
+    ['text' => 'Second Checkbox', 'value' => 2]],
+    [
+        'default' => 2
+    ]);
+echo $this->Html->tag('/div');
+echo $this->Html->tag('/div');
+```
+or
+```
+echo $this->Html->tag('div', null, ['class' => 'form-group clearfix']);
+echo $this->Form->label('My radios');
+echo $this->Html->tag('div', null, ['class' => 'custom-controls-stacked']);
+
+echo $this->Form->radio('radio1', [
+    ['text' => 'First Radio', 'value' => 1],
+    ['text' => 'Second Radio', 'value' => 2]],
+    [
+        'label' => 'label here',
+        'default' => 1
+    ]);
+echo $this->Html->tag('/div');
+echo $this->Html->tag('/div');
 ```
