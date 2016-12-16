@@ -126,4 +126,64 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
         }
     }
 
+    /**
+     * Returns the css tag for bootstrap
+     *
+     * @param $version string|array string of the version of bootstrap or
+     * an array containing 'url' and 'integrity' keys
+     *
+     * @return string|null the full css tag
+     */
+    public function bootstrapCss($version = '4.0.0-alpha.5') {
+        $versions = [
+            '4.0.0-alpha.5' => [
+                'url' => 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css',
+                'integrity' => 'sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi'
+            ],
+        ];
+        if (is_array($version)) {
+            return $this->css($version['url'], [
+                'integrity' => $version['integrity'],
+                'crossorigin' => 'anonymous'
+            ]);
+        } else if (array_key_exists($version, $versions)) {
+            return $this->css($versions[$version]['url'], [
+                'integrity' => $versions[$version]['integrity'],
+                'crossorigin' => 'anonymous'
+            ]);
+        }
+    }
+
+    /**
+     * Returns the script tag to the boostrap js
+     *
+     * @param $version string|array string of the version of bootstrap or
+     * an array containing 'url' and 'integrity' keys
+     *
+     * @return string|null the full script tag to the boostrap version
+     */
+    public function bootstrapScript($version = '4.0.0-alpha.5') {
+        $versions = [
+            '4.0.0-alpha.2' => [
+                'url' => 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js',
+                'integrity' => 'sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7'
+            ],
+            '4.0.0-alpha.5' => [
+                'url' => 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js',
+                'integrity' => 'sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK'
+            ],
+        ];
+        if (is_array($version)) {
+            return $this->script($version['url'], [
+                'integrity' => $version['integrity'],
+                'crossorigin' => 'anonymous'
+            ]);
+        } else if (array_key_exists($version, $versions)) {
+            return $this->script($versions[$version]['url'], [
+                'integrity' => $versions[$version]['integrity'],
+                'crossorigin' => 'anonymous'
+            ]);
+        }
+    }
+
 }
