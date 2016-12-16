@@ -312,6 +312,20 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     private function formatDateTimes(&$options) {
 
+        if (is_string($options['val'])) {
+            switch ($options['type']) {
+                case 'date':
+                    $options['val'] = \Cake\I18n\Date::createFromFormat("Y-m-d", $options['val']);
+                    break;
+                case 'time':
+                    $options['val'] = \Cake\I18n\Time::createFromFormat("G:i", $options['val']);
+                    break;
+                default:
+                case 'datetime-local':
+                    $options['val'] = \Cake\I18n\Time::createFromFormat("Y-m-d\\TG:i", $options['val']);
+            }
+        }
+
         if (in_array(get_class($options['val']), ['Cake\I18n\Date', 'Cake\I18n\FrozenDate',
             'Cake\I18n\Time', 'Cake\I18n\FrozenTime',])) {
 
@@ -343,6 +357,13 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         unset($options['html5Render']);
         $options['type'] = 'datetime-local';
         $options = $this->_initInputField($fieldName, $options);
+
+        // Switch to the html5 step attribute
+        if (isset($options['interval'])) {
+            $options['step'] = 60 * $options['interval'];
+            unset($options['interval']);
+        }
+
         $this->formatDateTimes($options);
         return $this->widget('bootstrapDateTime', $options);
     }
@@ -351,6 +372,13 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         unset($options['html5Render']);
         $options['type'] = 'time';
         $options = $this->_initInputField($fieldName, $options);
+
+        // Switch to the html5 step attribute
+        if (isset($options['interval'])) {
+            $options['step'] = 60 * $options['interval'];
+            unset($options['interval']);
+        }
+
         $this->formatDateTimes($options);
         return $this->widget('bootstrapDateTime', $options);
     }
