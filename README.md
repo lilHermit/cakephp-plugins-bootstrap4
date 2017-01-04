@@ -57,9 +57,10 @@ bin/cake plugin assets symlink lilHermit/Bootstrap4
 
 By default the plugin automatically parses the html5 date format of 2014-12-31T23:59 to disable this add the following to your app config array
 
-```    'lilHermit-plugin-bootstrap4' => [
+```
+    'lilHermit-plugin-bootstrap4' => [
            'skip-html5-datetime-type' => true
-       ]
+    ]
 ```
 
 ## Helpers & Components
