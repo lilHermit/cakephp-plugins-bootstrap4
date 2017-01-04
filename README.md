@@ -213,3 +213,22 @@ echo $this->Form->radio('radio1', [
 echo $this->Html->tag('/div');
 echo $this->Html->tag('/div');
 ```
+
+## Validation
+
+If you use HTML5 datetime elements then the standard dateTime Validator will fail. Therefore you need to register an additional provider. To use the Bootstrap-4 validation rule you need the following in relevant Table
+
+```
+    public function validationDefault(Validator $validator) {
+
+           // Register the provider with the correct Validation class
+           $validator->provider('bootstrap4', new RulesProvider('\lilHermit\Bootstrap4\Validation\Validation'));
+
+           // User the custom provider for the `expires` field
+           $validator
+               ->add('expires',  'custom', [
+                   'rule' => 'dateTime',
+                   'provider' => 'bootstrap4',
+               ]);
+    }
+```
