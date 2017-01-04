@@ -42,24 +42,25 @@ public function initialize() {
 }
 ```
 
-- Copy or symlink `form-manipulation.js` into your `webroot/js/BootStrap4`, it is advisable to use link as this should survive a `composer update`
+- Copy or symlink `Bootstrap4` plugin assets to your webroot
 
-**Copy**
 ```
-mkdir -p webroot/js/Bootstrap4
-cp vendor/lilHermit/cakephp-plugin-bootstrap4/webroot/js/form-manipulation.js webroot/js/Bootstrap4/
+bin/cake plugin assets symlink lilHermit/Bootstrap4
 ```
 
-**Symlink**
-```
-mkdir -p webroot/js/Bootstrap4
-( cd webroot/js/Bootstrap4/; ln -s ../../../vendor/lilHermit/cakephp-plugin-bootstrap4/webroot/js/form-manipulation.js . )
-```
-
-- Include the `form-manipulation.js` in your layout file `<?= $this->Html->script('Bootstrap4/form-manipulation.js'); ?>`
+- Include the `form-manipulation.js` in your layout file `<?= $this->Html->script('lilHermit/Bootstrap4.form-manipulation.js'); ?>`
 
 **NOTE**
 `form-manipulation.js` requires jquery
+
+## Configuration
+
+By default the plugin automatically parses the html5 date format of 2014-12-31T23:59 to disable this add the following to your app config array
+
+```    'lilHermit-plugin-bootstrap4' => [
+           'skip-html5-datetime-type' => true
+       ]
+```
 
 ## Helpers & Components
 
