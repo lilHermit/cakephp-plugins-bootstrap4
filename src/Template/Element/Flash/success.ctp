@@ -1,4 +1,4 @@
-<div class="alert alert-success alert-dismissible fade in" role="alert">
+<div class="alert alert-success alert-dismissible fade show" role="alert">
     <?php
     if (!(isset($params['noDismiss']) && $params['noDismiss'] === true) ):?>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">

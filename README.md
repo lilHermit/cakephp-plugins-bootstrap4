@@ -10,10 +10,10 @@ This plugin helps render HTML elements so they are styled correctly for Bootstra
 composer config repositories.lilhermit-cakephp-plugins-bootstrap4 vcs https://bitbucket.org/lilHermit/cakephp-plugins-bootstrap4.git
 ```
 
-- Add the plugin with the following command, replacing `1.*` with `dev-master` if you want the bleeding edge:
+- Add the plugin with the following command, replacing `2.*` with `dev-master` if you want the bleeding edge:
 
 ```
-composer require lilhermit/cakephp-plugin-bootstrap4:1.*
+composer require lilhermit/cakephp-plugin-bootstrap4:2.*
 ```
 
 - Load the plugin in your `bootstrap.php`
@@ -48,10 +48,10 @@ public function initialize() {
 bin/cake plugin assets symlink lilHermit/Bootstrap4
 ```
 
-- Include the `form-manipulation.js` in your layout file `<?= $this->Html->script('lilHermit/Bootstrap4.form-manipulation.js'); ?>`
+- Add Bootstrap and Plugin javascript to your layout file `<?= $this->Html->bootstrapScript(); ?>`
 
 **NOTE**
-`form-manipulation.js` requires jquery
+You need to include jquery javascript separately
 
 ## Configuration
 
@@ -74,7 +74,7 @@ With the various Helpers & Components you can style various html elements see wh
     - Pagination (PaginationHelper)
     - Flash messages `error`, `info`, `warning` & `success` are styled as dismissable alerts (FlashComponent)
 
-## FlashComponent
+### FlashComponent
 
 The standard `default`, `error` and `success` flash messages are styled to Bootstrap Alerts. I have also implemented `warning` and `info` (`default` will render `info`).
 
@@ -108,9 +108,9 @@ would render as
 [alert-dismiss]: docs/img/alerts-dismissable.png "Dismissable Alerts"
 [alert-not-dismiss]: docs/img/alerts-not-dismissable.png "Non dismissable Alerts"
 
-## FormHelper
+### FormHelper
 
-### Additional input options
+#### Additional input options
 
 Additional `$options` are now supported by FormHelper::input
 
@@ -136,7 +136,7 @@ please see example below.
 
 ![alt text](docs/img/input-example1.png "Input example")
 
-### Datetime elements
+#### Datetime elements
 
 This plugin now renders using HTML5 date functionality but you can go to CakePHP defaults of multiple dropdowns using the following `$option`
 
@@ -144,7 +144,7 @@ This plugin now renders using HTML5 date functionality but you can go to CakePHP
 echo $this->Form->input('Date', [ 'html5Render' => false ]);
 ```
 
-### Custom controls (checkboxes and radios)
+#### Custom controls (checkboxes and radios)
 
 By default checkboxes and radios are rendered using Bootstrap4 Custom Controls. To disable this either do at Form creation time or per input
 
@@ -213,6 +213,56 @@ echo $this->Form->radio('radio1', [
     ]);
 echo $this->Html->tag('/div');
 echo $this->Html->tag('/div');
+```
+
+### HtmlHelper
+
+#### Adding Bootstrap css
+
+The plugin provides markup for css from the official Bootstrap CDN
+
+For adding the latest official css use to your layout
+
+```
+<?= $this->Html->bootstrapCss(); ?>
+
+```
+
+If you want an older css version then pass in a string as the first parameter. For example
+
+```
+ <?= $this->Html->bootstrapCss('4.0.0-alpha.5'); ?>
+```
+
+#### Adding Bootstrap Javascript
+
+The plugin provides markup for javascript from the official Bootstrap CDN
+
+For adding the latest official javascript to your layout. This also adds the plugin javascript which fixes some form layout on error
+
+```
+ <?= $this->Html->bootstrapScript(); ?>
+```
+
+If you want an older javascript then pass in an array with `version` key as the first parameter. For example
+
+```
+  <?= $this->Html->bootstrapScript([ 'version' => '4.0.0-alpha.5'); ?>
+```
+
+You can also add urls that the plugin does not currently support by providing the `url` and `integrity` keys. For example to use 4.0.0-alpha4
+
+```
+  <?= $this->Html->bootstrapScript([
+        'url' => 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js',
+        'integrity' => 'VjEeINv9OSwtWFLAtmc4JCtEJXXBub00gtSnszmspDLCtC0I4z4nqz7rEFbIZLLU'
+   ]); ?>
+```
+
+To stop the plugin javascript from being added then add the `own` key like follows
+
+```
+  <?= $this->Html->bootstrapScript([ 'own' => false ]); ?>
 ```
 
 ## Validation
