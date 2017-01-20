@@ -1,3 +1,8 @@
+<?php
+if (!isset($params['escape']) || $params['escape'] !== false) {
+    $message = h($message);
+}
+?>
 <div class="alert alert-success alert-dismissible fade show" role="alert">
     <?php
     if (!(isset($params['noDismiss']) && $params['noDismiss'] === true) ):?>
@@ -5,5 +10,5 @@
             <span aria-hidden="true">&times;</span>
         </button>
     <?php endif; ?>
-    <?= h($message) ?>
+    <?= $message ?>
 </div>

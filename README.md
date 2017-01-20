@@ -4,6 +4,7 @@ This plugin helps render HTML elements so they are styled correctly for Bootstra
 
 ## Installation
 
+### Installing via composer
 - Add this Bitbucket repository with the following:
 
 ```
@@ -16,29 +17,50 @@ composer config repositories.lilhermit-cakephp-plugins-bootstrap4 vcs https://bi
 composer require lilhermit/cakephp-plugin-bootstrap4:2.*
 ```
 
+### Setting up your Application
+
 - Load the plugin in your `bootstrap.php`
 
-```
+```php
 Plugin::load('lilHermit/Bootstrap4', ['bootstrap' => true]);
 ```
 
-- Load the Helpers (see below of info on each) you want to use in your `src/View/AppView.php` file
+- Update your `src/View/AppView`, by either extending `lilHermit\Bootstrap4\View\BootstrapView`
+or use our trait `lilHermit\Bootstrap4\View\BoostrapViewTrait`
 
-```
-public function initialize() {
-    $this->loadHelper('lilHermit/Bootstrap4.Form');
-    $this->loadHelper('lilHermit/Bootstrap4.Html');
-    $this->loadHelper('lilHermit/Bootstrap4.Paginator');
+#### Extending AppView
+
+Make `src/View/AppView.php` extend `BootstrapView` like follows
+
+```php
+namespace App\View;
+
+use lilHermit\Bootstrap4\View\BootstrapView;
+
+class AppView extends BootstrapView {
+
 }
 ```
 
-- Load the Flash Component (see below of info on each) in your `src/Controller/AppController.php`
+#### Using our BootstrapViewTrait
 
-```
-public function initialize() {
-    parent::initialize();
+Make `src/View/AppView.php` use `BootstrapViewTrait` like follows
 
-    $this->loadComponent('lilHermit/Bootstrap4.Flash');
+```php
+namespace App\View;
+
+use Cake\View\View;
+use lilHermit\Bootstrap4\View\BootstrapViewTrait;
+
+class AppView extends View {
+
+    use BootstrapViewTrait;
+
+    public function initialize() {
+        parent::initialize();
+
+        $this->initializeBootstrap();
+    }
 }
 ```
 
@@ -57,13 +79,13 @@ You need to include jquery javascript separately
 
 By default the plugin automatically parses the html5 date format of 2014-12-31T23:59 to disable this add the following to your app config array
 
-```
+```php
     'lilHermit-plugin-bootstrap4' => [
            'skip-html5-datetime-type' => true
     ]
 ```
 
-## Helpers & Components
+## Helpers
 
 With the various Helpers & Components you can style various html elements see what below. If any have been missed please feel free to create an issue on bitbucket and I'll endeavour to add them.
 
@@ -74,13 +96,13 @@ With the various Helpers & Components you can style various html elements see wh
     - Pagination (PaginationHelper)
     - Flash messages `error`, `info`, `warning` & `success` are styled as dismissable alerts (FlashComponent)
 
-### FlashComponent
+### FlashHelper
 
 The standard `default`, `error` and `success` flash messages are styled to Bootstrap Alerts. I have also implemented `warning` and `info` (`default` will render `info`).
 
-Use the Flash component as you normally would:
+Use the `FlashComponent` as you normally would:
 
-```
+```php
 $this->Flash->set('This is an alert, which will render as info');
 $this->Flash->info('This is an info alert');
 $this->Flash->error('Something bad happened');
@@ -93,7 +115,7 @@ would render as
 
 You can drop the dismiss icon by passing `noDismiss` as `true`
 
-```
+```php
 $this->Flash->set('This is an alert, which will render as info', [ 'params' => [  'noDismiss' => true]]);
 $this->Flash->info('This is an info alert', [ 'params' => [  'noDismiss' => true]]);
 $this->Flash->error('Something bad happened', [ 'params' => [  'noDismiss' => true]]);
@@ -114,7 +136,7 @@ would render as
 
 Additional `$options` are now supported by FormHelper::input
 
-```
+```php
 $options = [
     // This text appears when a text box is empty
     'placeholder' => 'Currency',
@@ -130,6 +152,7 @@ $options = [
 ];
 
 echo $this->Form->input('Donation', $options);
+
 ```
 
 please see example below.
@@ -140,7 +163,7 @@ please see example below.
 
 This plugin now renders using HTML5 date functionality but you can go to CakePHP defaults of multiple dropdowns using the following `$option`
 
-```
+```php
 echo $this->Form->input('Date', [ 'html5Render' => false ]);
 ```
 
@@ -148,12 +171,12 @@ echo $this->Form->input('Date', [ 'html5Render' => false ]);
 
 By default checkboxes and radios are rendered using Bootstrap4 Custom Controls. To disable this either do at Form creation time or per input
 
-```
+```php
 echo $this->Form->create($registerUserForm, ['customControls' => false]);
 
 ```
 or
-```
+```php
 echo $this->Form->input('terms_agreed', [
   'label' => 'I agree to the terms of use',
   'customControls' => false
@@ -171,7 +194,7 @@ echo $this->Form->input('terms_agreed', [
 
 ```
 You can create multiple checkboxes or radios via the `select` method (This creates the full label and container code)
-```
+```php
 echo $this->Form->input('checkbox1', [
   'label' => 'My checkboxes',
   'default' => 2,
@@ -184,7 +207,7 @@ echo $this->Form->input('checkbox1', [
 ]);
 ```
 Or via the `multiCheckbox` or `radio` methods which just creates the checkboxes/radios so you need to add your container and labels separately
-```
+```php
 echo $this->Html->tag('div', null, ['class' => 'form-group clearfix']);
 echo $this->Form->label('My checkboxes');
 echo $this->Html->tag('div', null, ['class' => 'custom-controls-stacked']);
@@ -199,7 +222,7 @@ echo $this->Html->tag('/div');
 echo $this->Html->tag('/div');
 ```
 or
-```
+```php
 echo $this->Html->tag('div', null, ['class' => 'form-group clearfix']);
 echo $this->Form->label('My radios');
 echo $this->Html->tag('div', null, ['class' => 'custom-controls-stacked']);
@@ -223,14 +246,14 @@ The plugin provides markup for css from the official Bootstrap CDN
 
 For adding the latest official css use to your layout
 
-```
+```php
 <?= $this->Html->bootstrapCss(); ?>
 
 ```
 
 If you want an older css version then pass in a string as the first parameter. For example
 
-```
+```php
  <?= $this->Html->bootstrapCss('4.0.0-alpha.5'); ?>
 ```
 
@@ -240,19 +263,19 @@ The plugin provides markup for javascript from the official Bootstrap CDN
 
 For adding the latest official javascript to your layout. This also adds the plugin javascript which fixes some form layout on error
 
-```
+```php
  <?= $this->Html->bootstrapScript(); ?>
 ```
 
 If you want an older javascript then pass in an array with `version` key as the first parameter. For example
 
-```
-  <?= $this->Html->bootstrapScript([ 'version' => '4.0.0-alpha.5'); ?>
+```php
+  <?= $this->Html->bootstrapScript([ 'version' => '4.0.0-alpha.5']); ?>
 ```
 
 You can also add urls that the plugin does not currently support by providing the `url` and `integrity` keys. For example to use 4.0.0-alpha4
 
-```
+```php
   <?= $this->Html->bootstrapScript([
         'url' => 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js',
         'integrity' => 'VjEeINv9OSwtWFLAtmc4JCtEJXXBub00gtSnszmspDLCtC0I4z4nqz7rEFbIZLLU'
@@ -261,7 +284,7 @@ You can also add urls that the plugin does not currently support by providing th
 
 To stop the plugin javascript from being added then add the `own` key like follows
 
-```
+```php
   <?= $this->Html->bootstrapScript([ 'own' => false ]); ?>
 ```
 
@@ -269,7 +292,7 @@ To stop the plugin javascript from being added then add the `own` key like follo
 
 If you use HTML5 datetime elements then the standard dateTime Validator will fail. Therefore you need to register an additional provider. To use the Bootstrap-4 validation rule you need the following in relevant Table
 
-```
+```php
     public function validationDefault(Validator $validator) {
 
            // Register the provider with the correct Validation class

@@ -1,4 +1,8 @@
 <?php
+//die('error');
+if (!isset($params['escape']) || $params['escape'] !== false) {
+    $message = h($message);
+}
 ?>
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
     <?php
@@ -7,5 +11,5 @@
         <span aria-hidden="true">&times;</span>
     </button>
     <?php endif; ?>
-    <?= h($message) ?>
+    <?= $message ?>
 </div>
