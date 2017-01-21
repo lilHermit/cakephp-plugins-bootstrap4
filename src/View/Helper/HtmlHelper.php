@@ -152,27 +152,29 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
             $options['class'] = ['btn'];
         }
 
-        if ($options['outline']) {
-            $options['class'][] = $options['secondary'] ? 'btn-outline-secondary' : 'btn-outline-primary';
+        if ($options['outline'] === true) {
+            $options['class'][] = $options['secondary'] === true ? 'btn-outline-secondary' : 'btn-outline-primary';
         } else {
-            $options['class'][] = $options['secondary'] ? 'btn-secondary' : 'btn-primary';
+            $options['class'][] = $options['secondary'] === true ? 'btn-secondary' : 'btn-primary';
         }
 
         switch ($options['size']) {
             case 'large':
             case 'lg':
-                $options['class'][] = 'btn-large';
+                $options['class'][] = 'btn-lg';
                 break;
             case 'small':
             case 'sm':
                 $options['class'][] = 'btn-sm';
                 break;
         }
-        unset($options['size'], $options['secondary']);
+        unset($options['size'], $options['secondary'], $options['outline']);
 
         if (in_array($options['type'], ['button', 'submit', 'reset'])) {
             return $this->tag('button', $title, $options);
         } else {
+            unset($options['type']);
+            $options += ['role' => 'button'];
             return $this->link($title, $url, $options);
         }
     }
