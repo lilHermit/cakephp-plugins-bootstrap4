@@ -5,11 +5,17 @@
   "require-dev": {
     "php": ">=5.5.9",
     "cakephp/cakephp": "~3.2",
-    "cakephp/plugin-installer": "*"
+    "cakephp/plugin-installer": "*",
+    "phpunit/phpunit": "^5.3"
   },
   "autoload": {
     "psr-4": {
       "lilHermit\\Bootstrap4\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Cake\\Test\\": "vendor/cakephp/cakephp/tests"
     }
   }
 }

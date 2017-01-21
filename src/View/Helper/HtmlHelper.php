@@ -7,8 +7,8 @@ use Cake\View\View;
 class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
 
     private $bootstrapTemplates = [
-        'breadCrumbOl' => '<ol class="breadcrumb"{{attrs}}>{{content}}</ol>',
-        'breadCrumbLi' => '<li class="breadcrumb-item"{{attrs}}>{{content}}</li>',
+        'breadCrumbOl' => '<ol{{attrs}}>{{content}}</ol>',
+        'breadCrumbLi' => '<li{{attrs}}>{{content}}</li>',
     ];
 
     public function __construct(View $View, array $config = []) {
@@ -30,6 +30,7 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
      * - `separator` Separator content to insert in between breadcrumbs, defaults to ''
      * - `firstClass` Class for wrapper tag on the first breadcrumb, defaults to 'first'
      * - `lastClass` Class for wrapper tag on current active page, defaults to 'last'
+     * - `itemClass` Class for item tag set to false for none
      *
      * @param array $options Array of HTML attributes to apply to the generated list elements.
      * @param string|array|bool $startText This will be the first crumb, if false it defaults to first crumb in array. Can
@@ -39,13 +40,22 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
      * @deprecated 3.3.6 Use the BreadcrumbsHelper instead
      */
     public function getCrumbList(array $options = [], $startText = false) {
-        $defaults = ['firstClass' => false, 'lastClass' => 'active', 'separator' => '', 'escape' => true];
+        $defaults = [
+            'firstClass' => 'first',
+            'lastClass' => 'last',
+            'separator' => '',
+            'escape' => true,
+            'class' => 'breadcrumb',
+            'itemClass' => 'breadcrumb-item'
+        ];
+
         $options += $defaults;
         $firstClass = $options['firstClass'];
         $lastClass = $options['lastClass'];
         $separator = $options['separator'];
         $escape = $options['escape'];
-        unset($options['firstClass'], $options['lastClass'], $options['separator'], $options['escape']);
+        $itemClass = $options['itemClass'];
+        unset($options['firstClass'], $options['lastClass'], $options['separator'], $options['escape'], $options['itemClass']);
 
         $crumbs = $this->_prepareCrumbs($startText, $escape);
         if (empty($crumbs)) {
@@ -62,11 +72,32 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
             } else {
                 $elementContent = $this->link($crumb[0], $crumb[1], $crumb[2]);
             }
-            if (!$which && $firstClass !== false) {
-                $options['class'] = $firstClass;
-            } elseif ($which == $crumbCount - 1 && $lastClass !== false) {
-                $options['class'] = $lastClass;
+
+            if ($itemClass !== false) {
+                if (is_array($itemClass) ) {
+                    $liClass = implode(' ', $itemClass);
+                } else if (is_string($itemClass)) {
+                    $liClass = [ $itemClass];
+                } else {
+                    $liClass = [];
+                }
+            } else {
+                $liClass =[];
             }
+
+            if(empty($crumb[1])) {
+                $liClass[] = 'active';
+            }
+            if (!$which && $firstClass !== false) {
+                $liClass[] = $firstClass;
+            } elseif ($which == $crumbCount - 1 && $lastClass !== false) {
+                $liClass[] = $lastClass;
+
+            }
+            if (!empty($liClass)) {
+                $options['class'] = implode(' ', $liClass);
+            }
+
             if (!empty($separator) && ($crumbCount - $which >= 2)) {
                 $elementContent .= $separator;
             }
