@@ -28,7 +28,7 @@ define('LOGS', TMP . 'logs' . DS);
 define('CACHE', TMP . 'cache' . DS);
 define('SESSIONS', TMP . 'sessions' . DS);
 
-define('CAKE_CORE_INCLUDE_PATH', 'vendor/cakephp/cakephp');
+define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'vendor/cakephp/cakephp');
 define('CORE_PATH', CAKE_CORE_INCLUDE_PATH . DS);
 define('CAKE', CORE_PATH . 'src' . DS);
 define('CORE_TESTS', CORE_PATH . 'tests' . DS);
