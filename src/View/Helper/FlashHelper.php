@@ -9,6 +9,8 @@ class FlashHelper extends \Cake\View\Helper\FlashHelper {
      */
     public function render($key = 'flash', array $options = []) {
 
+        $pluginOverrides = ['Flash/default', 'Flash/error', 'Flash/info', 'Flash/success', 'Flash/warning'];
+
         if (!$this->request->session()->check("Flash.$key")) {
             return null;
         }
@@ -23,11 +25,12 @@ class FlashHelper extends \Cake\View\Helper\FlashHelper {
         }
 
         foreach ($stack as &$item) {
-            if (strpos('lilHermit/Bootstrap4', $item['element']) === false) {
-                $item['element'] = 'lilHermit/Bootstrap4.' . $item['element'];
+
+            list($plugin, $element) = pluginSplit($item['element']);
+            if ($plugin === null && in_array($item['element'], $pluginOverrides)) {
+                $item['element'] = 'lilHermit/Bootstrap4.' . $element;
             }
         }
-
         $this->request->session()->write("Flash.$key", $stack);
 
         return parent::render($key, $options);
