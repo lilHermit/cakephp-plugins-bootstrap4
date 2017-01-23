@@ -9,7 +9,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     private $customControls = true;
 
     protected $_bootstrapWidgets = [
-        'bootstrapDateTime' => ['lilHermit/Bootstrap4.BootstrapDateTime']
+        'bootstrapDateTime' => ['lilHermit/Bootstrap4.BootstrapDateTime'],
+        'hidden' => ['lilHermit/Bootstrap4.Hidden']
     ];
 
     protected $_bootstrapTypeMap = [
@@ -34,6 +35,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'formEnd' => '</form>',
         'formGroup' => '{{label}}{{input}}',
         'hiddenBlock' => '<div style="display:none;">{{content}}</div>',
+        'hidden' => '<input type="hidden" name="{{name}}"{{attrs}}/>',
         'input' => '{{prefix}}<input type="{{type}}" name="{{name}}" class="form-control"{{attrs}}/>{{suffix}}',
         'inputSubmit' => '<input type="{{type}}"{{attrs}}/>',
         'inputContainer' => '<div class="form-group">{{content}}<small class="form-text text-muted">{{help}}</small></div>',
