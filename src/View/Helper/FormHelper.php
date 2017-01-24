@@ -29,7 +29,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'error' => '<div class="form-control-feedback">{{content}}</div>',
         'errorList' => '<ul>{{content}}</ul>',
         'errorItem' => '<li>{{text}}</li>',
-        'file' => '<input type="file" name="{{name}}" class="form-control-file"{{attrs}}>{{placeholder}}',
+        'file' => '<input type="file" name="{{name}}" class="custom-file-input"{{attrs}}><span class="custom-file-control"></span>{{placeholder}}',
         'fieldset' => '<fieldset{{attrs}} class="form-group">{{content}}</fieldset>',
         'formStart' => '<form{{attrs}}>',
         'formEnd' => '</form>',
@@ -40,8 +40,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'inputSubmit' => '<input type="{{type}}"{{attrs}}/>',
         'inputContainer' => '<div class="form-group">{{content}}<small class="form-text text-muted">{{help}}</small></div>',
         'inputContainerError' => '<div class="form-group has-danger">{{content}}{{error}}<small class="form-text text-muted">{{help}}</small></div>',
-        'label' => '<label class="col-form-label" for="{{id}}" {{attrs}}>{{text}}</label>',
-        'nestingLabel' => '{{hidden}}<label class="col-form-label" for="{{id}}" {{attrs}}>{{input}}{{text}}</label>',
+        'label' => '<label class="{{label_class}}"{{attrs}}>{{text}}</label>',
+        'nestingLabel' => '{{hidden}}<label class="{{label_class}}"{{attrs}}>{{input}}{{text}}</label>',
         'legend' => '<legend>{{text}}</legend>',
         'multicheckboxTitle' => '<legend>{{text}}</legend>',
         'multicheckboxWrapper' => '<fieldset{{attrs}}>{{content}}</fieldset>',
@@ -116,6 +116,13 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
         // Move certain options to templateVars
         $this->_parseTemplateVar($options, ['help', 'prefix', 'suffix']);
+
+        if ($options['type'] === 'file') {
+            $options['nestedInput'] = true;
+            $options['templateVars']['label_class'] = 'custom-file';
+        } else {
+            $options['templateVars']['label_class'] = 'col-form-label';
+        }
 
         if (method_exists(get_parent_class($this), 'control')) {
             return parent::control($fieldName, $options);
@@ -375,7 +382,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                     $this->setTemplates([
                         'checkboxFormGroup' => '{{label}}',
                         'checkboxWrapper' => '<div class="form-check">{{label}}</div>',
-                        'nestingLabel' => '{{hidden}}<label class="form-check-label" for="{{id}}"{{attrs}}>{{input}}{{text}}</label>',
+                        'nestingLabel' => '{{hidden}}<label class="form-check-label"{{attrs}}>{{input}}{{text}}</label>',
                         'checkbox' => '<input class="form-check-input" type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}> ',
                         'multicheckboxContainer' => '<div class="form-check">{{content}}</div>',
                     ]);
@@ -384,21 +391,13 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                 case 'radio':
                     $this->setTemplates([
                         'checkboxFormGroup' => '{{label}}',
-                        'nestingLabel' => '{{hidden}}<label class="form-check-label" for="{{id}}"{{attrs}}>{{input}}{{text}}</label>',
+                        'nestingLabel' => '{{hidden}}<label class="form-check-label"{{attrs}}>{{input}}{{text}}</label>',
                         'checkbox' => '<input class="form-check-input" type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}> ',
                         'checkboxContainer' => '<div class="form-check">{{content}}</div>',
                     ]);;
                     break;
             }
         }
-    }
-
-    protected function _getLabel($fieldName, $options) {
-
-        // Make ID available in templates
-        $options['templateVars']['id'] = $options['id'];
-
-        return parent::_getLabel($fieldName, $options);
     }
 
     /**
