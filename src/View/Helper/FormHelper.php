@@ -29,7 +29,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'error' => '<div class="form-control-feedback">{{content}}</div>',
         'errorList' => '<ul>{{content}}</ul>',
         'errorItem' => '<li>{{text}}</li>',
-        'file' => '<input type="file" name="{{name}}" class="custom-file-input"{{attrs}}><span class="custom-file-control"></span>{{placeholder}}',
+        'file' => '<input type="file" name="{{name}}"{{attrs}}><span class="custom-file-control"></span>{{placeholder}}',
         'fieldset' => '<fieldset{{attrs}} class="form-group">{{content}}</fieldset>',
         'formStart' => '<form{{attrs}}>',
         'formEnd' => '</form>',
@@ -61,6 +61,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     public function __construct(View $View, array $config = []) {
 
         $this->_defaultConfig['templates'] = $this->_templates;
+        $this->_defaultConfig['errorClass'] = 'form-control-danger';
 
         $this->_defaultWidgets =
             array_replace_recursive($this->_defaultWidgets, $this->_bootstrapWidgets);
@@ -390,10 +391,10 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                     break;
                 case 'radio':
                     $this->setTemplates([
-                        'checkboxFormGroup' => '{{label}}',
+                        'radioFormGroup' => '{{label}}',
+                        'radioWrapper' => '<div class="form-check">{{label}}</div>',
                         'nestingLabel' => '{{hidden}}<label class="form-check-label"{{attrs}}>{{input}}{{text}}</label>',
-                        'checkbox' => '<input class="form-check-input" type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}> ',
-                        'checkboxContainer' => '<div class="form-check">{{content}}</div>',
+                        'radio' => '<input type="radio" name="{{name}}" value="{{value}}" class="form-check-input"{{attrs}}>',
                     ]);;
                     break;
             }
@@ -433,7 +434,10 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * @return string A HTML submit button
      */
     public function submit($caption = null, array $options = []) {
-        $options = $this->parseButtonClass($options);
+
+        if (!preg_match('/\.(jpg|jpe|jpeg|gif|png|ico)$/', $caption)) {
+            $options = $this->parseButtonClass($options);
+        }
 
         return parent::submit($caption, $options);
     }
@@ -493,8 +497,9 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             }
         }
 
-        if (in_array(get_class($options['val']), ['Cake\I18n\Date', 'Cake\I18n\FrozenDate',
-            'Cake\I18n\Time', 'Cake\I18n\FrozenTime',])) {
+        if (is_object($options['val']) && in_array(get_class($options['val']), ['Cake\I18n\Date', 'Cake\I18n\FrozenDate',
+                'Cake\I18n\Time', 'Cake\I18n\FrozenTime',])
+        ) {
 
             switch ($options['type']) {
                 case 'date':
