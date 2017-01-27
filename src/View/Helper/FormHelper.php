@@ -442,7 +442,69 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return parent::submit($caption, $options);
     }
 
+    /**
+     * Adds a class and returns a unique list either in array or space separated
+     *
+     * ### Options
+     *
+     * - `useIndex` if you are inputting an array with an 'element' called 'class' and the same returning
+     *                  you should set this to 'class'
+     * - `returnArray` Setting this to `false` will return a space separated string (default is `true`)
+     *
+     * @param $input array|string
+     * @param $newClass array|string
+     * @param array $options See above for options
+     *
+     * @return array|string
+     */
+    public function _addClass($input, $newClass, $options = []) {
+
+        // NOOP
+        if (empty($newClass)) {
+            return $input;
+        }
+
+        $options = $options + [
+                'useIndex' => null,
+                'returnArray' => true
+            ];
+
+        $useIndex = $options['useIndex'];
+        if (is_string($useIndex)) {
+            $class = isset($input[$useIndex]) ? $input[$useIndex] : [];
+        } else {
+            $class = $input;
+        }
+
+        // Convert and sanitise the inputs
+        if (!is_array($class)) {
+            if (is_string($class) && !empty($class)) {
+                $class = explode(' ', $class);
+            } else {
+                $class = [];
+            }
+        }
+
+        if (is_string($newClass)) {
+            $newClass = explode(' ', $newClass);
+        }
+
+        $class = array_unique(array_merge($class, $newClass));
+
+        if ($options['returnArray'] === false) {
+            $class = implode(" ", $class);
+        }
+
+        if (is_string($useIndex)) {
+            $input[$useIndex] = $class;
+        } else {
+            $input = $class;
+        }
+        return $input;
+    }
+
     private function parseButtonClass(&$options) {
+
         $options = $options + [
                 'size' => 'normal',
                 'secondary' => false,
@@ -450,34 +512,30 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                 'class' => []
             ];
 
-        // Convert and sanitise the css class
-        if (is_array($options['class'])) {
-            $options['class'][] = 'btn';
-        } else if (is_string($options['class'])) {
-            $options['class'] = ['btn', $options['class']];
-        } else {
-            $options['class'] = ['btn'];
-        }
+        $newClasses = ['btn'];
 
         if ($options['outline']) {
-            $options['class'][] = $options['secondary'] ? 'btn-outline-secondary' : 'btn-outline-primary';
+            $newClasses[] = $options['secondary'] ? 'btn-outline-secondary' : 'btn-outline-primary';
         } else {
-            $options['class'][] = $options['secondary'] ? 'btn-secondary' : 'btn-primary';
+            $newClasses[] = $options['secondary'] ? 'btn-secondary' : 'btn-primary';
         }
 
         switch ($options['size']) {
             case 'large':
             case 'lg':
-                $options['class'][] = 'btn-lg';
+                $newClasses[] = 'btn-lg';
                 break;
             case 'small':
             case 'sm':
-                $options['class'][] = 'btn-sm';
+                $newClasses[] = 'btn-sm';
                 break;
         }
 
         unset($options['size'], $options['secondary'], $options['outline']);
 
+        $options = $this->_addClass($options, $newClasses, [
+            'useIndex' => 'class'
+        ]);
         return $options;
     }
 
