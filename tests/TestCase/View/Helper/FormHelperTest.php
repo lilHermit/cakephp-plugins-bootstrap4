@@ -232,8 +232,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                     'class' => 'form-control'
                 ]
             ],
-            ['small' => ['class' => 'form-text text-muted']],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -253,8 +251,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                     'class' => 'form-control'
                 ]
             ],
-            ['small' => ['class' => 'form-text text-muted']],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -286,8 +282,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                     'class' => 'form-control'
                 ]
             ],
-            ['small' => ['class' => 'form-text text-muted']],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -396,8 +390,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'Ratio',
             '/label',
             'input' => ['name', 'type' => 'number', 'step' => '0.000001', 'id', 'class'],
-            'small' => ['class'],
-            '/small',
             '/div',
         ];
         $this->assertHtml($expected, $result);
@@ -409,8 +401,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'Population',
             '/label',
             'input' => ['name', 'type' => 'number', 'step' => '1', 'id', 'class'],
-            'small' => ['class'],
-            '/small',
             '/div',
         ];
         $this->assertHtml($expected, $result);
@@ -430,8 +420,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                     'class'
                 ]
             ],
-            'small' => ['class'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -450,8 +438,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                     'class'
                 ]
             ],
-            'small' => ['class'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -498,8 +484,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ],
             'Something',
             '/label',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -582,8 +566,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['div' => ['class' => 'form-control-feedback']],
             'error message',
             '/div',
-            'small' => ['class'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -626,8 +608,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['div' => ['class' => 'form-control-feedback']],
             'some &lt;strong&gt;test&lt;/strong&gt; data with &lt;a href=&quot;#&quot;&gt;HTML&lt;/a&gt; chars',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -647,8 +627,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['div' => ['class' => 'form-control-feedback']],
             'some &lt;strong&gt;test&lt;/strong&gt; data with &lt;a href=&quot;#&quot;&gt;HTML&lt;/a&gt; chars',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -668,8 +646,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['div' => ['class' => 'form-control-feedback']],
             'some <strong>test</strong> data with <a href="#">HTML</a> chars',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -703,8 +679,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['div' => ['class' => 'form-control-feedback']],
             [],
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -738,8 +712,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['div' => ['class' => 'form-control-feedback']],
             [],
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -776,8 +748,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['div' => ['class' => 'form-control-feedback']],
             'Custom error!',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -800,8 +770,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['div' => ['class' => 'form-control-feedback']],
             'Custom error!',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -878,8 +846,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['div' => ['class' => 'form-control-feedback']],
             'invalid email',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -901,8 +867,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['div' => ['class' => 'form-control-feedback']],
             'This is wrong',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -927,8 +891,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'Balance',
             '/label',
             'input' => ['name', 'type' => 'number', 'id', 'step', 'class'],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div',
         ];
         $this->assertHtml($expected, $result);
@@ -940,8 +902,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'Cost Decimal',
             '/label',
             'input' => ['name', 'type' => 'number', 'step' => '0.001', 'id', 'class'],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div',
         ];
         $this->assertHtml($expected, $result);
@@ -953,8 +913,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'Null Decimal',
             '/label',
             'input' => ['name', 'type' => 'number', 'id', 'class'],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div',
         ];
         $this->assertHtml($expected, $result);
@@ -987,8 +945,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                     'class' => 'form-control'
                 ]
             ],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1030,8 +986,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                     'class' => 'form-control'
                 ]
             ],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1051,8 +1005,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                     'class' => 'form-control'
                 ]
             ],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1071,8 +1023,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                     'class' => 'form-control'
                 ]
             ],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1116,8 +1066,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                     'class' => 'form-control'
                 ]
             ],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1137,8 +1085,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'id' => 'myId',
                 'class' => 'form-control'
             ],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1162,8 +1108,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['div' => ['class' => 'form-control-feedback']],
             'Badness!',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1211,8 +1155,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['div' => ['class' => 'form-control-feedback']],
             'Le login doit contenir au moins 2 caractères',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1238,8 +1180,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['div' => ['class' => 'form-control-feedback']],
             'login too large',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1350,8 +1290,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'Field',
             '/label',
             'input' => ['type' => 'text', 'name' => 'field', 'id' => 'prefix-field', 'class' => 'form-control'],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1363,8 +1301,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'Field',
             '/label',
             'input' => ['type' => 'text', 'name' => 'field', 'id' => 'custom-id', 'class' => 'form-control'],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1446,8 +1382,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'Field',
             '/label',
             'input' => ['type' => 'text', 'name' => 'field', 'id' => 'field', 'class' => 'form-control'],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1471,8 +1405,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'label' => ['for' => '0', 'class'],
             '/label',
             'input' => ['type' => 'text', 'name' => '0', 'id' => '0', 'class' => 'form-control'],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1494,8 +1426,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'id' => 'user-active', 'checked' => 'checked',
                 'class' => 'form-check-input'
             ]],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1508,8 +1438,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'id' => 'user-active', 'checked' => 'checked',
                 'class' => 'form-check-input'
             ]],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1522,8 +1450,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'id' => 'user-active', 'checked' => 'checked',
                 'class' => 'form-check-input'
             ]],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1550,8 +1476,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ],
             'Disabled',
             '/label',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1577,8 +1501,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ],
             'Confirm <b>me</b>!',
             '/label',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1650,8 +1572,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'Three',
             '/label',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1695,8 +1615,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'Stringy',
             '/label',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $result = $this->Form->input('Contact.multiple', [
@@ -1753,8 +1671,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'Secoènd',
             '/option',
             '/select',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1781,8 +1697,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'Second',
             '/option',
             '/select',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1813,8 +1727,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'bad',
             '/option',
             '/select',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1838,8 +1750,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'bad',
             '/option',
             '/select',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1863,8 +1773,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'bad',
             '/option',
             '/select',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1912,8 +1820,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'Label 2',
             '/label',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1941,8 +1847,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'id' => 'model-user-id',
                 'class' => 'form-control'
             ],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -1963,8 +1867,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'bad',
             '/option',
             '/select',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -2001,8 +1903,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ],
             'User',
             '/label',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
 
@@ -2051,8 +1951,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'red',
             '/label',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -2090,8 +1988,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'a lot',
             '/option',
             '/select',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -2944,8 +2840,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'B',
             '/label',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -2972,8 +2866,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'B',
             '/label',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
             ,
         ];
@@ -2999,8 +2891,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'B',
             '/label',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -3410,8 +3300,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ]],
             'Get Spam',
             '/label',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -3459,8 +3347,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'green',
             '/option',
             '/select',
-            ['small' => ['class' => 'form-text text-muted']],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -3498,8 +3384,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'green',
             '/option',
             '/select',
-            ['small' => ['class' => 'form-text text-muted']],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -3528,8 +3412,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'Helios',
             '/option',
             '/select',
-            ['small' => ['class' => 'form-text text-muted']],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -3577,8 +3459,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['div' => ['class' => 'form-control-feedback']],
             'Invalid',
             '/div',
-            ['small' => ['class' => 'form-text text-muted']],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -3805,8 +3685,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'third',
             '/label',
             '/div',
-            ['small' => ['class' => 'form-text text-muted']],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -3851,8 +3729,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'third',
             '/label',
             '/div',
-            ['small' => ['class' => 'form-text text-muted']],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -3946,8 +3822,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '2',
             '/label',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div',
         ];
         $this->assertHtml($expected, $result);
@@ -4221,8 +4095,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             'div' => ['class' => 'form-group'],
             'input' => ['type' => 'text', 'required' => 'required', 'id' => 'title', 'name' => 'title', 'class' => 'form-control'],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -4347,8 +4219,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/label',
             'textarea' => ['name' => 'other', 'id' => 'other', 'rows' => 5, 'class' => 'form-control'],
             '/textarea',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -4361,8 +4231,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/label',
             'textarea' => ['name' => 'stuff', 'maxlength' => 10, 'id' => 'stuff', 'rows' => 5, 'class' => 'form-control'],
             '/textarea',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -4791,8 +4659,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'class' => 'form-control'
             ],
             '/textarea',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         //@codingStandardsIgnoreEnd
@@ -4812,8 +4678,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ],
             'Value',
             '/textarea',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         //@codingStandardsIgnoreEnd
@@ -4838,8 +4702,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['div' => ['class' => 'form-control-feedback']],
             'Not valid',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
 
@@ -4863,8 +4725,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'rows' => 5, 'class' => 'form-control'
             ],
             '/textarea',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         //@codingStandardsIgnoreEnd
@@ -4952,8 +4812,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'required' => 'required',
                 'class' => 'form-control'
             ],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -4973,8 +4831,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'id' => 'body',
                 'class' => 'form-control'
             ],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -5009,8 +4865,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'label' => ['for' => 'foo', 'class' => 'form-check-label'],
             'Foo',
             '/label',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
 
@@ -5027,8 +4881,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'value' => '1',
                 'class' => 'form-check-input'
             ]],
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -5052,8 +4904,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '<label',
             'Confirm',
             '/label',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div',
         ];
         $this->assertHtml($expected, $result);
@@ -5218,8 +5068,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ]],
             'Foo',
             '/label',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -5249,8 +5097,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['div' => ['class' => 'form-check']],
             ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '1', 'id' => 'test-1', 'class' => 'form-check-input']],
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
 
@@ -5278,8 +5124,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['div' => ['class' => 'form-check']],
             ['input' => ['type' => 'checkbox', 'name' => 'checkbox1[]', 'value' => '2', 'id' => 'checkbox1-2', 'class' => 'form-check-input']],
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -5317,8 +5161,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'B',
             '/label',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div',
         ];
         $this->assertHtml($expected, $result);
@@ -5347,8 +5189,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'B',
             '/label',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -5377,8 +5217,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'B',
             '/label',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -5466,8 +5304,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'Second Checkbox',
             '/label',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -5523,8 +5359,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'Second Checkbox',
             '/label',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ];
         $this->assertHtml($expected, $result);

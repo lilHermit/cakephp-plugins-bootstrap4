@@ -39,8 +39,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'hidden' => '<input type="hidden" name="{{name}}"{{attrs}}/>',
         'input' => '{{prefix}}<input type="{{type}}" name="{{name}}"{{attrs}}/>{{suffix}}',
         'inputSubmit' => '<input type="{{type}}"{{attrs}}/>',
-        'inputContainer' => '<div class="form-group">{{content}}<small class="form-text text-muted">{{help}}</small></div>',
-        'inputContainerError' => '<div class="form-group has-danger">{{content}}{{error}}<small class="form-text text-muted">{{help}}</small></div>',
+        'inputContainer' => '<div class="form-group">{{content}}{{help}}</div>',
+        'inputContainerError' => '<div class="form-group has-danger">{{content}}{{error}}{{help}}</div>',
         'label' => '<label{{attrs}}>{{text}}</label>',
         'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
         'legend' => '<legend>{{text}}</legend>',
@@ -57,8 +57,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'datetimeFormGroup' => '{{label}}<div class="form-inline">{{input}}</div>',
         'dateFormGroup' => '{{label}}<div class="form-inline">{{input}}</div>',
         'timeFormGroup' => '{{label}}<div class="form-inline">{{input}}</div>',
-        'bootstrapDateTime' => '<input type="{{type}}" name="{{name}}" class="form-control"{{attrs}}/>'
-
+        'bootstrapDateTime' => '<input type="{{type}}" name="{{name}}" class="form-control"{{attrs}}/>',
+        'help' => '<small{{attrs}}>{{content}}</small>'
     ];
 
     public function __construct(View $View, array $config = []) {
@@ -117,7 +117,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      */
     public function control($fieldName, array $options = []) {
         $options += [
-            'customControls' => $this->customControls
+            'customControls' => $this->customControls,
+            'help' => false
         ];
 
         $this->_defaultConfig['templates'] = $this->_templates;
@@ -432,27 +433,24 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     /**
      *
-     * Wrapper method for __parseTemplateVar which facilitates array and string
+     * Wrapper method for _parseTemplateVar which facilitates array and string
      *
      * @param $options
      * @param $var
+     *
+     * @return void
      */
-
     private function _parseTemplateVar(&$options, $var) {
 
         if (is_array($var)) {
             foreach ($var as $item) {
-                $this->__parseTemplateVar($options, $item);
+                $this->_parseTemplateVar($options, $item);
             }
         } else {
-            $this->__parseTemplateVar($options, $var);
-        }
-    }
-
-    private function __parseTemplateVar(&$options, $var) {
-        if (isset($options[$var])) {
-            $options['templateVars'][$var] = $options[$var];
-            unset($options[$var]);
+            if (isset($options[$var])) {
+                $options['templateVars'][$var] = $options[$var];
+                unset($options[$var]);
+            }
         }
     }
 
@@ -482,12 +480,47 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         $options['templateVars'] = array_merge($options['templateVars'], compact(['prefix', 'suffix']));
     }
 
+    private function formatHelp(&$options) {
+
+        if ($options['templateVars']['help']) {
+
+            $help = $options['templateVars']['help'];
+
+            $data = ['attrs' => []];
+            if (is_string($help)) {
+                $data['content'] = $help;
+            } else if (is_array($help) && isset($help['text'])) {
+                $data['content'] = $help['text'];
+                $data['attrs'] = $help;
+            }
+
+            if (isset($data['content'])) {
+                // Add the class
+                $data['attrs'] = Html::addClass($data['attrs'], ['form-text', 'text-muted']);
+
+                // Convert attrs to a string
+                $data['attrs'] = $this->templater()->formatAttributes($data['attrs'], ['text']);
+
+                $options['templateVars']['help'] = $this->templater()->format('help', $data);
+
+            } else {
+                unset($options['templateVars']['help']);
+            }
+        }
+
+    }
+
     protected function _getInput($fieldName, $options) {
 
         // now process the prefix and suffix
         $this->_parsePrefixSuffix($options);
 
         return parent::_getInput($fieldName, $options);
+    }
+
+    protected function _inputContainerTemplate($options) {
+        $this->formatHelp($options['options']);
+        return parent::_inputContainerTemplate($options);
     }
 
     /**
@@ -526,7 +559,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                     $this->setTemplates([
                         'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}<span class="custom-control-indicator"></span> <span class="custom-control-description">{{text}}</span></label>',
                         'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}> ',
-                        'checkboxContainer' => '<div class="form-group clearfix"{{attrs}}>{{content}}{{error}}<small class="form-text text-muted">{{help}}</small></div>',
+                        'checkboxContainer' => '<div class="form-group clearfix"{{attrs}}>{{content}}{{error}}{{help}}</div>',
                     ]);
                     break;
                 case 'multicheckbox':
@@ -536,7 +569,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                         'checkboxWrapper' => '{{label}}',
 
                         // Select because we might be using the ['type' => 'select', 'multiple' => 'checkbox']
-                        'selectContainer' => '<div class="form-group clearfix"{{attrs}}>{{content}}{{error}}<small class="form-text text-muted">{{help}}</small></div>',
+                        'selectContainer' => '<div class="form-group clearfix"{{attrs}}>{{content}}{{error}}{{help}}</div>',
                         'selectFormGroup' => '{{label}}<div class="custom-controls-stacked"{{attrs}}>{{input}}</div>',
                     ]);
                     break;
@@ -550,7 +583,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                 case 'file':
                     $this->setTemplates([
                         'file' => '<input type="file" name="{{name}}"{{attrs}}><span class="custom-file-control"></span>{{placeholder}}',
-                        'fileContainer' => '{{content}}<small class="form-text text-muted">{{help}}</small>',
+                        'fileContainer' => '{{content}}{{help}}',
                         'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}</label>',
                     ]);
                     break;
@@ -568,7 +601,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                     $this->setTemplates([
                         'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
                         'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}>',
-                        'checkboxContainer' => '<div class="form-check"{{attrs}}>{{content}}{{error}}<small class="form-text text-muted">{{help}}</small></div>',
+                        'checkboxContainer' => '<div class="form-check"{{attrs}}>{{content}}{{error}}{{help}}</div>',
                     ]);
                     break;
                 case 'radio':

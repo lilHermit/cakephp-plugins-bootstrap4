@@ -273,8 +273,6 @@ class BootstrapFormHelperTest extends TestCase {
             'Second Checkbox',
             '/label',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ], $result);
 
@@ -331,8 +329,6 @@ class BootstrapFormHelperTest extends TestCase {
             '/span',
             '/label',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ], $result);
 
@@ -359,8 +355,6 @@ class BootstrapFormHelperTest extends TestCase {
             ],
             'I agree to the terms of use',
             '/label',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ], $result);
 
@@ -389,8 +383,6 @@ class BootstrapFormHelperTest extends TestCase {
             'I agree to the terms of use',
             '/span',
             '/label',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ], $result);
 
@@ -403,7 +395,7 @@ class BootstrapFormHelperTest extends TestCase {
             [
                 'label' => 'My Radios',
                 'default' => 2,
-                'type'=> 'radio',
+                'type' => 'radio',
                 'options' => [
                     ['text' => 'First Radio', 'value' => 1],
                     ['text' => 'Second Radio', 'value' => 2]
@@ -447,8 +439,6 @@ class BootstrapFormHelperTest extends TestCase {
             'Second Radio',
             '/label',
             '/div',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ], $result);
 
@@ -457,7 +447,7 @@ class BootstrapFormHelperTest extends TestCase {
             [
                 'label' => 'My Radios',
                 'default' => 2,
-                'type'=> 'radio',
+                'type' => 'radio',
                 'options' => [
                     ['text' => 'First Radio', 'value' => 1],
                     ['text' => 'Second Radio', 'value' => 2]
@@ -505,8 +495,6 @@ class BootstrapFormHelperTest extends TestCase {
             'Second Radio',
             '/span',
             '/label',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small',
             '/div'
         ], $result);
     }
@@ -611,8 +599,18 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
     }
 
+    /**
+     *
+     * testInputHelp
+     *
+     * Test to make sure the help text is render correctly
+     *
+     * Test string and array, including adding custom attributes (inc class)
+     *
+     * @return void
+     */
     public function testInputHelp() {
-        $result = $this->Form->input('first_name', [
+        $result = $this->Form->control('first_name', [
             'help' => 'Please enter the users first name'
         ]);
         $this->assertHtml([
@@ -625,31 +623,78 @@ class BootstrapFormHelperTest extends TestCase {
                 'name' => 'first_name',
                 'id' => 'first-name',
                 'class' => 'form-control'
-                ],
+            ],
             'small' => ['class' => 'form-text text-muted'],
             'Please enter the users first name',
             '/small',
             '/div'
         ], $result);
 
-        //TODO make sure small helptext is excluded as per this test
-//        $result = $this->Form->input('first_name', [
-//            'help' => false
-//        ]);
-//
-//        $this->assertHtml([
-//            'div' => ['class' => 'form-group'],
-//            ['label' => ['class' => 'col-form-label', 'for' => 'first-name']],
-//            'First Name',
-//            '/label',
-//            'input' => [
-//                'type' => 'text',
-//                'name' => 'first_name',
-//                'id' => 'first-name',
-//                'class' => 'form-control'
-//                ],
-//            '/div'
-//        ], $result);
+        $result = $this->Form->control('first_name', [
+            'help' => [
+                'text' => 'Please enter the users first name',
+                'class' => 'custom-class',
+                'data-ref' => 'custom-attr'
+            ]
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'first-name']],
+            'First Name',
+            '/label',
+            'input' => [
+                'type' => 'text',
+                'name' => 'first_name',
+                'id' => 'first-name',
+                'class' => 'form-control'
+            ],
+            'small' => ['class' => 'custom-class form-text text-muted', 'data-ref' => 'custom-attr'],
+            'Please enter the users first name',
+            '/small',
+            '/div'
+        ], $result);
+    }
+
+    /**
+     * testInputHelpExclude
+     *
+     * Test to make sure the help text is not rendered default and if explicitly set to false
+     *
+     * @return void
+     */
+    public function testInputHelpExclude() {
+
+        $result = $this->Form->control('first_name');
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'first-name']],
+            'First Name',
+            '/label',
+            'input' => [
+                'type' => 'text',
+                'name' => 'first_name',
+                'id' => 'first-name',
+                'class' => 'form-control'
+            ],
+            '/div'
+        ], $result);
+
+        $result = $this->Form->control('first_name', [
+            'help' => false
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'first-name']],
+            'First Name',
+            '/label',
+            'input' => [
+                'type' => 'text',
+                'name' => 'first_name',
+                'id' => 'first-name',
+                'class' => 'form-control'
+            ],
+            '/div'
+        ], $result);
     }
 
     /**
@@ -705,9 +750,7 @@ class BootstrapFormHelperTest extends TestCase {
             'input' => ['type' => 'file', 'name' => 'Model[upload]', 'class' => 'custom-file-input', 'id' => 'model-upload'],
             'span' => ['class' => 'custom-file-control'],
             '/span',
-            '/label',
-            'small' => ['class' => 'form-text text-muted'],
-            '/small'
+            '/label'
 
         ], $result);
     }
