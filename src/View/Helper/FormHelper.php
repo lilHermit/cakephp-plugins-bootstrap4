@@ -2,7 +2,9 @@
 namespace lilHermit\Bootstrap4\View\Helper;
 
 
+use Cake\Utility\Hash;
 use Cake\View\View;
+use lilHermit\Toolkit\Utility\Html;
 
 class FormHelper extends \Cake\View\Helper\FormHelper {
 
@@ -20,7 +22,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     ];
 
     protected $_templates = [
-        'button' => '<button {{attrs}}>{{text}}</button>',
+        'button' => '<button{{attrs}}>{{text}}</button>',
 
         'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}>',
         'checkboxFormGroup' => '{{label}}',
@@ -29,28 +31,29 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'error' => '<div class="form-control-feedback">{{content}}</div>',
         'errorList' => '<ul>{{content}}</ul>',
         'errorItem' => '<li>{{text}}</li>',
-        'file' => '<input type="file" name="{{name}}"{{attrs}}><span class="custom-file-control"></span>{{placeholder}}',
-        'fieldset' => '<fieldset{{attrs}} class="form-group">{{content}}</fieldset>',
+        'fieldset' => '<fieldset{{attrs}}>{{content}}</fieldset>',
         'formStart' => '<form{{attrs}}>',
         'formEnd' => '</form>',
         'formGroup' => '{{label}}{{input}}',
         'hiddenBlock' => '<div style="display:none;">{{content}}</div>',
         'hidden' => '<input type="hidden" name="{{name}}"{{attrs}}/>',
-        'input' => '{{prefix}}<input type="{{type}}" name="{{name}}" class="form-control"{{attrs}}/>{{suffix}}',
+        'input' => '{{prefix}}<input type="{{type}}" name="{{name}}"{{attrs}}/>{{suffix}}',
         'inputSubmit' => '<input type="{{type}}"{{attrs}}/>',
         'inputContainer' => '<div class="form-group">{{content}}<small class="form-text text-muted">{{help}}</small></div>',
         'inputContainerError' => '<div class="form-group has-danger">{{content}}{{error}}<small class="form-text text-muted">{{help}}</small></div>',
-        'label' => '<label class="{{label_class}}"{{attrs}}>{{text}}</label>',
-        'nestingLabel' => '{{hidden}}<label class="{{label_class}}"{{attrs}}>{{input}}{{text}}</label>',
+        'label' => '<label{{attrs}}>{{text}}</label>',
+        'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
         'legend' => '<legend>{{text}}</legend>',
         'multicheckboxTitle' => '<legend>{{text}}</legend>',
         'multicheckboxWrapper' => '<fieldset{{attrs}}>{{content}}</fieldset>',
         'option' => '<option value="{{value}}"{{attrs}}>{{text}}</option>',
         'optgroup' => '<optgroup label="{{label}}"{{attrs}}>{{content}}</optgroup>',
-        'select' => '<select name="{{name}}" class="form-control"{{attrs}}>{{content}}</select>',
-        'selectMultiple' => '<select name="{{name}}[]" class="form-control" multiple="multiple"{{attrs}}>{{content}}</select>',
-        'textarea' => '<textarea name="{{name}}" class="form-control"{{attrs}}>{{value}}</textarea>',
-        'submitContainer' => '<div class="submit">{{content}}</div>',
+        'radio' => '<input type="radio" name="{{name}}" value="{{value}}"{{attrs}}>',
+        'radioWrapper' => '{{label}}',
+        'select' => '<select name="{{name}}"{{attrs}}>{{content}}</select>',
+        'selectMultiple' => '<select name="{{name}}[]" multiple="multiple"{{attrs}}>{{content}}</select>',
+        'textarea' => '<textarea name="{{name}}"{{attrs}}>{{value}}</textarea>',
+        'submitContainer' => '{{content}}',
         'datetimeFormGroup' => '{{label}}<div class="form-inline">{{input}}</div>',
         'dateFormGroup' => '{{label}}<div class="form-inline">{{input}}</div>',
         'timeFormGroup' => '{{label}}<div class="form-inline">{{input}}</div>',
@@ -65,6 +68,11 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
         $this->_defaultWidgets =
             array_replace_recursive($this->_defaultWidgets, $this->_bootstrapWidgets);
+
+        if (isset($config['customControls']) && is_bool($config['customControls'])) {
+            $this->customControls = $config['customControls'];
+            unset($config['customControls']);
+        }
 
         parent::__construct($View, $config);
     }
@@ -108,21 +116,23 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * @link http://book.cakephp.org/3.0/en/views/helpers/form.html#creating-form-inputs
      */
     public function control($fieldName, array $options = []) {
+        $options += [
+            'customControls' => $this->customControls
+        ];
+
         $this->_defaultConfig['templates'] = $this->_templates;
 
         // Work out the type, so we can switchTemplates if required!
         $options = $this->_parseOptions($fieldName, $options);
 
+        $this->setLabelClass($options, isset($options['type']) ? $options['type'] : null, true);
         $this->switchTemplates($options);
 
         // Move certain options to templateVars
         $this->_parseTemplateVar($options, ['help', 'prefix', 'suffix']);
 
-        if ($options['type'] === 'file') {
+        if ($options['type'] === 'file' && $options['customControls']) {
             $options['nestedInput'] = true;
-            $options['templateVars']['label_class'] = 'custom-file';
-        } else {
-            $options['templateVars']['label_class'] = 'col-form-label';
         }
 
         if (method_exists(get_parent_class($this), 'control')) {
@@ -130,6 +140,27 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         } else {
             return parent::input($fieldName, $options);
         }
+    }
+
+    private function _addLabelClass($options, $class, $index = 'label') {
+
+        if (isset($options[$index])) {
+            if ($options[$index] === false) {
+                return $options;
+            }
+
+            // Save the text from the label
+            if (is_string($options[$index])) {
+                $text = $options[$index];
+                $options = Hash::insert($options, $index . '.text', $text);
+            }
+        }
+
+        return Html::addClass(
+            $options,
+            $class,
+            ['useIndex' => $index . '.class']
+        );
     }
 
     /**
@@ -253,18 +284,151 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     }
 
     public function multiCheckbox($fieldName, $options, array $attributes = []) {
+        $attributes += [
+            'customControls' => $this->customControls
+        ];
         $this->_defaultConfig['templates'] = $this->_templates;
-        $this->switchTemplates($attributes, 'checkbox');
+        $this->setLabelClass($attributes, 'multicheckbox');
+        $this->switchTemplates($attributes, 'multicheckbox');
 
         return parent::multiCheckbox($fieldName, $options, $attributes);
     }
 
-    public function radio($fieldName, $options = [], array $attributes = []) {
+    public function select($fieldName, $options = [], array $attributes = []) {
+        $attributes += [
+            'customControls' => $this->customControls
+        ];
+
+        return parent::select($fieldName, $options, $attributes);
+    }
+
+    public function checkbox($fieldName, array $options = []) {
+        $options += [
+            'customControls' => $this->customControls,
+            'type' => 'checkbox'
+        ];
+
         $this->_defaultConfig['templates'] = $this->_templates;
+        $this->setLabelClass($options, 'checkbox');
+        $this->switchTemplates($options, 'checkbox');
+
+        return parent::checkbox($fieldName, $options);
+    }
+
+
+    public function radio($fieldName, $options = [], array $attributes = []) {
+        $attributes += [
+            'customControls' => $this->customControls,
+            'type' => 'radio'
+        ];
+
+        $this->_defaultConfig['templates'] = $this->_templates;
+        $this->setLabelClass($attributes, 'radio');
         $this->switchTemplates($attributes, 'radio');
 
         return parent::radio($fieldName, $options, $attributes);
     }
+
+    public function fieldset($fields = '', array $options = []) {
+        if (!isset($options['fieldset']) || $options['fieldset'] !== false) {
+            $options = HTml::addClass($options, 'form-group', ['useIndex' => 'fieldset.class']);
+        }
+
+        return parent::fieldset($fields, $options);
+    }
+
+    public function hidden($fieldName, array $options = []) {
+        $options['type'] = 'hidden';
+
+        return parent::hidden($fieldName, $options);
+    }
+
+    public function widget($name, array $data = []) {
+        $data = $this->_addWidgetClass($data, $name);
+
+        // Clean up any elements so they don't end up as attributes
+        unset($data['customControls'], $data['templateType'], $data['skipSwitchTemplates']);
+
+        return parent::widget($name, $data);
+    }
+
+    public function file($fieldName, array $options = []) {
+        $options += [
+            'customControls' => $this->customControls,
+            'type' => 'file'
+        ];
+
+        $this->_defaultConfig['templates'] = $this->_templates;
+        $this->switchTemplates($options, 'file');
+
+        return parent::file($fieldName, $options);
+    }
+
+    protected function _initInputField($field, $options = []) {
+        $options = parent::_initInputField($field, $options);
+        $options = $this->_addWidgetClass($options);
+
+        return $options;
+    }
+
+    protected function _addWidgetClass($options = [], $widgetType = null) {
+
+        $skipClassFallback = [
+            'hidden',
+            'file'
+        ];
+
+        $widgetsClassMap = [
+            'text' => 'form-control',
+            'select' => 'form-control',
+            'multicheckbox' => 'custom-control-input',
+            'checkbox' => 'custom-control-input',
+            'radio' => 'custom-control-input',
+            'file' => 'custom-file-input'
+        ];
+
+        if (isset($options['customControls'])) {
+            if (!$options['customControls']) {
+                $widgetsClassMap = array_merge($widgetsClassMap,
+                    [
+                        'multicheckbox' => 'form-check-input',
+                        'checkbox' => 'form-check-input',
+                        'radio' => 'form-check-input',
+                        'file' => null
+                    ]);
+            }
+        }
+
+        $type = null;
+        if (!empty($options['templateType'])) {
+            $type = $options['templateType'];
+        } else {
+
+            if (!empty($options['type'])) {
+                $type = $options['type'];
+            } else {
+                if ($widgetType !== null && array_key_exists($widgetType, $widgetsClassMap)) {
+                    $type = $widgetType;
+                }
+            }
+        }
+
+        $class = null;
+        if ($type == null || !array_key_exists($type, $widgetsClassMap)) {
+
+            // Fall back for certain inputs ie didn't come from widget method
+            if ($widgetType === null && !in_array($type, $skipClassFallback)) {
+                $class = 'form-control';
+            }
+        } else {
+            $class = $widgetsClassMap[$type];
+        }
+
+        $options = Html::addClass($options, $class);
+
+        return $options;
+    }
+
 
     /**
      *
@@ -302,11 +466,13 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         }
 
         if (isset($options['templateVars']['prefix'])) {
-            $prefix .= sprintf('<span class="input-group-addon" id="%s">%s</span>', $options['id'], $options['templateVars']['prefix']);
+            $prefix .= sprintf('<span class="input-group-addon" id="%s">%s</span>', $options['id'],
+                $options['templateVars']['prefix']);
         }
 
         if (isset($options['templateVars']['suffix'])) {
-            $suffix = sprintf('<span class="input-group-addon" id="%s">%s</span>', $options['id'], $options['templateVars']['suffix']);
+            $suffix = sprintf('<span class="input-group-addon" id="%s">%s</span>', $options['id'],
+                $options['templateVars']['suffix']);
         }
 
         if ($needContainer) {
@@ -340,65 +506,141 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     private function switchTemplates(&$options, $type = null) {
 
-        $type = $type ?: $options['type'];
-        if ($type == 'select' && isset($options['multiple']) && $options['multiple'] == 'checkbox') {
-            $type = 'checkbox';
+        if (!isset($options['templateType'])) {
+            $options['templateType'] = $type;
         }
 
-        $customControls = $this->customControls;
-        if (isset($options['customControls']) && is_bool($options['customControls'])) {
-            $customControls = $options['customControls'];
+        $type = $this->decodeType($options, $type);
+
+        $skipSwitchTemplates = isset($options['skipSwitchTemplates']) && $options['skipSwitchTemplates'] === true;
+        $skipNonRelevantWidget = !in_array($type, ['checkbox', 'radio', 'multicheckbox', 'file']);
+
+        if ($skipSwitchTemplates || $skipNonRelevantWidget) {
+            return;
         }
 
-        if ($customControls) {
+        if ($options['customControls']) {
 
             switch ($type) {
                 case 'checkbox':
                     $this->setTemplates([
-                        'nestingLabel' => '{{hidden}}<label class="custom-control custom-checkbox"{{attrs}}>{{input}}<span class="custom-control-indicator"></span> <span class="custom-control-description">{{text}}</span></label>',
-                        'checkbox' => '<input class="custom-control-input" type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}> ',
-                        'checkboxContainer' => '<div class="form-group clearfix"{{attrs}}>{{content}}</div>',
+                        'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}<span class="custom-control-indicator"></span> <span class="custom-control-description">{{text}}</span></label>',
+                        'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}> ',
+                        'checkboxContainer' => '<div class="form-group clearfix"{{attrs}}>{{content}}{{error}}<small class="form-text text-muted">{{help}}</small></div>',
+                    ]);
+                    break;
+                case 'multicheckbox':
+                    $this->setTemplates([
+                        'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}<span class="custom-control-indicator"></span> <span class="custom-control-description">{{text}}</span></label>',
+                        'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}> ',
                         'checkboxWrapper' => '{{label}}',
-                        'checkboxFormGroup' => '<div class="custom-controls-stacked"{{attrs}}>{{label}}</div>',
+
+                        'multicheckboxFormGroup' => '<div class="custom-controls-stacked"{{attrs}}>{{label}}</div>',
 
                         // Select because we might be using the ['type' => 'select', 'multiple' => 'checkbox']
-                        'selectContainer' => '<div class="form-group clearfix"{{attrs}}>{{content}}</div>',
+                        'selectContainer' => '<div class="form-group clearfix"{{attrs}}>{{content}}{{error}}<small class="form-text text-muted">{{help}}</small></div>',
                         'selectFormGroup' => '{{label}}<div class="custom-controls-stacked"{{attrs}}>{{input}}</div>',
                     ]);
                     break;
                 case 'radio':
                     $this->setTemplates([
-                        'nestingLabel' => '<label class="custom-control custom-radio"{{attrs}}>{{input}}<span class="custom-control-indicator"></span> <span class="custom-control-description">{{text}}</span></label>',
-                        'radio' => '<input class="custom-control-input" type="radio" name="{{name}}" value="{{value}}"{{attrs}}> ',
-                        'radioContainer' => '<div class="form-group">{{content}}</div>',
-                        'radioWrapper' => '{{label}}',
-                        'radioFormGroup' => '{{label}}',
+                        'nestingLabel' => '<label{{attrs}}>{{input}}<span class="custom-control-indicator"></span> <span class="custom-control-description">{{text}}</span></label>',
+                        'radio' => '<input type="radio" name="{{name}}" value="{{value}}"{{attrs}}> ',
+                        'radioWrapper' => '{{label}}'
                     ]);
-
+                    break;
+                case 'file':
+                    $this->setTemplates([
+                        'file' => '<input type="file" name="{{name}}"{{attrs}}><span class="custom-file-control"></span>{{placeholder}}',
+                        'fileContainer' => '{{content}}<small class="form-text text-muted">{{help}}</small>',
+                        'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}</label>',
+                    ]);
                     break;
             }
         } else {
             switch ($type) {
+                case 'multicheckbox':
+                    $this->setTemplates([
+                        'checkboxWrapper' => '<div class="form-check">{{label}}</div>',
+                        'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
+                        'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}>',
+                    ]);
+                    break;
                 case 'checkbox':
                     $this->setTemplates([
-                        'checkboxFormGroup' => '{{label}}',
-                        'checkboxWrapper' => '<div class="form-check">{{label}}</div>',
-                        'nestingLabel' => '{{hidden}}<label class="form-check-label"{{attrs}}>{{input}}{{text}}</label>',
-                        'checkbox' => '<input class="form-check-input" type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}> ',
-                        'multicheckboxContainer' => '<div class="form-check">{{content}}</div>',
+                        'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
+                        'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}>',
+                        'checkboxContainer' => '<div class="form-check"{{attrs}}>{{content}}{{error}}<small class="form-text text-muted">{{help}}</small></div>',
                     ]);
-
                     break;
                 case 'radio':
                     $this->setTemplates([
-                        'radioFormGroup' => '{{label}}',
                         'radioWrapper' => '<div class="form-check">{{label}}</div>',
-                        'nestingLabel' => '{{hidden}}<label class="form-check-label"{{attrs}}>{{input}}{{text}}</label>',
-                        'radio' => '<input type="radio" name="{{name}}" value="{{value}}" class="form-check-input"{{attrs}}>',
-                    ]);;
+                        'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
+                        'radio' => '<input type="radio" name="{{name}}" value="{{value}}"{{attrs}}>',
+                    ]);
+                    break;
+                case 'file':
+                    $this->setTemplates([
+                        'file' => '<input type="file" name="{{name}}"{{attrs}}>{{placeholder}}',
+                        'fileContainer' => '<div class="input {{type}}{{required}}">{{content}}</div>',
+                        'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
+                    ]);
                     break;
             }
         }
+    }
+
+    private function decodeType($options, $type) {
+        $type = $type ?: $options['type'];
+        if ($type == 'select' && isset($options['multiple']) && $options['multiple'] === 'checkbox') {
+            $type = 'multicheckbox';
+        }
+
+        return $type;
+    }
+
+    private function setLabelClass(&$options, $type = null, $fromInput = false) {
+        $type = $this->decodeType($options, $type);
+        $customControls = $options['customControls'];
+
+        $label = [];
+        $index = 'label';
+        if ($type === 'file') {
+            if ($customControls) {
+                $label = 'custom-file';
+            }
+        } elseif ($type === 'radio' || $type === 'checkbox' || $type === 'multicheckbox') {
+
+            if ($fromInput) {
+                if ($type === 'checkbox') {
+                    if ($customControls) {
+                        $label = ['custom-control', 'custom-checkbox'];
+                    } else {
+                        $label = 'form-check-label';
+                    }
+                }
+            } else {
+                if ($type === 'radio') {
+                    $label = $customControls ? ['custom-control', 'custom-radio'] : 'form-check-label';
+                }
+            }
+
+            if ($type === 'multicheckbox') {
+
+                $index = $fromInput ? 'labelOptions' : 'label';
+                if ($customControls) {
+                    $label = ['custom-control', 'custom-checkbox'];
+                } else {
+                    $label = 'form-check-label';
+                }
+            }
+
+        } else {
+            $label = 'col-form-label';
+        }
+
+        $options = $this->_addLabelClass($options, $label, $index);
     }
 
     /**
@@ -442,67 +684,6 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return parent::submit($caption, $options);
     }
 
-    /**
-     * Adds a class and returns a unique list either in array or space separated
-     *
-     * ### Options
-     *
-     * - `useIndex` if you are inputting an array with an 'element' called 'class' and the same returning
-     *                  you should set this to 'class'
-     * - `returnArray` Setting this to `false` will return a space separated string (default is `true`)
-     *
-     * @param $input array|string
-     * @param $newClass array|string
-     * @param array $options See above for options
-     *
-     * @return array|string
-     */
-    public function _addClass($input, $newClass, $options = []) {
-
-        // NOOP
-        if (empty($newClass)) {
-            return $input;
-        }
-
-        $options = $options + [
-                'useIndex' => null,
-                'returnArray' => true
-            ];
-
-        $useIndex = $options['useIndex'];
-        if (is_string($useIndex)) {
-            $class = isset($input[$useIndex]) ? $input[$useIndex] : [];
-        } else {
-            $class = $input;
-        }
-
-        // Convert and sanitise the inputs
-        if (!is_array($class)) {
-            if (is_string($class) && !empty($class)) {
-                $class = explode(' ', $class);
-            } else {
-                $class = [];
-            }
-        }
-
-        if (is_string($newClass)) {
-            $newClass = explode(' ', $newClass);
-        }
-
-        $class = array_unique(array_merge($class, $newClass));
-
-        if ($options['returnArray'] === false) {
-            $class = implode(" ", $class);
-        }
-
-        if (is_string($useIndex)) {
-            $input[$useIndex] = $class;
-        } else {
-            $input = $class;
-        }
-        return $input;
-    }
-
     private function parseButtonClass(&$options) {
 
         $options = $options + [
@@ -533,9 +714,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
         unset($options['size'], $options['secondary'], $options['outline']);
 
-        $options = $this->_addClass($options, $newClasses, [
-            'useIndex' => 'class'
-        ]);
+        $options = Html::addClass($options, $newClasses);
+
         return $options;
     }
 
@@ -555,8 +735,12 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             }
         }
 
-        if (is_object($options['val']) && in_array(get_class($options['val']), ['Cake\I18n\Date', 'Cake\I18n\FrozenDate',
-                'Cake\I18n\Time', 'Cake\I18n\FrozenTime',])
+        if (is_object($options['val']) && in_array(get_class($options['val']), [
+                'Cake\I18n\Date',
+                'Cake\I18n\FrozenDate',
+                'Cake\I18n\Time',
+                'Cake\I18n\FrozenTime',
+            ])
         ) {
 
             switch ($options['type']) {
@@ -580,6 +764,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         $options['type'] = 'date';
         $options = $this->_initInputField($fieldName, $options);
         $this->formatDateTimes($options);
+
         return $this->widget('bootstrapDateTime', $options);
     }
 
@@ -595,6 +780,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         }
 
         $this->formatDateTimes($options);
+
         return $this->widget('bootstrapDateTime', $options);
     }
 
@@ -610,6 +796,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         }
 
         $this->formatDateTimes($options);
+
         return $this->widget('bootstrapDateTime', $options);
     }
 
@@ -621,6 +808,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      */
     protected function _bootstrapTypeMap($type) {
         $map = $this->_bootstrapTypeMap;
+
         return isset($map[$type]) ? $map[$type] : 'text';
     }
 
@@ -651,6 +839,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         }
 
         $options = $this->_magicOptions($fieldName, $options, $needsMagicType);
+
         return $options;
     }
 
