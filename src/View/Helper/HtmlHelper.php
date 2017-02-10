@@ -222,7 +222,7 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
      * - `version` The version of bootstrap javascript required. Defaults = latest version
      * - `url` The url of the non built-in version bootstrap javascript
      * - `integrity` The integrity hash for the `url` key
-     * - `own` Should we include this plugin javascript too. Default = true
+     * - `own` Should we include this plugin javascript too. Default = false
      *
      * @return string The full script tag or blank if `own` is false and `version` doesn't exist
      */
@@ -231,7 +231,7 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
         // Add the defaults
         $options += [
             'version' => '4.0.0-alpha.6',
-            'own' => true
+            'own' => false
         ];
 
         $versions = [

@@ -1,8 +1,4 @@
 jQuery(function () {
 
-
-    // Setup the correct class for any error fields
-    $(".form-group.has-danger").each(function (index) {
-        $(this).find("input").addClass('form-control-danger')
-    });
+    // Currently intentionally blank as we don't need any js manipulation of forms
 });
