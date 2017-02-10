@@ -657,9 +657,13 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             switch ($type) {
                 case 'multicheckbox':
                     $this->setTemplates([
-                        'checkboxWrapper' => '<div class="form-check">{{label}}</div>',
                         'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
                         'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}>',
+                        'checkboxWrapper' => '<div class="form-check">{{label}}</div>',
+
+                        // Reset incase custom was previously used
+                        'selectContainer' => null,
+                        'selectFormGroup' => null,
                     ]);
                     break;
                 case 'checkbox':
