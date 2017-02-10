@@ -266,4 +266,184 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['button' => ['type' => 'button', 'class' => 'btn btn-outline-secondary']], 'text', '/button'
         ], $result);
     }
+
+    /**
+     * testProgressBasic method
+     *
+     * Tests basic value (include being greater than max and less than min)
+     *
+     * @return void
+     */
+    public function testProgressBasic() {
+
+        $result = $this->Html->progress(90);
+        $this->assertHtml([
+            ['div' => ['class' => 'progress']],
+            ['div' => [
+                'class' => 'progress-bar',
+                'role' => 'progressbar',
+                'style' => 'width:90%',
+                'aria-valuenow' => 90,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 100
+            ]],
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Html->progress(101);
+        $this->assertHtml([
+            ['div' => ['class' => 'progress']],
+            ['div' => [
+                'class' => 'progress-bar',
+                'role' => 'progressbar',
+                'style' => 'width:100%',
+                'aria-valuenow' => 100,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 100
+            ]],
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Html->progress(-101);
+        $this->assertHtml([
+            ['div' => ['class' => 'progress']],
+            ['div' => [
+                'class' => 'progress-bar',
+                'role' => 'progressbar',
+                'style' => 'width:0%',
+                'aria-valuenow' => 0,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 100
+            ]],
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Html->progress(50.555);
+        $this->assertHtml([
+            ['div' => ['class' => 'progress']],
+            ['div' => [
+                'class' => 'progress-bar',
+                'role' => 'progressbar',
+                'style' => 'width:51%',
+                'aria-valuenow' => 51,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 100
+            ]],
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Html->progress('ss');
+        $this->assertHtml([
+            ['div' => ['class' => 'progress']],
+            ['div' => [
+                'class' => 'progress-bar',
+                'role' => 'progressbar',
+                'style' => 'width:0%',
+                'aria-valuenow' => 0,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 100
+            ]],
+            '/div',
+            '/div'
+        ], $result);
+    }
+
+    /**
+     * testProgressMaxValue method
+     *
+     * Tests max value
+     *
+     * @return void
+     */
+    public function testProgressMaxValue() {
+
+        $result = $this->Html->progress(5, 10);
+        $this->assertHtml([
+            ['div' => ['class' => 'progress']],
+            ['div' => [
+                'class' => 'progress-bar',
+                'role' => 'progressbar',
+                'style' => 'width:50%',
+                'aria-valuenow' => 5,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 10
+            ]],
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Html->progress(150, 200);
+        $this->assertHtml([
+            ['div' => ['class' => 'progress']],
+            ['div' => [
+                'class' => 'progress-bar',
+                'role' => 'progressbar',
+                'style' => 'width:75%',
+                'aria-valuenow' => 150,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 200
+            ]],
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Html->progress(0, 1);
+        $this->assertHtml([
+            ['div' => ['class' => 'progress']],
+            ['div' => [
+                'class' => 'progress-bar',
+                'role' => 'progressbar',
+                'style' => 'width:0%',
+                'aria-valuenow' => 0,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 1
+            ]],
+            '/div',
+            '/div'
+        ], $result);
+    }
+
+    /**
+     * testProgressAttributes method
+     *
+     * Tests custom attributes including merge of `class`
+     *
+     * @return void
+     */
+    public function testProgressAttributes() {
+
+        $result = $this->Html->progress(50, 100, ['class' => 'myclass']);
+        $this->assertHtml([
+            ['div' => ['class' => 'myclass progress']],
+            ['div' => [
+                'class' => 'progress-bar',
+                'role' => 'progressbar',
+                'style' => 'width:50%',
+                'aria-valuenow' => 50,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 100
+            ]],
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Html->progress(50, 100, ['class' => 'myclass', 'data-ref' => 'my-progress']);
+        $this->assertHtml([
+            ['div' => ['class' => 'myclass progress', 'data-ref' => 'my-progress']],
+            ['div' => [
+                'class' => 'progress-bar',
+                'role' => 'progressbar',
+                'style' => 'width:50%',
+                'aria-valuenow' => 50,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 100
+            ]],
+            '/div',
+            '/div'
+        ], $result);
+    }
 }

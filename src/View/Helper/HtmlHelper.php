@@ -3,6 +3,7 @@ namespace lilHermit\Bootstrap4\View\Helper;
 
 
 use Cake\View\View;
+use lilHermit\Toolkit\Utility\Html;
 
 class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
 
@@ -32,11 +33,12 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
      * - `lastClass` Class for wrapper tag on current active page, defaults to 'last'
      * - `itemClass` Class for item tag set to false for none
      *
-     * @param array $options Array of HTML attributes to apply to the generated list elements.
-     * @param string|array|bool $startText This will be the first crumb, if false it defaults to first crumb in array. Can
-     *   also be an array, see `HtmlHelper::getCrumbs` for details.
+     * @param array             $options   Array of HTML attributes to apply to the generated list elements.
+     * @param string|array|bool $startText This will be the first crumb, if false it defaults to first crumb in array.
+     *                                     Can also be an array, see `HtmlHelper::getCrumbs` for details.
+     *
      * @return string|null Breadcrumbs HTML list.
-     * @link http://book.cakephp.org/3.0/en/views/helpers/html.html#creating-breadcrumb-trails-with-htmlhelper
+     * @link       http://book.cakephp.org/3.0/en/views/helpers/html.html#creating-breadcrumb-trails-with-htmlhelper
      * @deprecated 3.3.6 Use the BreadcrumbsHelper instead
      */
     public function getCrumbList(array $options = [], $startText = false) {
@@ -74,18 +76,18 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
             }
 
             if ($itemClass !== false) {
-                if (is_array($itemClass) ) {
+                if (is_array($itemClass)) {
                     $liClass = implode(' ', $itemClass);
                 } else if (is_string($itemClass)) {
-                    $liClass = [ $itemClass];
+                    $liClass = [$itemClass];
                 } else {
                     $liClass = [];
                 }
             } else {
-                $liClass =[];
+                $liClass = [];
             }
 
-            if(empty($crumb[1])) {
+            if (empty($crumb[1])) {
                 $liClass[] = 'active';
             }
             if (!$which && $firstClass !== false) {
@@ -128,10 +130,11 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
      * - `secondary` Boolean true if you want secondary colour.
      * - `outline` Boolean true if you want button outlined.
      *
-     * @param string $title The content to be used for the button.
-     * @param string|array|null $url Cake-relative URL or array of URL parameters, or
-     *   external URL (starts with http://)
-     * @param array $options Array of options and HTML attributes.
+     * @param string            $title   The content to be used for the button.
+     * @param string|array|null $url     Cake-relative URL or array of URL parameters, or
+     *                                   external URL (starts with http://)
+     * @param array             $options Array of options and HTML attributes.
+     *
      * @return string the element.
      */
     public function button($title, $url = null, array $options = []) {
@@ -183,7 +186,7 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
      * Returns the css tag for bootstrap
      *
      * @param $version string|array string of the version of bootstrap or
-     * an array containing 'url' and 'integrity' keys
+     *                 an array containing 'url' and 'integrity' keys
      *
      * @return string|null the full css tag
      */
@@ -215,7 +218,7 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
     /**
      * Returns the script tag to the bootstrap js
      *
-     * @param $options array of options
+     * @param array $options array of options
      *
      *   ### Options
      *
@@ -268,6 +271,50 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
         }
 
         return $return;
+    }
+
+    /**
+     * Progress
+     *
+     * Returns a Bootstrap formatted progress
+     *
+     * @param int   $value    Value to represent
+     * @param int   $maxValue The maximum value
+     * @param array $options  Array of options include `class`
+     *
+     * @return string the rendered html
+     */
+    public function progress($value, $maxValue = 100, $options = []) {
+
+        $value = filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT,
+            [
+                'flags' => FILTER_FLAG_ALLOW_FRACTION
+            ]
+        );
+
+        $value = round($value);
+        $value = ($value < $maxValue) ? ($value < 0 ? 0 : $value) : $maxValue;
+
+        if ($value > 0) {
+            $valueAsPercentage = 100 / ($maxValue / $value);
+        } else {
+            $valueAsPercentage = 0;
+        }
+
+        $progressBar = $this->tag('div', '',
+            [
+                'class' => 'progress-bar',
+                'role' => 'progressbar',
+                'style' => sprintf('width:%d%%', $valueAsPercentage),
+                'aria-valuenow' => $value,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => $maxValue
+            ]
+        );
+        $options = Html::addClass($options, 'progress');
+
+        return $this->tag('div', $progressBar, $options);
+
     }
 
 }
