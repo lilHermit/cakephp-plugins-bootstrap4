@@ -37,7 +37,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'formGroup' => '{{label}}{{input}}',
         'hiddenBlock' => '<div style="display:none;">{{content}}</div>',
         'hidden' => '<input type="hidden" name="{{name}}"{{attrs}}/>',
-        'input' => '{{prefix}}<input type="{{type}}" name="{{name}}"{{attrs}}/>{{suffix}}',
+        'input' => '<input type="{{type}}" name="{{name}}"{{attrs}}/>',
         'inputSubmit' => '<input type="{{type}}"{{attrs}}/>',
         'inputContainer' => '<div class="form-group">{{content}}{{help}}</div>',
         'inputContainerError' => '<div class="form-group has-danger">{{content}}{{error}}{{help}}</div>',
@@ -58,7 +58,9 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'dateFormGroup' => '{{label}}<div class="form-inline">{{input}}</div>',
         'timeFormGroup' => '{{label}}<div class="form-inline">{{input}}</div>',
         'bootstrapDateTime' => '<input type="{{type}}" name="{{name}}" class="form-control"{{attrs}}/>',
-        'help' => '<small{{attrs}}>{{content}}</small>'
+        'help' => '<small{{attrs}}>{{content}}</small>',
+        'prefixSuffix' => '<span{{attrs}}>{{content}}</span>',
+        'prefixSuffixContainer' => '<div{{attrs}}>{{prefix}}{{input}}{{suffix}}</div>'
     ];
 
     public function __construct(View $View, array $config = []) {
@@ -118,7 +120,9 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     public function control($fieldName, array $options = []) {
         $options += [
             'customControls' => $this->customControls,
-            'help' => false
+            'help' => false,
+            'prefix' => false,
+            'suffix' => false
         ];
 
         $this->_defaultConfig['templates'] = $this->_templates;
@@ -454,30 +458,92 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         }
     }
 
-    private function _parsePrefixSuffix(&$options) {
+    private function _parseAndRenderPrefixSuffix($data) {
+        $out = '';
+        if ($data) {
+            if (is_string($data)) {
+                $out = $this->_renderPrefixSuffix(h($data), ['class' => 'input-group-addon']);
+            } else {
+                if (is_array($data)) {
+                    // Handles single array instance
+                    if (isset($data['text'])) {
+                        $data = [$data];
+                    }
 
-        $prefix = $suffix = '';
+                    foreach ($data as $key => $item) {
 
-        $needContainer = isset($options['templateVars']['prefix']) || isset($options['templateVars']['suffix']);
-        if ($needContainer) {
-            $prefix = '<div class="input-group">';
+                        if (is_string($item)) {
+                            $out .= $this->_renderPrefixSuffix(h($item), ['class' => 'input-group-addon']);
+                        } else if (is_array($item)) {
+                            if (isset($item['text'])) {
+                                $item += ['type' => 'addon', 'escape' => true];
+                                if ($item['escape']) {
+                                    $item['text'] = h($item['text']);
+                                }
+
+                                switch ($item['type']) {
+                                    case 'button':
+                                    case 'btn':
+                                        $item = Html::addClass($item, 'input-group-btn');
+                                        break;
+                                    default:
+                                        $item = Html::addClass($item, 'input-group-addon');
+                                        break;
+                                }
+                                $out .= $this->_renderPrefixSuffix($item['text'], $item);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $out;
+    }
+
+    private function _parsePrefixSuffixSize($prefix, $suffix) {
+        $sizeScores = ['large' => 1, 'lg' => 1, 'normal' => 0, 'standard' => 0, 'small' => 0];
+        $data = [$prefix, $suffix];
+
+        // Add a normal so it defaults to that if not found
+        $foundSizes = [0];
+
+        foreach ($data as $item) {
+            if (is_array($item)) {
+                $flattened = Hash::flatten($item);
+                foreach ($flattened as $key => $value) {
+                    if (strstr($key, 'size') !== false && array_key_exists($value, $sizeScores)) {
+                        $foundSizes[] = $sizeScores[$value];
+                    }
+                }
+            }
         }
 
-        if (isset($options['templateVars']['prefix'])) {
-            $prefix .= sprintf('<span class="input-group-addon" id="%s">%s</span>', $options['id'],
-                $options['templateVars']['prefix']);
+        rsort($foundSizes);
+        return array_search($foundSizes[0], $sizeScores);
+    }
+
+    private function _renderPrefixSuffix($content, $attrs) {
+        $attrs = $this->templater()->formatAttributes($attrs, ['text', 'type', 'size']);
+        return $this->templater()->format('prefixSuffix', compact('content', 'attrs'));
+    }
+
+    private function renderPrefixSuffix($input, $options) {
+
+        if (!$options['templateVars']['prefix'] && !$options['templateVars']['suffix']) {
+            return $input;
         }
 
-        if (isset($options['templateVars']['suffix'])) {
-            $suffix = sprintf('<span class="input-group-addon" id="%s">%s</span>', $options['id'],
-                $options['templateVars']['suffix']);
+        $size = $this->_parsePrefixSuffixSize($options['templateVars']['prefix'], $options['templateVars']['suffix']);
+        $attrs = [ 'class' => 'input-group'];
+        if ($size ==='large') {
+            $attrs = Html::addClass($attrs, 'input-group-lg');
         }
+        $attrs = $this->templater()->formatAttributes($attrs);
 
-        if ($needContainer) {
-            $suffix .= '</div>';
-        }
+        $prefix = $this->_parseAndRenderPrefixSuffix($options['templateVars']['prefix']);
+        $suffix = $this->_parseAndRenderPrefixSuffix($options['templateVars']['suffix']);
 
-        $options['templateVars'] = array_merge($options['templateVars'], compact(['prefix', 'suffix']));
+        return $this->templater()->format('prefixSuffixContainer', compact('prefix', 'input', 'suffix', 'attrs'));
     }
 
     private function formatHelp(&$options) {
@@ -511,11 +577,10 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     }
 
     protected function _getInput($fieldName, $options) {
+        $input = parent::_getInput($fieldName, $options);
 
         // now process the prefix and suffix
-        $this->_parsePrefixSuffix($options);
-
-        return parent::_getInput($fieldName, $options);
+        return $this->renderPrefixSuffix($input, $options);
     }
 
     protected function _inputContainerTemplate($options) {

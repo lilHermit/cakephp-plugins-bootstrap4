@@ -7,6 +7,7 @@ namespace lilHermit\Bootstrap4\Test\TestCase\View\Helper;
 use Cake\TestSuite\TestCase;
 use Cake\View\View;
 use lilHermit\Bootstrap4\View\Helper\FormHelper;
+use lilHermit\Bootstrap4\View\Helper\HtmlHelper;
 
 class BootstrapFormHelperTest extends TestCase {
 
@@ -752,6 +753,737 @@ class BootstrapFormHelperTest extends TestCase {
             '/span',
             '/label'
 
+        ], $result);
+    }
+
+    /**
+     * testInputPrefixOnlyRendering
+     *
+     * Tests the rendering of Prefix only
+     */
+    public function testInputPrefixOnlyRendering() {
+
+        $result = $this->Form->control('Donation', [
+            'prefix' => '£'
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group']],
+            ['span' => ['class' => 'input-group-addon']],
+            '£',
+            '/span',
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            '/div',
+            '/div'
+        ], $result);
+    }
+
+    /**
+     * testInputSuffixOnlyRendering
+     *
+     * Tests the rendering of Suffix only
+     */
+    public function testInputSuffixOnlyRendering() {
+
+        $result = $this->Form->control('Donation', [
+            'suffix' => '.00'
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group']],
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            ['span' => ['class' => 'input-group-addon']],
+            '.00',
+            '/span',
+            '/div',
+            '/div'
+        ], $result);
+    }
+
+    /**
+     * testInputPrefixSuffixRendering
+     *
+     * Tests the rendering of Prefix and Suffix
+     */
+    public function testInputPrefixSuffixRendering() {
+
+        $result = $this->Form->control('Donation', [
+            'prefix' => '£',
+            'suffix' => '.00'
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group']],
+            ['span' => ['class' => 'input-group-addon']],
+            '£',
+            '/span',
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            ['span' => ['class' => 'input-group-addon']],
+            '.00',
+            '/span',
+            '/div',
+
+            '/div'
+        ], $result);
+    }
+
+    /**
+     * testInputPrefixSuffixTypeRendering
+     *
+     * Tests the rendering of Prefix/Suffix Type setting
+     */
+    public function testInputPrefixSuffixTypeRendering() {
+
+        $htmlHelper = new HtmlHelper(new View());
+
+        $button = $htmlHelper->button('<i class="fa fa-eye fa-lg" aria-hidden="true"></i>', null, [
+            'type' => 'button',
+            'data-toggle' => 'button',
+            'id' => 'show-password',
+            'secondary' => true
+        ]);
+
+        $result = $this->Form->control('Password', [
+            'suffix' => [[
+                'text' => $button,
+                'escape' => false,
+                'type' => 'button'
+            ]]
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'password']],
+            'Password',
+            '/label',
+            ['div' => ['class' => 'input-group']],
+            'input' => [
+                'type' => 'text',
+                'name' => 'Password',
+                'id' => 'password',
+                'class' => 'form-control'
+            ],
+            ['span' => ['class' => 'input-group-btn']],
+            'button' => ['class' => 'btn btn-secondary', 'id' => 'show-password', 'data-toggle' => 'button', 'type' => 'button'],
+            'i' => ['class' => 'fa fa-eye fa-lg', 'aria-hidden' => 'true'],
+            '/i',
+            '/button',
+            '/span',
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Form->control('Password', [
+            'suffix' => [[
+                'text' => $button,
+                'escape' => false,
+                'type' => 'btn']
+            ]
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'password']],
+            'Password',
+            '/label',
+            ['div' => ['class' => 'input-group']],
+            'input' => [
+                'type' => 'text',
+                'name' => 'Password',
+                'id' => 'password',
+                'class' => 'form-control'
+            ],
+            ['span' => ['class' => 'input-group-btn']],
+            'button' => ['class' => 'btn btn-secondary', 'id' => 'show-password', 'data-toggle' => 'button', 'type' => 'button'],
+            'i' => ['class' => 'fa fa-eye fa-lg', 'aria-hidden' => 'true'],
+            '/i',
+            '/button',
+            '/span',
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Form->control('Password', [
+            'suffix' => [[
+                'text' => $button,
+                'escape' => false,
+                'type' => 'addon']
+            ]
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'password']],
+            'Password',
+            '/label',
+            ['div' => ['class' => 'input-group']],
+            'input' => [
+                'type' => 'text',
+                'name' => 'Password',
+                'id' => 'password',
+                'class' => 'form-control'
+            ],
+            ['span' => ['class' => 'input-group-addon']],
+            'button' => ['class' => 'btn btn-secondary', 'id' => 'show-password', 'data-toggle' => 'button', 'type' => 'button'],
+            'i' => ['class' => 'fa fa-eye fa-lg', 'aria-hidden' => 'true'],
+            '/i',
+            '/button',
+            '/span',
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Form->control('Password', [
+            'suffix' => [[
+                'text' => $button,
+                'escape' => false,
+                'type' => 'unknown']
+            ]
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'password']],
+            'Password',
+            '/label',
+            ['div' => ['class' => 'input-group']],
+            'input' => [
+                'type' => 'text',
+                'name' => 'Password',
+                'id' => 'password',
+                'class' => 'form-control'
+            ],
+            ['span' => ['class' => 'input-group-addon']],
+            'button' => ['class' => 'btn btn-secondary', 'id' => 'show-password', 'data-toggle' => 'button', 'type' => 'button'],
+            'i' => ['class' => 'fa fa-eye fa-lg', 'aria-hidden' => 'true'],
+            '/i',
+            '/button',
+            '/span',
+            '/div',
+            '/div'
+        ], $result);
+    }
+
+    /**
+     * testInputPrefixMultipleRendering
+     *
+     * Tests the rendering of multiple Prefix
+     */
+    public function testInputPrefixMultipleRendering() {
+
+        $result = $this->Form->control('Donation', [
+            'prefix' => ['£', '$']
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group']],
+            ['span' => ['class' => 'input-group-addon']],
+            '£',
+            '/span',
+            ['span' => ['class' => 'input-group-addon']],
+            '$',
+            '/span',
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            '/div',
+
+            '/div'
+        ], $result);
+
+        $result = $this->Form->control('Donation', [
+            'prefix' => [['text' => '£'], ['text' => '$']]
+        ]);
+
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group']],
+            ['span' => ['class' => 'input-group-addon']],
+            '£',
+            '/span',
+            ['span' => ['class' => 'input-group-addon']],
+            '$',
+            '/span',
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            '/div',
+
+            '/div'
+        ], $result);
+
+        $result = $this->Form->control('Donation', [
+            'prefix' => [['text' => '£', 'class' => 'custom', 'id' => 'donation1'], ['text' => '$']]
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group']],
+            ['span' => ['class' => 'custom input-group-addon', 'id' => 'donation1']],
+            '£',
+            '/span',
+            ['span' => ['class' => 'input-group-addon']],
+            '$',
+            '/span',
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            '/div',
+
+            '/div'
+        ], $result);
+    }
+
+    /**
+     * testInputSuffixMultipleRendering
+     *
+     * Tests the rendering of multiple suffix
+     */
+    public function testInputSuffixMultipleRendering() {
+
+        $result = $this->Form->control('Donation', [
+            'suffix' => ['.00', 'Go']
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group']],
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            ['span' => ['class' => 'input-group-addon']],
+            '.00',
+            '/span',
+            ['span' => ['class' => 'input-group-addon']],
+            'Go',
+            '/span',
+
+            '/div',
+
+            '/div'
+        ], $result);
+
+        $result = $this->Form->control('Donation', [
+            'suffix' => [['text' => '.00'], ['text' => 'Go']]
+        ]);
+
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group']],
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            ['span' => ['class' => 'input-group-addon']],
+            '.00',
+            '/span',
+            ['span' => ['class' => 'input-group-addon']],
+            'Go',
+            '/span',
+
+            '/div',
+
+            '/div'
+        ], $result);
+
+        $result = $this->Form->control('Donation', [
+            'suffix' => [['text' => '.00', 'class' => 'custom', 'id' => 'donation1'], ['text' => 'Go']]
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group']],
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            ['span' => ['class' => 'custom input-group-addon', 'id' => 'donation1']],
+            '.00',
+            '/span',
+            ['span' => ['class' => 'input-group-addon']],
+            'Go',
+            '/span',
+            '/div',
+
+            '/div'
+        ], $result);
+    }
+
+    /**
+     * testInputPrefixSuffixMultipleRendering
+     *
+     * Tests the rendering of multiple prefix and suffix
+     */
+    public function testInputPrefixSuffixMultipleRendering() {
+
+        $result = $this->Form->control('Donation', [
+            'prefix' => ['£', '$'],
+            'suffix' => ['.00', 'Go']
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group']],
+            ['span' => ['class' => 'input-group-addon']],
+            '£',
+            '/span',
+            ['span' => ['class' => 'input-group-addon']],
+            '$',
+            '/span',
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            ['span' => ['class' => 'input-group-addon']],
+            '.00',
+            '/span',
+            ['span' => ['class' => 'input-group-addon']],
+            'Go',
+            '/span',
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Form->control('Donation', [
+            'prefix' => [['text' => '£'], ['text' => '$']],
+            'suffix' => [['text' => '.00'], ['text' => 'Go']]
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group']],
+            ['span' => ['class' => 'input-group-addon']],
+            '£',
+            '/span',
+            ['span' => ['class' => 'input-group-addon']],
+            '$',
+            '/span',
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            ['span' => ['class' => 'input-group-addon']],
+            '.00',
+            '/span',
+            ['span' => ['class' => 'input-group-addon']],
+            'Go',
+            '/span',
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Form->control('Donation', [
+            'prefix' => [['text' => '£', 'class' => 'custom', 'id' => 'donation1'], ['text' => '$']],
+            'suffix' => [['text' => '.00', 'class' => 'custom', 'id' => 'donation1'], ['text' => 'Go']]
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group']],
+            ['span' => ['class' => 'custom input-group-addon', 'id' => 'donation1']],
+            '£',
+            '/span',
+            ['span' => ['class' => 'input-group-addon']],
+            '$',
+            '/span',
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            ['span' => ['class' => 'custom input-group-addon', 'id' => 'donation1']],
+            '.00',
+            '/span',
+            ['span' => ['class' => 'input-group-addon']],
+            'Go',
+            '/span',
+            '/div',
+            '/div'
+        ], $result);
+    }
+
+    /**
+     * testInputPrefixSuffixEscapingRendering
+     *
+     * Tests the rendering of Prefix/Suffix escaping
+     */
+    public function testInputPrefixSuffixEscapingRendering() {
+
+        $result = $this->Form->control('Donation', [
+            'prefix' => ['text' => '<b>text</b>', 'escape' => true]
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group']],
+            ['span' => ['class' => 'input-group-addon']],
+            '&lt;b&gt;text&lt;/b&gt;',
+            '/span',
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Form->control('Donation', [
+            'prefix' => ['text' => '<b>text</b>']
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group']],
+            ['span' => ['class' => 'input-group-addon']],
+            '&lt;b&gt;text&lt;/b&gt;',
+            '/span',
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            '/div',
+            '/div'
+        ], $result);
+
+    }
+
+    /**
+     * testInputPrefixSuffixSingleItemArrayRendering
+     *
+     * Tests the rendering of Prefix/Suffix with single array item
+     */
+    public function testInputPrefixSuffixSingleItemArrayRendering() {
+
+        $result = $this->Form->control('Donation', [
+            'prefix' =>
+                [
+                    'text' => 'text',
+                    'class' => 'my-class'
+                ]
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group']],
+            ['span' => ['class' => 'my-class input-group-addon']],
+            'text',
+            '/span',
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            '/div',
+            '/div'
+        ], $result);
+    }
+
+    /**
+     * testInputPrefixSuffixSizeOptionRendering
+     *
+     * Tests the rendering of Prefix/Suffix with size option
+     */
+    public function testInputPrefixSuffixSizeOptionRendering() {
+
+        $result = $this->Form->control('Donation', [
+            'suffix' => [
+                'text' => 'suffix',
+                'size' => 'lg'
+            ],
+            'prefix' => [
+                'text' => 'prefix',
+                'size' => 'normal'
+            ]
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group input-group-lg']],
+            ['span' => ['class' => 'input-group-addon']],
+            'prefix',
+            '/span',
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            ['span' => ['class' => 'input-group-addon']],
+            'suffix',
+            '/span',
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Form->control('Donation', [
+            'suffix' => [
+                'text' => 'suffix',
+                'size' => 'large'
+            ],
+            'prefix' => [
+                'text' => 'prefix',
+                'size' => 'normal'
+            ]
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group input-group-lg']],
+            ['span' => ['class' => 'input-group-addon']],
+            'prefix',
+            '/span',
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            ['span' => ['class' => 'input-group-addon']],
+            'suffix',
+            '/span',
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Form->control('Donation', [
+            'suffix' => [
+                'text' => 'suffix',
+                'size' => 'normal'
+            ],
+            'prefix' => [
+                'text' => 'prefix',
+                'size' => 'large'
+            ]
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group input-group-lg']],
+            ['span' => ['class' => 'input-group-addon']],
+            'prefix',
+            '/span',
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            ['span' => ['class' => 'input-group-addon']],
+            'suffix',
+            '/span',
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Form->control('Donation', [
+            'suffix' => [
+                'text' => 'suffix',
+                'size' => 'unknown'
+            ],
+            'prefix' => [
+                'text' => 'prefix',
+                'size' => 'normal'
+            ]
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group']],
+            ['span' => ['class' => 'input-group-addon']],
+            'prefix',
+            '/span',
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            ['span' => ['class' => 'input-group-addon']],
+            'suffix',
+            '/span',
+            '/div',
+            '/div'
         ], $result);
     }
 }
