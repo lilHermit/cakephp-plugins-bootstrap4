@@ -278,13 +278,28 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
      *
      * Returns a Bootstrap formatted progress
      *
-     * @param int   $value    Value to represent
-     * @param int   $maxValue The maximum value
-     * @param array $options  Array of options include `class`
+     * @param int   $value   Value to represent
+     * @param array $options Array of options include `class`
+     *
+     *   ### Options
+     *
+     * - `label`            Label to use for the progress, if true the percentage is used (default: false, no label)
+     * - `striped`          Set to true for striped progress-bar (default: false)
+     * - `animiatedStripes` Set to true for animated stripes, setting to true also sets `striped` to true (default: false)
+     * - `escape`           Set to false to disable escaping of label
+     * - `max`              The maximum value
      *
      * @return string the rendered html
      */
-    public function progress($value, $maxValue = 100, $options = []) {
+    public function progress($value, $options = []) {
+
+        $options += [
+            'label' => false,
+            'striped' => false,
+            'animatedStripes' => false,
+            'max' => 100,
+            'escape' => true
+        ];
 
         $value = filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT,
             [
@@ -293,25 +308,52 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
         );
 
         $value = round($value);
-        $value = ($value < $maxValue) ? ($value < 0 ? 0 : $value) : $maxValue;
+        $value = ($value < $options['max']) ? ($value < 0 ? 0 : $value) : $options['max'];
 
         if ($value > 0) {
-            $valueAsPercentage = 100 / ($maxValue / $value);
+            $valueAsPercentage = 100 / ($options['max'] / $value);
         } else {
             $valueAsPercentage = 0;
         }
 
-        $progressBar = $this->tag('div', '',
-            [
-                'class' => 'progress-bar',
-                'role' => 'progressbar',
-                'style' => sprintf('width:%d%%', $valueAsPercentage),
-                'aria-valuenow' => $value,
-                'aria-valuemin' => 0,
-                'aria-valuemax' => $maxValue
-            ]
-        );
+        $progressBarOptions = [
+            'class' => 'progress-bar',
+            'role' => 'progressbar',
+            'style' => sprintf('width:%d%%', $valueAsPercentage),
+            'aria-valuenow' => $value,
+            'aria-valuemin' => 0,
+            'aria-valuemax' => $options['max']
+        ];
+
+        if ($options['animatedStripes']) {
+            $options['striped'] = true;
+        }
+
+        if ($options['striped']) {
+            if ($options['animatedStripes']) {
+                $progressBarOptions = Html::addClass($progressBarOptions, ['progress-bar-striped', 'progress-bar-animated']);
+            } else {
+                $progressBarOptions = Html::addClass($progressBarOptions, 'progress-bar-striped');
+            }
+        }
+
+        $labelStr = '';
+        if ($options['label'] !== false) {
+            if ($options['label'] === true) {
+                $labelStr = h(sprintf('%d%%', $valueAsPercentage));
+            } else {
+                $labelStr = $options['escape'] ? h($options['label']) : $options['label'];
+            }
+        }
+
+        $progressBar = $this->tag('div', $labelStr, $progressBarOptions);
+
         $options = Html::addClass($options, 'progress');
+
+        // Filter out the options
+        $options = array_filter($options, function ($key) {
+            return !in_array($key, ['label', 'max', 'striped', 'escape', 'animatedStripes']);
+        }, ARRAY_FILTER_USE_KEY);
 
         return $this->tag('div', $progressBar, $options);
 

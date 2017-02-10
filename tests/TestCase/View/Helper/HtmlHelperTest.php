@@ -361,7 +361,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
      */
     public function testProgressMaxValue() {
 
-        $result = $this->Html->progress(5, 10);
+        $result = $this->Html->progress(5, ['max' => 10]);
         $this->assertHtml([
             ['div' => ['class' => 'progress']],
             ['div' => [
@@ -376,7 +376,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             '/div'
         ], $result);
 
-        $result = $this->Html->progress(150, 200);
+        $result = $this->Html->progress(150, ['max' => 200]);
         $this->assertHtml([
             ['div' => ['class' => 'progress']],
             ['div' => [
@@ -391,7 +391,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             '/div'
         ], $result);
 
-        $result = $this->Html->progress(0, 1);
+        $result = $this->Html->progress(0, ['max' => 1]);
         $this->assertHtml([
             ['div' => ['class' => 'progress']],
             ['div' => [
@@ -416,7 +416,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
      */
     public function testProgressAttributes() {
 
-        $result = $this->Html->progress(50, 100, ['class' => 'myclass']);
+        $result = $this->Html->progress(50, ['class' => 'myclass']);
         $this->assertHtml([
             ['div' => ['class' => 'myclass progress']],
             ['div' => [
@@ -431,7 +431,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             '/div'
         ], $result);
 
-        $result = $this->Html->progress(50, 100, ['class' => 'myclass', 'data-ref' => 'my-progress']);
+        $result = $this->Html->progress(50, ['class' => 'myclass', 'data-ref' => 'my-progress']);
         $this->assertHtml([
             ['div' => ['class' => 'myclass progress', 'data-ref' => 'my-progress']],
             ['div' => [
@@ -442,6 +442,168 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
             ]],
+            '/div',
+            '/div'
+        ], $result);
+    }
+
+    /**
+     * testProgressStripedOption method
+     *
+     * Tests the adding of striped option including the animated option
+     *
+     * @return void
+     */
+    public function testProgressStripedOption() {
+
+        $result = $this->Html->progress(50, ['striped' => true]);
+        $this->assertHtml([
+            ['div' => ['class' => 'progress']],
+            ['div' => [
+                'class' => 'progress-bar progress-bar-striped',
+                'role' => 'progressbar',
+                'style' => 'width:50%',
+                'aria-valuenow' => 50,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 100
+            ]],
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Html->progress(50, ['striped' => true, 'animatedStripes' => true]);
+        $this->assertHtml([
+            ['div' => ['class' => 'progress']],
+            ['div' => [
+                'class' => 'progress-bar progress-bar-striped progress-bar-animated',
+                'role' => 'progressbar',
+                'style' => 'width:50%',
+                'aria-valuenow' => 50,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 100
+            ]],
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Html->progress(50, ['striped' => false, 'animatedStripes' => true]);
+        $this->assertHtml([
+            ['div' => ['class' => 'progress']],
+            ['div' => [
+                'class' => 'progress-bar progress-bar-striped progress-bar-animated',
+                'role' => 'progressbar',
+                'style' => 'width:50%',
+                'aria-valuenow' => 50,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 100
+            ]],
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Html->progress(50, ['animatedStripes' => true]);
+        $this->assertHtml([
+            ['div' => ['class' => 'progress']],
+            ['div' => [
+                'class' => 'progress-bar progress-bar-striped progress-bar-animated',
+                'role' => 'progressbar',
+                'style' => 'width:50%',
+                'aria-valuenow' => 50,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 100
+            ]],
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Html->progress(50, ['animatedStripes' => false]);
+        $this->assertHtml([
+            ['div' => ['class' => 'progress']],
+            ['div' => [
+                'class' => 'progress-bar',
+                'role' => 'progressbar',
+                'style' => 'width:50%',
+                'aria-valuenow' => 50,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 100
+            ]],
+            '/div',
+            '/div'
+        ], $result);
+
+    }
+
+    /**
+     * testProgressLabelOption method
+     *
+     * Tests the adding of label option
+     *
+     * @return void
+     */
+    public function testProgressLabelOption() {
+
+        $result = $this->Html->progress(50, ['label' => true]);
+        $this->assertHtml([
+            ['div' => ['class' => 'progress']],
+            ['div' => [
+                'class' => 'progress-bar',
+                'role' => 'progressbar',
+                'style' => 'width:50%',
+                'aria-valuenow' => 50,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 100
+            ]],
+            '50%',
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Html->progress(50, ['label' => 'Half way']);
+        $this->assertHtml([
+            ['div' => ['class' => 'progress']],
+            ['div' => [
+                'class' => 'progress-bar',
+                'role' => 'progressbar',
+                'style' => 'width:50%',
+                'aria-valuenow' => 50,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 100
+            ]],
+            'Half way',
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Html->progress(50, ['label' => '<b>Half way</b>']);
+        $this->assertHtml([
+            ['div' => ['class' => 'progress']],
+            ['div' => [
+                'class' => 'progress-bar',
+                'role' => 'progressbar',
+                'style' => 'width:50%',
+                'aria-valuenow' => 50,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 100
+            ]],
+            '&lt;b&gt;Half way&lt;/b&gt;',
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Html->progress(50, ['label' => '<b>Half way</b>', 'escape' => false]);
+        $this->assertHtml([
+            ['div' => ['class' => 'progress']],
+            ['div' => [
+                'class' => 'progress-bar',
+                'role' => 'progressbar',
+                'style' => 'width:50%',
+                'aria-valuenow' => 50,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 100
+            ]],
+            '<b',
+            'Half way',
+            '/b',
             '/div',
             '/div'
         ], $result);
