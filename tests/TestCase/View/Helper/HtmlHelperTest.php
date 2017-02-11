@@ -282,7 +282,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:90%',
+                'style' => 'width:90.00%',
                 'aria-valuenow' => 90,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -297,7 +297,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:100%',
+                'style' => 'width:100.00%',
                 'aria-valuenow' => 100,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -312,7 +312,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:0%',
+                'style' => 'width:0.00%',
                 'aria-valuenow' => 0,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -327,7 +327,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:51%',
+                'style' => 'width:51.00%',
                 'aria-valuenow' => 51,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -342,7 +342,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:0%',
+                'style' => 'width:0.00%',
                 'aria-valuenow' => 0,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -362,14 +362,12 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
     public function testProgressMaxValue() {
 
         $result = $this->Html->progress(5, ['max' => 10]);
-//        debug($result);
-//        return;
         $this->assertHtml([
             ['div' => ['class' => 'progress']],
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:50%',
+                'style' => 'width:50.00%',
                 'aria-valuenow' => 5,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 10
@@ -384,7 +382,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:75%',
+                'style' => 'width:75.00%',
                 'aria-valuenow' => 150,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 200
@@ -399,10 +397,50 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:0%',
+                'style' => 'width:0.00%',
                 'aria-valuenow' => 0,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 1
+            ]],
+            '/div',
+            '/div'
+        ], $result);
+
+        // Test multiple values and make sure `max` in values doesn't override global `max
+        $result = $this->Html->progress([
+            ['value' => 75],
+            ['value' => 50, 'class' => 'bg-danger'],
+            ['value' => 75, 'max' => 100]
+        ],
+            ['max' => 200]
+        );
+        $this->assertHtml([
+            ['div' => ['class' => 'progress']],
+            ['div' => [
+                'class' => 'progress-bar',
+                'role' => 'progressbar',
+                'style' => 'width:37.50%',
+                'aria-valuenow' => 75,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 200
+            ]],
+            '/div',
+            ['div' => [
+                'class' => 'bg-danger progress-bar',
+                'role' => 'progressbar',
+                'style' => 'width:25.00%',
+                'aria-valuenow' => 50,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 200
+            ]],
+            '/div',
+            ['div' => [
+                'class' => 'progress-bar',
+                'role' => 'progressbar',
+                'style' => 'width:37.50%',
+                'aria-valuenow' => 75,
+                'aria-valuemin' => 0,
+                'aria-valuemax' => 200
             ]],
             '/div',
             '/div'
@@ -424,7 +462,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:50%',
+                'style' => 'width:50.00%',
                 'aria-valuenow' => 50,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -432,14 +470,14 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             '/div',
             '/div'
         ], $result);
-//return;
+
         $result = $this->Html->progress(50, ['class' => 'myclass', 'data-ref' => 'my-progress']);
         $this->assertHtml([
             ['div' => ['class' => 'myclass progress', 'data-ref' => 'my-progress']],
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:50%',
+                'style' => 'width:50.00%',
                 'aria-valuenow' => 50,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -464,7 +502,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar progress-bar-striped',
                 'role' => 'progressbar',
-                'style' => 'width:50%',
+                'style' => 'width:50.00%',
                 'aria-valuenow' => 50,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -479,7 +517,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar progress-bar-striped progress-bar-animated',
                 'role' => 'progressbar',
-                'style' => 'width:50%',
+                'style' => 'width:50.00%',
                 'aria-valuenow' => 50,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -494,7 +532,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar progress-bar-striped progress-bar-animated',
                 'role' => 'progressbar',
-                'style' => 'width:50%',
+                'style' => 'width:50.00%',
                 'aria-valuenow' => 50,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -509,7 +547,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar progress-bar-striped progress-bar-animated',
                 'role' => 'progressbar',
-                'style' => 'width:50%',
+                'style' => 'width:50.00%',
                 'aria-valuenow' => 50,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -524,7 +562,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:50%',
+                'style' => 'width:50.00%',
                 'aria-valuenow' => 50,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -549,7 +587,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar progress-bar-striped progress-bar-animated',
                 'role' => 'progressbar',
-                'style' => 'width:65%',
+                'style' => 'width:65.00%',
                 'aria-valuenow' => 65,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -558,7 +596,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar progress-bar-striped',
                 'role' => 'progressbar',
-                'style' => 'width:35%',
+                'style' => 'width:35.00%',
                 'aria-valuenow' => 35,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -585,12 +623,12 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:50%',
+                'style' => 'width:50.00%',
                 'aria-valuenow' => 50,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
             ]],
-            '50%',
+            '50.0%',
             '/div',
             '/div'
         ], $result);
@@ -601,7 +639,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:50%',
+                'style' => 'width:50.00%',
                 'aria-valuenow' => 50,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -617,7 +655,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:50%',
+                'style' => 'width:50.00%',
                 'aria-valuenow' => 50,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -633,7 +671,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:50%',
+                'style' => 'width:50.00%',
                 'aria-valuenow' => 50,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -662,7 +700,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:50%',
+                'style' => 'width:50.00%',
                 'aria-valuenow' => 50,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -671,7 +709,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:25%',
+                'style' => 'width:25.00%',
                 'aria-valuenow' => 25,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -680,7 +718,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:25%',
+                'style' => 'width:25.00%',
                 'aria-valuenow' => 25,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -696,7 +734,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:50%',
+                'style' => 'width:50.00%',
                 'aria-valuenow' => 50,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -705,7 +743,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:25%',
+                'style' => 'width:25.00%',
                 'aria-valuenow' => 25,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -714,7 +752,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:25%',
+                'style' => 'width:25.00%',
                 'aria-valuenow' => 25,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -729,7 +767,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:50%',
+                'style' => 'width:50.00%',
                 'aria-valuenow' => 50,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -738,7 +776,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:25%',
+                'style' => 'width:25.00%',
                 'aria-valuenow' => 25,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -747,7 +785,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:25%',
+                'style' => 'width:25.00%',
                 'aria-valuenow' => 25,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -777,7 +815,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:50%',
+                'style' => 'width:50.00%',
                 'aria-valuenow' => 50,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -786,7 +824,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:25%',
+                'style' => 'width:25.00%',
                 'aria-valuenow' => 25,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -796,7 +834,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:25%',
+                'style' => 'width:25.00%',
                 'aria-valuenow' => 25,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -818,17 +856,17 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:50%',
+                'style' => 'width:50.00%',
                 'aria-valuenow' => 50,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
             ]],
-            '50%',
+            '50.0%',
             '/div',
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:25%',
+                'style' => 'width:25.00%',
                 'aria-valuenow' => 25,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -838,12 +876,12 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:25%',
+                'style' => 'width:25.00%',
                 'aria-valuenow' => 25,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
             ]],
-            '25%',
+            '25.0%',
             '/div',
             '/div'
         ], $result);
@@ -861,17 +899,17 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:50%',
+                'style' => 'width:50.00%',
                 'aria-valuenow' => 50,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
             ]],
-            '50%',
+            '50.0%',
             '/div',
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:25%',
+                'style' => 'width:25.00%',
                 'aria-valuenow' => 25,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -880,12 +918,12 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:25%',
+                'style' => 'width:25.00%',
                 'aria-valuenow' => 25,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
             ]],
-            '25%',
+            '25.0%',
             '/div',
             '/div'
         ], $result);
@@ -912,7 +950,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:50%',
+                'style' => 'width:50.00%',
                 'aria-valuenow' => 50,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -921,7 +959,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'bg-success progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:25%',
+                'style' => 'width:25.00%',
                 'aria-valuenow' => 25,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -930,7 +968,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'bg-warning progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:25%',
+                'style' => 'width:25.00%',
                 'aria-valuenow' => 25,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -950,7 +988,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:50%',
+                'style' => 'width:50.00%',
                 'aria-valuenow' => 50,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -959,7 +997,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['div' => [
                 'class' => 'bg-success progress-bar',
                 'role' => 'progressbar',
-                'style' => 'width:25%',
+                'style' => 'width:25.00%',
                 'aria-valuenow' => 25,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -969,7 +1007,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
                 'class' => 'progress-bar',
                 'id' => 'stage3',
                 'role' => 'progressbar',
-                'style' => 'width:25%',
+                'style' => 'width:25.00%',
                 'aria-valuenow' => 25,
                 'aria-valuemin' => 0,
                 'aria-valuemax' => 100
@@ -977,7 +1015,5 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             '/div',
             '/div'
         ], $result);
-
-
     }
 }

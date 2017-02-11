@@ -317,7 +317,6 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
                 'label' => $options['label'],
                 'striped' => $options['striped'],
                 'animatedStripes' => $options['animatedStripes'],
-                'max' => $options['max'],
                 'escape' => $options['escape']
             ];
 
@@ -332,20 +331,20 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
 
             // Make sure the accumulativeVales don't exceed the max
             $accumulativeValue += $value;
-            $value = ($accumulativeValue <= $item['max']) ? $value : $value + ($item['max'] - $accumulativeValue);
+            $value = ($accumulativeValue <= $options['max']) ? $value : $value + ($options['max'] - $accumulativeValue);
 
             if ($value > 0) {
-                $valueAsPercentage = 100 / ($item['max'] / $value);
+                $valueAsPercentage = 100 / ($options['max'] / $value);
             } else {
                 $valueAsPercentage = 0;
             }
 
             $progressBarOptions = $item + [
                     'role' => 'progressbar',
-                    'style' => sprintf('width:%d%%', $valueAsPercentage),
+                    'style' => sprintf('width:%.2f%%', $valueAsPercentage),
                     'aria-valuenow' => $value,
                     'aria-valuemin' => 0,
-                    'aria-valuemax' => $item['max']
+                    'aria-valuemax' => $options['max']
                 ];
 
             if ($item['animatedStripes']) {
@@ -366,7 +365,7 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
             $labelStr = '';
             if ($item['label'] !== false) {
                 if ($item['label'] === true) {
-                    $labelStr = h(sprintf('%d%%', $valueAsPercentage));
+                    $labelStr = h(sprintf('%.1f%%', $valueAsPercentage));
                 } else {
                     $labelStr = $item['escape'] ? h($item['label']) : $item['label'];
                 }
