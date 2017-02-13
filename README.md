@@ -1,20 +1,23 @@
+[![Packagist](https://img.shields.io/packagist/v/lilhermit/cakephp-plugin-bootstrap4.svg?style=flat-square)](https://packagist.org/packages/lilhermit/cakephp-plugin-bootstrap4) [![Bootstrap version](https://img.shields.io/badge/Bootstrap%20version-4.0.0--alpha6-brightgreen.svg)](https://v4-alpha.getbootstrap.com/) [![Bitbucket issues](https://img.shields.io/bitbucket/issues/lilhermit/cakephp-plugins-bootstrap4.svg)](https://bitbucket.org/lilHermit/cakephp-plugins-bootstrap4/issues?status=new&status=open)  [![Twitter Follow](https://img.shields.io/twitter/follow/lilh3rmit.svg?style=social&label=Follow)](https://twitter.com/lilH3rmit)
+
 # Bootstrap-4 plugin for CakePHP-3
 
 This plugin helps render HTML elements so they are styled correctly for Bootstrap-4.
 
+## Requirements
+
+- CakePHP 3.3 (3.3.15 minimum)
+- Bootstrap 4
+- jQuery 1.8+
+
 ## Installation
 
 ### Installing via composer
-- Add this Bitbucket repository with the following:
 
-```
-composer config repositories.lilhermit-cakephp-plugins-bootstrap4 vcs https://bitbucket.org/lilHermit/cakephp-plugins-bootstrap4.git
-```
+- Add the plugin with the following command from your application root filter
 
-- Add the plugin with the following command, replacing `2.*` with `dev-master` if you want the bleeding edge:
-
-```
-composer require lilhermit/cakephp-plugin-bootstrap4:2.*
+```bash
+composer require lilhermit/cakephp-plugin-bootstrap4
 ```
 
 ### Setting up your Application
