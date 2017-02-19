@@ -1,9 +1,21 @@
-<div class="alert alert-warning alert-dismissible fade show" role="alert">
+<?php
+use lilHermit\Toolkit\Utility\Html;
+
+if (!isset($params['escape']) || $params['escape'] !== false) {
+    $message = h($message);
+}
+
+$class = ['alert', 'alert-warning'];
+if (!(isset($params['noDismiss']) && $params['noDismiss'] === true)) {
+    $class = Html::addClass($class, ['alert-dismissible', 'fade', 'show'], ['useIndex' => false]);
+}
+?>
+<div class="<?= implode(' ', $class) ?>" role="alert">
     <?php
-    if (!(isset($params['noDismiss']) && $params['noDismiss'] === true) ):?>
+    if (!(isset($params['noDismiss']) && $params['noDismiss'] === true)):?>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     <?php endif; ?>
-    <?= h($message) ?>
+    <?= $message ?>
 </div>

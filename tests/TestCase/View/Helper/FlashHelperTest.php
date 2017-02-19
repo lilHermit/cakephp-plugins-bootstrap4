@@ -153,18 +153,76 @@ class FlashHelperTest extends \Cake\Test\TestCase\View\Helper\FlashHelperTest {
     }
 
     /**
-     * Tests the no-dismiss param
+     * Tests the no-dismiss param (all variants)
      *
      * @return void
      */
     public function testFlashNoDismiss() {
 
-        $this->View->request->session()->write('Flash.flash.0.params', ['noDismiss' => true]);
+        $this->View->request->session()->write('Flash.flash.0', [
+            'key' => 'flash',
+            'message' => 'This is a calling',
+            'element' => 'Flash/default',
+            'params' => ['noDismiss' => true]
+        ]);
         $result = $this->Flash->render();
         $this->assertHtml([
-            ['div' => ['class' => 'alert alert-info alert-dismissible fade show', 'role' => 'alert']],
+            ['div' => ['class' => 'alert alert-info', 'role' => 'alert']],
             'preg:/[\s]*This is a calling[\s]*/',
             ['/div' => true]
         ], $result);
+
+        $this->View->request->session()->write('Flash.flash.0', [
+            'key' => 'flash',
+            'message' => 'This is a calling',
+            'element' => 'Flash/info',
+            'params' => ['noDismiss' => true]
+        ]);
+        $result = $this->Flash->render();
+        $this->assertHtml([
+            ['div' => ['class' => 'alert alert-info', 'role' => 'alert']],
+            'preg:/[\s]*This is a calling[\s]*/',
+            ['/div' => true]
+        ], $result);
+
+        $this->View->request->session()->write('Flash.flash.0', [
+            'key' => 'flash',
+            'message' => 'This is a calling',
+            'element' => 'Flash/error',
+            'params' => ['noDismiss' => true]
+        ]);
+        $result = $this->Flash->render();
+        $this->assertHtml([
+            ['div' => ['class' => 'alert alert-danger', 'role' => 'alert']],
+            'preg:/[\s]*This is a calling[\s]*/',
+            ['/div' => true]
+        ], $result);
+
+        $this->View->request->session()->write('Flash.flash.0', [
+            'key' => 'flash',
+            'message' => 'This is a calling',
+            'element' => 'Flash/success',
+            'params' => ['noDismiss' => true]
+        ]);
+        $result = $this->Flash->render();
+        $this->assertHtml([
+            ['div' => ['class' => 'alert alert-success', 'role' => 'alert']],
+            'preg:/[\s]*This is a calling[\s]*/',
+            ['/div' => true]
+        ], $result);
+
+        $this->View->request->session()->write('Flash.flash.0', [
+            'key' => 'flash',
+            'message' => 'This is a calling',
+            'element' => 'Flash/warning',
+            'params' => ['noDismiss' => true]
+        ]);
+        $result = $this->Flash->render();
+        $this->assertHtml([
+            ['div' => ['class' => 'alert alert-warning', 'role' => 'alert']],
+            'preg:/[\s]*This is a calling[\s]*/',
+            ['/div' => true]
+        ], $result);
+
     }
 }
