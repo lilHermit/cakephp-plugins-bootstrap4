@@ -3,6 +3,7 @@
 namespace lilHermit\Bootstrap4\Test\TestCase\View\Helper;
 
 use Cake\Network\Request;
+use lilHermit\Bootstrap4\Configure\Assets;
 use lilHermit\Bootstrap4\View\Helper\HtmlHelper;
 
 
@@ -1014,6 +1015,124 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ]],
             '/div',
             '/div'
+        ], $result);
+    }
+
+    public function testBootstrapCssMethod() {
+
+        $versions = Assets::css();
+        $latestVersion = array_pop($versions);
+
+        // Latest version
+        $result = $this->Html->bootstrapCss();
+        $this->assertHtml([
+            'link' => [
+                'rel' => 'stylesheet',
+                'href' => $latestVersion['href'],
+                'integrity' => $latestVersion['integrity'],
+                'crossorigin' => 'anonymous'
+            ]
+        ], $result);
+
+        // Specific version
+        $result = $this->Html->bootstrapCss('4.0.0-alpha.5');
+        $this->assertHtml([
+            'link' => [
+                'rel' => 'stylesheet',
+                'href' => $versions['4.0.0-alpha.5']['href'],
+                'integrity' => $versions['4.0.0-alpha.5']['integrity'],
+                'crossorigin' => 'anonymous'
+            ]
+        ], $result);
+
+        // Custom array
+        $result = $this->Html->bootstrapCss([
+            'href' => 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.3/css/bootstrap.min.css',
+            'integrity' => 'sha384-MIwDKRSSImVFAZCVLtU0LMDdON6KVCrZHyVQQj6e8wIEJkW4tvwqXrbMIya1vriY'
+        ]);
+        $this->assertHtml([
+            'link' => [
+                'rel' => 'stylesheet',
+                'href' => 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.3/css/bootstrap.min.css',
+                'integrity' => 'sha384-MIwDKRSSImVFAZCVLtU0LMDdON6KVCrZHyVQQj6e8wIEJkW4tvwqXrbMIya1vriY',
+                'crossorigin' => 'anonymous'
+            ]
+        ], $result);
+    }
+
+    public function testBootstrapScriptMethodVersions() {
+        $versions = Assets::javascript();
+        $latestVersion = array_pop($versions);
+
+        // Latest version
+        $result = $this->Html->bootstrapScript();
+        $this->assertHtml([
+            'script' => [
+                'src' => $latestVersion['src'],
+                'integrity' => $latestVersion['integrity'],
+                'crossorigin' => 'anonymous'
+
+            ],
+            '/script'
+        ], $result);
+
+        // Specific version
+        $result = $this->Html->bootstrapScript(['version' => '4.0.0-alpha.5']);
+        $this->assertHtml([
+            'script' => [
+                'src' => $versions['4.0.0-alpha.5']['src'],
+                'integrity' => $versions['4.0.0-alpha.5']['integrity'],
+                'crossorigin' => 'anonymous'
+
+            ],
+            '/script'
+        ], $result);
+
+        // Custom array
+        $result = $this->Html->bootstrapScript([
+            'src' => 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.3/js/bootstrap.min.js',
+            'integrity' => 'sha384-ux8v3A6CPtOTqOzMKiuo3d/DomGaaClxFYdCu2HPMBEkf6x2xiDyJ7gkXU0MWwaD'
+        ]);
+        $this->assertHtml([
+            'script' => [
+                'src' => 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.3/js/bootstrap.min.js',
+                'integrity' => 'sha384-ux8v3A6CPtOTqOzMKiuo3d/DomGaaClxFYdCu2HPMBEkf6x2xiDyJ7gkXU0MWwaD',
+                'crossorigin' => 'anonymous'
+            ],
+            '/script'
+        ], $result);
+    }
+
+    public function testBootstrapScriptMethodOptions() {
+        $versions = Assets::javascript();
+        $latestVersion = array_pop($versions);
+
+        // Latest version
+        $result = $this->Html->bootstrapScript(['own' => true]);
+        $this->assertHtml([
+            ['script' => ['src' => 'js/lilHermit/Bootstrap4.form-manipulation.js']],
+            '/script',
+            ['script' => [
+                'src' => $latestVersion['src'],
+                'integrity' => $latestVersion['integrity'],
+                'crossorigin' => 'anonymous'
+            ]],
+            '/script'
+        ], $result);
+
+        // Reset the view because it won't include the plugin script multiple times
+        $this->setUp();
+
+        // Specific version
+        $result = $this->Html->bootstrapScript(['version' => '4.0.0-alpha.5', 'own' => true]);
+        $this->assertHtml([
+            ['script' => ['src' => 'js/lilHermit/Bootstrap4.form-manipulation.js']],
+            '/script',
+            'script' => [
+                'src' => $versions['4.0.0-alpha.5']['src'],
+                'integrity' => $versions['4.0.0-alpha.5']['integrity'],
+                'crossorigin' => 'anonymous'
+            ]
         ], $result);
     }
 }

@@ -3,6 +3,7 @@ namespace lilHermit\Bootstrap4\View\Helper;
 
 
 use Cake\View\View;
+use lilHermit\Bootstrap4\Configure\Assets;
 use lilHermit\Toolkit\Utility\Html;
 
 class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
@@ -186,28 +187,25 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
      * Returns the css tag for bootstrap
      *
      * @param $version string|array string of the version of bootstrap or
-     *                 an array containing 'url' and 'integrity' keys
+     *                 an array containing 'href' and 'integrity' keys
      *
      * @return string|null the full css tag
      */
-    public function bootstrapCss($version = '4.0.0-alpha.6') {
-        $versions = [
-            '4.0.0-alpha.5' => [
-                'url' => 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css',
-                'integrity' => 'sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi'
-            ],
-            '4.0.0-alpha.6' => [
-                'url' => 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css',
-                'integrity' => 'sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ'
-            ]
-        ];
+    public function bootstrapCss($version = null) {
+        $versions = Assets::css();
+
+        if ($version === null) {
+            $latestVersion = array_slice($versions, -1, 1, true);
+            $version = key($latestVersion);
+        }
+
         if (is_array($version)) {
-            return $this->css($version['url'], [
+            return $this->css($version['href'], [
                 'integrity' => $version['integrity'],
                 'crossorigin' => 'anonymous'
             ]);
         } else if (array_key_exists($version, $versions)) {
-            return $this->css($versions[$version]['url'], [
+            return $this->css($versions[$version]['href'], [
                 'integrity' => $versions[$version]['integrity'],
                 'crossorigin' => 'anonymous'
             ]);
@@ -223,7 +221,7 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
      *   ### Options
      *
      * - `version` The version of bootstrap javascript required. Defaults = latest version
-     * - `url` The url of the non built-in version bootstrap javascript
+     * - `src` The url of the non built-in version bootstrap javascript
      * - `integrity` The integrity hash for the `url` key
      * - `own` Should we include this plugin javascript too. Default = false
      *
@@ -231,40 +229,28 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
      */
     public function bootstrapScript($options = []) {
 
+        $versions = Assets::javascript();
+        $latestVersion = array_slice($versions, -1, 1, true);
+        $version = key($latestVersion);
+
         // Add the defaults
         $options += [
-            'version' => '4.0.0-alpha.6',
+            'version' => $version,
             'own' => false
         ];
 
-        $versions = [
-            '4.0.0-alpha.2' => [
-                'url' => 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js',
-                'integrity' => 'sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7'
-            ],
-            '4.0.0-alpha.5' => [
-                'url' => 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js',
-                'integrity' => 'sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK'
-            ],
-            '4.0.0-alpha.6' => [
-                'url' => 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js',
-                'integrity' => 'sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn'
-            ]
-        ];
-
-        $return = "";
+        $return = '';
         if (filter_var($options['own'], FILTER_VALIDATE_BOOLEAN)) {
             $return = $this->script('lilHermit/Bootstrap4.form-manipulation.js');
         }
-
-        if (isset($options['url']) && isset($options['integrity'])) {
-            $return .= $this->script($options['url'], [
+        if (isset($options['src']) && isset($options['integrity'])) {
+            $return .= $this->script($options['src'], [
                 'integrity' => $options['integrity'],
                 'crossorigin' => 'anonymous'
             ]);
         } else if (array_key_exists($options['version'], $versions)) {
             $version = $versions[$options['version']];
-            $return .= $this->script($version['url'], [
+            $return .= $this->script($version['src'], [
                 'integrity' => $version['integrity'],
                 'crossorigin' => 'anonymous'
             ]);
