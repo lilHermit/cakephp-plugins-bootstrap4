@@ -1062,29 +1062,49 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
 
     public function testBootstrapScriptMethodVersions() {
         $versions = Assets::javascript();
-        $latestVersion = array_pop($versions);
+        $latestVersion = array_slice($versions, -1, 1, true);
+        $latestVersionNumber = key($latestVersion);
+        $latestVersion = $latestVersion[$latestVersionNumber];
+
+        $tetherVersions = Assets::tetherJavascript();
+        $tetherVersion = $tetherVersions[$latestVersionNumber];
 
         // Latest version
         $result = $this->Html->bootstrapScript();
         $this->assertHtml([
-            'script' => [
+            ['script' => [
+                'src' => $tetherVersion['src'],
+                'integrity' => $tetherVersion['integrity'],
+                'crossorigin' => 'anonymous'
+
+            ]],
+            '/script',
+            ['script' => [
                 'src' => $latestVersion['src'],
                 'integrity' => $latestVersion['integrity'],
                 'crossorigin' => 'anonymous'
 
-            ],
+            ]],
             '/script'
         ], $result);
 
         // Specific version
         $result = $this->Html->bootstrapScript(['version' => '4.0.0-alpha.5']);
+        $tetherVersion = $tetherVersions['4.0.0-alpha.5'];
         $this->assertHtml([
-            'script' => [
+            ['script' => [
+                'src' => $tetherVersion['src'],
+                'integrity' => $tetherVersion['integrity'],
+                'crossorigin' => 'anonymous'
+
+            ]],
+            '/script',
+            ['script' => [
                 'src' => $versions['4.0.0-alpha.5']['src'],
                 'integrity' => $versions['4.0.0-alpha.5']['integrity'],
                 'crossorigin' => 'anonymous'
 
-            ],
+            ]],
             '/script'
         ], $result);
 
@@ -1105,12 +1125,24 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
 
     public function testBootstrapScriptMethodOptions() {
         $versions = Assets::javascript();
-        $latestVersion = array_pop($versions);
+        $latestVersion = array_slice($versions, -1, 1, true);
+        $latestVersionNumber = key($latestVersion);
+        $latestVersion = $latestVersion[$latestVersionNumber];
 
-        // Latest version
+        $tetherVersions = Assets::tetherJavascript();
+        $tetherVersion = $tetherVersions[$latestVersionNumber];
+
+        // Latest version with own script
         $result = $this->Html->bootstrapScript(['own' => true]);
         $this->assertHtml([
             ['script' => ['src' => 'js/lilHermit/Bootstrap4.form-manipulation.js']],
+            '/script',
+            ['script' => [
+                'src' => $tetherVersion['src'],
+                'integrity' => $tetherVersion['integrity'],
+                'crossorigin' => 'anonymous'
+
+            ]],
             '/script',
             ['script' => [
                 'src' => $latestVersion['src'],
@@ -1123,16 +1155,40 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
         // Reset the view because it won't include the plugin script multiple times
         $this->setUp();
 
-        // Specific version
+        // Specific version with own script
         $result = $this->Html->bootstrapScript(['version' => '4.0.0-alpha.5', 'own' => true]);
+        $tetherVersion = $tetherVersions['4.0.0-alpha.5'];
         $this->assertHtml([
             ['script' => ['src' => 'js/lilHermit/Bootstrap4.form-manipulation.js']],
+            '/script',
+            ['script' => [
+                'src' => $tetherVersion['src'],
+                'integrity' => $tetherVersion['integrity'],
+                'crossorigin' => 'anonymous'
+
+            ]],
             '/script',
             'script' => [
                 'src' => $versions['4.0.0-alpha.5']['src'],
                 'integrity' => $versions['4.0.0-alpha.5']['integrity'],
                 'crossorigin' => 'anonymous'
             ]
+        ], $result);
+
+        // Reset the view because it won't include the plugin script multiple times
+        $this->setUp();
+
+        // Latest version with own script but without tether
+        $result = $this->Html->bootstrapScript(['own' => true, 'tether' => false]);
+        $this->assertHtml([
+            ['script' => ['src' => 'js/lilHermit/Bootstrap4.form-manipulation.js']],
+            '/script',
+            ['script' => [
+                'src' => $latestVersion['src'],
+                'integrity' => $latestVersion['integrity'],
+                'crossorigin' => 'anonymous'
+            ]],
+            '/script'
         ], $result);
     }
 }

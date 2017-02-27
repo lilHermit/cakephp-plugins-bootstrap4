@@ -218,12 +218,13 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
      *
      * @param array $options array of options
      *
-     *   ### Options
+     * ### Options
      *
-     * - `version` The version of bootstrap javascript required. Defaults = latest version
-     * - `src` The url of the non built-in version bootstrap javascript
+     * - `version`   The version of bootstrap javascript required. Defaults = latest version
+     * - `src`       The url of the non built-in version bootstrap javascript
      * - `integrity` The integrity hash for the `url` key
-     * - `own` Should we include this plugin javascript too. Default = false
+     * - `own`       Should we include this plugin javascript too. Default = false
+     * - `tether`    Should we include tether script tag too. Default = true
      *
      * @return string The full script tag or blank if `own` is false and `version` doesn't exist
      */
@@ -236,12 +237,21 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
         // Add the defaults
         $options += [
             'version' => $version,
-            'own' => false
+            'own' => false,
+            'tether' => true
         ];
 
         $return = '';
         if (filter_var($options['own'], FILTER_VALIDATE_BOOLEAN)) {
             $return = $this->script('lilHermit/Bootstrap4.form-manipulation.js');
+        }
+        if (filter_var($options['tether'], FILTER_VALIDATE_BOOLEAN)) {
+            $tetherVersions = Assets::tetherJavascript();
+            $tetherVersion = $tetherVersions[$options['version']];
+            $return .= $this->script($tetherVersion['src'], [
+                'integrity' => $tetherVersion['integrity'],
+                'crossorigin' => 'anonymous'
+            ]);
         }
         if (isset($options['src']) && isset($options['integrity'])) {
             $return .= $this->script($options['src'], [

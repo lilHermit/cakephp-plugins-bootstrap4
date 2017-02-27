@@ -19,10 +19,6 @@ class Assets {
 
     public static function javascript() {
         return [
-            '4.0.0-alpha.2' => [
-                'src' => 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js',
-                'integrity' => 'sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7'
-            ],
             '4.0.0-alpha.5' => [
                 'src' => 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js',
                 'integrity' => 'sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK'
@@ -30,6 +26,19 @@ class Assets {
             '4.0.0-alpha.6' => [
                 'src' => 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js',
                 'integrity' => 'sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn'
+            ]
+        ];
+    }
+
+    public static function tetherJavascript() {
+        return [
+            '4.0.0-alpha.5' => [
+                'src' => 'https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js',
+                'integrity' => 'sha384-XTs3FgkjiBgo8qjEjBk0tGmf3wPrWtA6coPfQDfFEY8AnYJwjalXCiosYRBIBZX8'
+            ],
+            '4.0.0-alpha.6' => [
+                'src' => 'https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js',
+                'integrity' => 'sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb'
             ]
         ];
     }
