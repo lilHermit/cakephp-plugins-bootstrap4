@@ -102,8 +102,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * - `type` - Force the type of widget you want. e.g. `type => 'select'`
      * - `label` - Either a string label, or an array of options for the label. See FormHelper::label().
      * - `options` - For widgets that take options e.g. radio, select.
-     * - `error` - Control the error message that is produced. Set to `false` to disable any kind of error reporting (field
-     *    error and error messages).
+     * - `error` - Control the error message that is produced. Set to `false` to disable any kind of error reporting
+     * (field error and error messages).
      * - `empty` - String or boolean to enable empty select box options.
      * - `nestedInput` - Used with checkbox and radio inputs. Set to false to render inputs outside of label
      *   elements. Can be set to true on any input to force the input inside the label. If you
@@ -113,7 +113,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      *   the templates you want to load, or an array of templates to use.
      *
      * @param string $fieldName This should be "modelname.fieldname"
-     * @param array $options Each type of input takes different options.
+     * @param array  $options   Each type of input takes different options.
+     *
      * @return string Completed form widget.
      * @link http://book.cakephp.org/3.0/en/views/helpers/form.html#creating-form-inputs
      */
@@ -168,9 +169,10 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * Generates a form control element complete with label and wrapper div.
      *
      * @param string $fieldName This should be "modelname.fieldname"
-     * @param array $options Each type of input takes different options.
+     * @param array  $options   Each type of input takes different options.
+     *
      * @return string Completed form widget.
-     * @link http://book.cakephp.org/3.0/en/views/helpers/form.html#creating-form-inputs
+     * @link       http://book.cakephp.org/3.0/en/views/helpers/form.html#creating-form-inputs
      * @deprecated 3.4.0 Use FormHelper::control() instead.
      */
     public function input($fieldName, array $options = []) {
@@ -188,14 +190,15 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * ]);
      * ```
      *
-     * @param array $fields An array of the fields to generate. This array allows
-     *   you to set custom types, labels, or other options.
-     * @param array $options Options array. Valid keys are:
-     * - `fieldset` Set to false to disable the fieldset. You can also pass an
-     *    array of params to be applied as HTML attributes to the fieldset tag.
-     *    If you pass an empty array, the fieldset will be enabled.
-     * - `legend` Set to false to disable the legend for the generated input set.
-     *    Or supply a string to customize the legend text.
+     * @param array $fields  An array of the fields to generate. This array allows
+     *                       you to set custom types, labels, or other options.
+q     * @param array $options Options array. Valid keys are:
+     *                       - `fieldset` Set to false to disable the fieldset. You can also pass an
+     *                       array of params to be applied as HTML attributes to the fieldset tag.
+     *                       If you pass an empty array, the fieldset will be enabled.
+     *                       - `legend` Set to false to disable the legend for the generated input set.
+     *                       Or supply a string to customize the legend text.
+     *
      * @return string Completed form inputs.
      * @link http://book.cakephp.org/3.0/en/views/helpers/form.html#generating-entire-forms
      */
@@ -210,16 +213,17 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     /**
      * Generate a set of controls for `$fields` wrapped in a fieldset element.
      *
-     * @param array $fields An array of the fields to generate. This array allows
-     *   you to set custom types, labels, or other options.
+     * @param array $fields  An array of the fields to generate. This array allows
+     *                       you to set custom types, labels, or other options.
      * @param array $options Options array. Valid keys are:
-     * - `fieldset` Set to false to disable the fieldset. You can also pass an
-     *    array of params to be applied as HTML attributes to the fieldset tag.
-     *    If you pass an empty array, the fieldset will be enabled.
-     * - `legend` Set to false to disable the legend for the generated input set.
-     *    Or supply a string to customize the legend text.
+     *                       - `fieldset` Set to false to disable the fieldset. You can also pass an
+     *                       array of params to be applied as HTML attributes to the fieldset tag.
+     *                       If you pass an empty array, the fieldset will be enabled.
+     *                       - `legend` Set to false to disable the legend for the generated input set.
+     *                       Or supply a string to customize the legend text.
+     *
      * @return string Completed form inputs.
-     * @link http://book.cakephp.org/3.0/en/views/helpers/form.html#generating-entire-forms
+     * @link       http://book.cakephp.org/3.0/en/views/helpers/form.html#generating-entire-forms
      * @deprecated 3.4.0 Use FormHelper::controls() instead.
      */
     public function inputs(array $fields, array $options = []) {
@@ -245,14 +249,15 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      *
      * In the above example, no field would be generated for the title field.
      *
-     * @param array $fields An array of customizations for the fields that will be
-     *   generated. This array allows you to set custom types, labels, or other options.
+     * @param array $fields  An array of customizations for the fields that will be
+     *                       generated. This array allows you to set custom types, labels, or other options.
      * @param array $options Options array. Valid keys are:
-     * - `fieldset` Set to false to disable the fieldset. You can also pass an array of params to be
-     *    applied as HTML attributes to the fieldset tag. If you pass an empty array, the fieldset will
-     *    be enabled
-     * - `legend` Set to false to disable the legend for the generated control set. Or supply a string
-     *    to customize the legend text.
+     *                       - `fieldset` Set to false to disable the fieldset. You can also pass an array of params to
+     *                       be applied as HTML attributes to the fieldset tag. If you pass an empty array, the
+     *                       fieldset will be enabled
+     *                       - `legend` Set to false to disable the legend for the generated control set. Or supply a
+     *                       string to customize the legend text.
+     *
      * @return string Completed form controls.
      * @link http://book.cakephp.org/3.0/en/views/helpers/form.html#generating-entire-forms
      */
@@ -268,16 +273,17 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * Generate a set of controls for `$fields`. If $fields is empty the fields
      * of current model will be used.
      *
-     * @param array $fields An array of customizations for the fields that will be
-     *   generated. This array allows you to set custom types, labels, or other options.
+     * @param array $fields  An array of customizations for the fields that will be
+     *                       generated. This array allows you to set custom types, labels, or other options.
      * @param array $options Options array. Valid keys are:
-     * - `fieldset` Set to false to disable the fieldset. You can also pass an array of params to be
-     *    applied as HTML attributes to the fieldset tag. If you pass an empty array, the fieldset will
-     *    be enabled
-     * - `legend` Set to false to disable the legend for the generated control set. Or supply a string
-     *    to customize the legend text.
+     *                       - `fieldset` Set to false to disable the fieldset. You can also pass an array of params to
+     *                       be applied as HTML attributes to the fieldset tag. If you pass an empty array, the
+     *                       fieldset will be enabled
+     *                       - `legend` Set to false to disable the legend for the generated control set. Or supply a
+     *                       string to customize the legend text.
+     *
      * @return string Completed form controls.
-     * @link http://book.cakephp.org/3.0/en/views/helpers/form.html#generating-entire-forms
+     * @link       http://book.cakephp.org/3.0/en/views/helpers/form.html#generating-entire-forms
      * @deprecated 3.4.0 Use FormHelper::allControls() instead.
      */
     public function allInputs(array $fields = [], array $options = []) {
@@ -529,8 +535,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         }
 
         $size = $this->_parsePrefixSuffixSize($options['templateVars']['prefix'], $options['templateVars']['suffix']);
-        $attrs = [ 'class' => 'input-group'];
-        if ($size ==='large') {
+        $attrs = ['class' => 'input-group'];
+        if ($size === 'large') {
             $attrs = Html::addClass($attrs, 'input-group-lg');
         }
         $attrs = $this->templater()->formatAttributes($attrs);
@@ -587,6 +593,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * Sets templates to use.
      *
      * @param array $templates Templates to be added.
+     *
      * @return void
      */
     public function setTemplates(array $templates) {
@@ -744,8 +751,9 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * - `secondary` Boolean true if you want secondary colour.
      * - `outline` Boolean true if you want button outlined.
      *
-     * @param string $title The content to be used for the button.
-     * @param array $options Array of options and HTML attributes.
+     * @param string $title   The content to be used for the button.
+     * @param array  $options Array of options and HTML attributes.
+     *
      * @return string the element.
      */
 
@@ -760,10 +768,11 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * Creates submit button but adds bootstrap styling
      *
      * @param string|null $caption The label appearing on the button OR if string contains :// or the
-     *  extension .jpg, .jpe, .jpeg, .gif, .png use an image if the extension
-     *  exists, AND the first character is /, image is relative to webroot,
-     *  OR if the first character is not /, image is relative to webroot/img.
-     * @param array $options Array of options. See above.
+     *                             extension .jpg, .jpe, .jpeg, .gif, .png use an image if the extension
+     *                             exists, AND the first character is /, image is relative to webroot,
+     *                             OR if the first character is not /, image is relative to webroot/img.
+     * @param array       $options Array of options. See above.
+     *
      * @return string A HTML submit button
      */
     public function submit($caption = null, array $options = []) {
@@ -895,6 +904,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * Maps the type to bootstrap else text
      *
      * @param $type
+     *
      * @return mixed|string
      */
     protected function _bootstrapTypeMap($type) {
@@ -907,7 +917,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * In case the type is defined manually by the user we need to map it
      *
      * @param string $fieldName
-     * @param array $options
+     * @param array  $options
+     *
      * @return array
      */
     protected function _parseOptions($fieldName, $options) {
@@ -938,6 +949,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * Tests if we want HTML5 render or not
      *
      * @param $options
+     *
      * @return bool if we should use the HTML5 (else its the CakePHP select boxes)
      */
     private function isHtml5Render($options) {

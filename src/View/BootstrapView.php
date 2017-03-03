@@ -9,9 +9,9 @@ use Cake\View\View;
  *
  * It loads our Bootstrap helpers.
  *
- * @property \lilHermit\Bootstrap4\View\Helper\FormHelper $Form
- * @property \lilHermit\Bootstrap4\View\Helper\HtmlHelper $Html
- * @property \lilHermit\Bootstrap4\View\Helper\FlashHelper $Flash
+ * @property \lilHermit\Bootstrap4\View\Helper\FormHelper      $Form
+ * @property \lilHermit\Bootstrap4\View\Helper\HtmlHelper      $Html
+ * @property \lilHermit\Bootstrap4\View\Helper\FlashHelper     $Flash
  * @property \lilHermit\Bootstrap4\View\Helper\PaginatorHelper $Paginator
  */
 class BootstrapView extends View {
