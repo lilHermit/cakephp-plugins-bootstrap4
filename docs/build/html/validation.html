@@ -1,0 +1,103 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    
+    <title>Validation</title>
+    <link href="_static/favicon.png" type="image/png" rel="icon"/>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
+    
+<link rel="stylesheet" href="_static/css/app.css" type="text/css"/>
+<link rel="stylesheet" href="_static/css/pygments.css" type="text/css"/>
+    
+
+</head>
+<body>
+<div class="container">
+    <div class="row">
+
+        <div class="col-12 col-md-10 push-md-2">
+            <div class="page-contents col-sm-4 float-right p-2 mb-2 ml-2 bg-grey">
+                <h3>Page Contents</h3>
+                <ul>
+<li><a class="reference internal" href="#">Validation</a></li>
+</ul>
+
+            </div>
+
+            <div class="document-body">
+                
+<div class="section" id="validation">
+<h1>Validation<a class="headerlink" href="#validation" title="Permalink to this headline">¶</a></h1>
+<p>If you use HTML5 datetime elements then the standard dateTime Validator will fail. Therefore you need to register an additional provider. To use the Bootstrap-4 validation rule you need the following in relevant Table:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="k">namespace</span> <span class="nx">App\Model\Table</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">Cake\ORM\Table</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Cake\Validation\Validator</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Cake\Validation\RulesProvider</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">MyTable</span> <span class="k">extends</span> <span class="nx">Table</span> <span class="p">{</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">validationDefault</span><span class="p">(</span><span class="nx">Validator</span> <span class="nv">$validator</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="c1">// Register the provider with the correct Validation class</span>
+        <span class="nv">$validator</span><span class="o">-&gt;</span><span class="na">provider</span><span class="p">(</span><span class="s1">&#39;bootstrap4&#39;</span><span class="p">,</span> <span class="k">new</span> <span class="nx">RulesProvider</span><span class="p">(</span><span class="s1">&#39;\lilHermit\Bootstrap4\Validation\Validation&#39;</span><span class="p">));</span>
+
+        <span class="c1">// User the custom provider for the `expires` field</span>
+        <span class="nv">$validator</span>
+            <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;expires&#39;</span><span class="p">,</span>  <span class="s1">&#39;custom&#39;</span><span class="p">,</span> <span class="p">[</span>
+                <span class="s1">&#39;rule&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;dateTime&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;provider&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;bootstrap4&#39;</span><span class="p">,</span>
+        <span class="p">]);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+            </div>
+        </div>
+
+        
+        <div class="col-md-2 pull-md-10 hidden-xs hidden-sm bg-grey p-2">
+            <aside class="sidebar">
+                <div class="row">
+<div id="sidebar-navigation" class="col hidden-xs">
+    <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Welcome</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="helpers.html">Helpers</a></li>
+</ul>
+
+</div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery first, then Tether, then Bootstrap JS. -->
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+        integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+        integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
+</body>
+</html>

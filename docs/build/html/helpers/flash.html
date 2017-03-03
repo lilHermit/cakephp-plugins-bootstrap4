@@ -1,0 +1,153 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta content="FlashHelper" lang="en" name="title" />
+<meta content="The Bootstrap FlashHelper extends the core FlashHelper" lang="en" name="description" />
+<meta content="flashhelper, flash, helper" lang="en" name="keywords" />
+
+    <title>Flash</title>
+    <link href="../_static/favicon.png" type="image/png" rel="icon"/>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
+    
+<link rel="stylesheet" href="../_static/css/app.css" type="text/css"/>
+<link rel="stylesheet" href="../_static/css/pygments.css" type="text/css"/>
+    
+
+</head>
+<body>
+<div class="container">
+    <div class="row">
+
+        <div class="col-12 col-md-10 push-md-2">
+            <div class="page-contents col-sm-4 float-right p-2 mb-2 ml-2 bg-grey">
+                <h3>Page Contents</h3>
+                <ul>
+<li><a class="reference internal" href="#">Flash</a><ul>
+<li><a class="reference internal" href="#dismissable-alert">Dismissable Alert</a></li>
+<li><a class="reference internal" href="#standard-alert">Standard Alert</a></li>
+</ul>
+</li>
+</ul>
+
+            </div>
+
+            <div class="document-body">
+                
+<div class="section" id="flash">
+<h1>Flash<a class="headerlink" href="#flash" title="Permalink to this headline">¶</a></h1>
+<p>The standard <cite>default</cite>, <cite>error</cite> and <cite>success</cite> flash messages are styled to Bootstrap Alerts. I have also implemented <cite>warning</cite> and <cite>info</cite> (<cite>default</cite> will render <cite>info</cite>).</p>
+<div class="section" id="dismissable-alert">
+<h2>Dismissable Alert<a class="headerlink" href="#dismissable-alert" title="Permalink to this headline">¶</a></h2>
+<p>Use the <cite>FlashComponent</cite> as you normally would:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Flash</span><span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span><span class="s1">&#39;This is an alert, which will render as info&#39;</span><span class="p">);</span>
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Flash</span><span class="o">-&gt;</span><span class="na">info</span><span class="p">(</span><span class="s1">&#39;This is an info alert&#39;</span><span class="p">);</span>
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Flash</span><span class="o">-&gt;</span><span class="na">error</span><span class="p">(</span><span class="s1">&#39;Something bad happened&#39;</span><span class="p">);</span>
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Flash</span><span class="o">-&gt;</span><span class="na">success</span><span class="p">(</span><span class="s1">&#39;Everything worked as expected&#39;</span><span class="p">);</span>
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Flash</span><span class="o">-&gt;</span><span class="na">warning</span><span class="p">(</span><span class="s1">&#39;Warning: Might not have saved!&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>would render as</p>
+<div class="bootstrap-example">
+
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    This is an alert, which will render as info
+</div>
+
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    This is an info alert
+</div>
+
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    Something bad happened
+</div>
+
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    Everything worked as expected
+</div>
+
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    Warning: Might not have saved!
+</div>
+
+</div></div>
+<div class="section" id="standard-alert">
+<h2>Standard Alert<a class="headerlink" href="#standard-alert" title="Permalink to this headline">¶</a></h2>
+<p>You can drop the dismiss icon by passing <code class="docutils literal"><span class="pre">['noDismiss'</span> <span class="pre">=&gt;</span> <span class="pre">true]</span></code></p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Flash</span><span class="o">-&gt;</span><span class="na">error</span><span class="p">(</span><span class="s1">&#39;Something bad happened (You can\&#39;t dismiss this)&#39;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="s1">&#39;params&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;noDismiss&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">]]</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>would render as</p>
+<div class="bootstrap-example">
+    <div class="alert alert-danger" role="alert">Something bad happened (You can&#039;t dismiss this)</div>
+</div></div>
+</div>
+
+
+            </div>
+        </div>
+
+        
+        <div class="col-md-2 pull-md-10 hidden-xs hidden-sm bg-grey p-2">
+            <aside class="sidebar">
+                <div class="row">
+<div id="sidebar-navigation" class="col hidden-xs">
+    <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Welcome</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../helpers.html">Helpers</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Flash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="form.html">Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="html.html">Html</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery first, then Tether, then Bootstrap JS. -->
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+        integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+        integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
+</body>
+</html>

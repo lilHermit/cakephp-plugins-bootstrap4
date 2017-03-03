@@ -1,0 +1,81 @@
+{%- macro script(script_files) %}
+{%- for scriptfile in script_files %}
+<script type="text/javascript" src="{{ pathto(scriptfile, 1) }}"></script>
+{%- endfor %}
+{%- endmacro %}
+
+{%- macro css(css_files) %}
+{%- for cssfile in css_files %}
+<link rel="stylesheet" href="{{ pathto(cssfile, 1) }}" type="text/css"/>
+{%- endfor %}
+{%- endmacro %}
+
+{# The files that make these builds are defined in Makefile #}
+{%- set css_files = [
+    '_static/css/app.css',
+    '_static/css/pygments.css'] -%}
+{%- set script_files = [] -%}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset={{ encoding }}"/>
+    {{ metatags }}
+    <title>{{ title|striptags|e }}{{ titlesuffix }}</title>
+    <link href="{{ pathto('_static/favicon.png', 1) }}" type="image/png" rel="icon"/>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
+    {{ css(css_files) }}
+    {{ script(script_files) }}
+
+</head>
+<body>
+<div class="container">
+    <div class="row">
+
+        <div class="col-12 col-md-10 push-md-2">
+            <div class="page-contents col-sm-4 float-right p-2 mb-2 ml-2 bg-grey">
+                <h3>{{ _('Page Contents') }}</h3>
+                {{ toc }}
+            </div>
+
+            <div class="document-body">
+                {% block body %} {% endblock %}
+            </div>
+        </div>
+
+        {# TOC sidebar #}
+        <div class="col-md-2 pull-md-10 hidden-xs hidden-sm bg-grey p-2">
+            {%- for sidebartemplate in sidebars %}
+            <aside class="sidebar">
+                <div class="row">
+                    {%- include sidebartemplate %}
+                </div>
+            </aside>
+            {%- endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- jQuery first, then Tether, then Bootstrap JS. -->
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+        integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+        integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
+</body>
+</html>

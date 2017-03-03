@@ -1,0 +1,437 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta content="Form" name="title" />
+<meta content="The Bootstrap Form extends the core Form" name="description" />
+<meta content="formhelper, form, helper" name="keywords" />
+
+    <title>Form</title>
+    <link href="../_static/favicon.png" type="image/png" rel="icon"/>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
+    
+<link rel="stylesheet" href="../_static/css/app.css" type="text/css"/>
+<link rel="stylesheet" href="../_static/css/pygments.css" type="text/css"/>
+    
+
+</head>
+<body>
+<div class="container">
+    <div class="row">
+
+        <div class="col-12 col-md-10 push-md-2">
+            <div class="page-contents col-sm-4 float-right p-2 mb-2 ml-2 bg-grey">
+                <h3>Page Contents</h3>
+                <ul>
+<li><a class="reference internal" href="#">Form</a><ul>
+<li><a class="reference internal" href="#creating-textual-controls">Creating Textual Controls</a><ul>
+<li><a class="reference internal" href="#placeholder-and-help-text">Placeholder and Help Text</a></li>
+<li><a class="reference internal" href="#prefix-suffix">Prefix/Suffix</a><ul>
+<li><a class="reference internal" href="#standard-static">Standard (static)</a></li>
+<li><a class="reference internal" href="#buttons">Buttons</a></li>
+<li><a class="reference internal" href="#attributes">Attributes</a></li>
+<li><a class="reference internal" href="#multiple">Multiple</a></li>
+<li><a class="reference internal" href="#sizing">Sizing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#datetime-elements">Datetime elements</a></li>
+<li><a class="reference internal" href="#custom-form-controls">Custom Form Controls</a><ul>
+<li><a class="reference internal" href="#disabling-custom-controls">Disabling Custom Controls</a></li>
+<li><a class="reference internal" href="#creating-custom-checkboxes">Creating Custom Checkboxes</a><ul>
+<li><a class="reference internal" href="#single">Single</a></li>
+<li><a class="reference internal" href="#id2">Multiple</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#creating-custom-radios">Creating Custom Radios</a></li>
+<li><a class="reference internal" href="#creating-custom-file-browser">Creating Custom File Browser</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+
+            <div class="document-body">
+                
+<div class="section" id="namespace-lilHermit\Bootstrap4\View\Helper">
+<span id="form"></span><h1>Form<a class="headerlink" href="#namespace-lilHermit\Bootstrap4\View\Helper" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="lilHermit\Bootstrap4\View\Helper\FormHelper">
+<em class="property">class </em><code class="descclassname">lilHermit\Bootstrap4\View\Helper\</code><code class="descname">FormHelper</code><span class="sig-paren">(</span><em>View $view</em>, <em>array $config = []</em><span class="sig-paren">)</span><a class="headerlink" href="#lilHermit\Bootstrap4\View\Helper\FormHelper" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The <code class="docutils literal"><span class="pre">FormHelper</span></code> builds upon the CakePHP core <code class="docutils literal"><span class="pre">FormHelper</span></code> and transparently
+styles form elements. As standard it renders Bootstrap4
+<a class="reference external" href="https://v4-alpha.getbootstrap.com/components/forms/#custom-forms">custom form</a> elements
+where relevant, however this can be disabled.</p>
+<p>You use the methods of <code class="docutils literal"><span class="pre">FormHelper</span></code> as you would normally do and the output will get styled
+correctly. There are additional control <cite>options</cite> which will be detailed below.</p>
+<div class="section" id="creating-textual-controls">
+<h2>Creating Textual Controls<a class="headerlink" href="#creating-textual-controls" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="lilHermit\Bootstrap4\View\Helper\FormHelper::control">
+<code class="descclassname">lilHermit\Bootstrap4\View\Helper\FormHelper::</code><code class="descname">control</code><span class="sig-paren">(</span><em>string $fieldName</em>, <em>array $options = []</em><span class="sig-paren">)</span><a class="headerlink" href="#lilHermit\Bootstrap4\View\Helper\FormHelper::control" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The plugin uses the <strong>NEW</strong> CakePHP <a class="reference external" href="https://book.cakephp.org/3.0/en/views/helpers/form.html#creating-form-controls">control</a>
+method however if you are using CakePHP 3.3.x then this is automatically translated to <code class="docutils literal"><span class="pre">input</span></code></p>
+</div>
+<p>Many additional <cite>$options</cite> are now supported by the <code class="docutils literal"><span class="pre">control()</span></code> method which provide
+the following functionality:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Placeholder text</li>
+<li>Help text</li>
+<li>Prefix and Suffix</li>
+</ul>
+</div></blockquote>
+<div class="section" id="placeholder-and-help-text">
+<h3>Placeholder and Help Text<a class="headerlink" href="#placeholder-and-help-text" title="Permalink to this headline">¶</a></h3>
+<p>Placeholder text is presented as hint before any text is entered into the form control whereas help
+is rendered underneath the control:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Form</span><span class="o">-&gt;</span><span class="na">control</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="s1">&#39;placeholder&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Your email address&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;help&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Please enter a valid email address&#39;</span>
+<span class="p">]);</span>
+</pre></div>
+</div>
+<p>Will render like</p>
+<div class="form-group">
+    <label class="col-form-label" for="email">Email</label>
+    <input type="email" name="email" placeholder="Your email address" id="email" class="form-control"/>
+    <small class="form-text text-muted">Please enter a valid email address</small>
+</div></div>
+<div class="section" id="prefix-suffix">
+<h3>Prefix/Suffix<a class="headerlink" href="#prefix-suffix" title="Permalink to this headline">¶</a></h3>
+<p>The prefix/suffix functionality utilises Bootstrap <cite>input-groups</cite> to add text/buttons either side
+of a textual <cite>input</cite>.</p>
+<div class="section" id="standard-static">
+<h4>Standard (static)<a class="headerlink" href="#standard-static" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Form</span><span class="o">-&gt;</span><span class="na">control</span><span class="p">(</span><span class="s1">&#39;donation&#39;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="s1">&#39;prefix&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;£&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;suffix&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;.00&#39;</span><span class="p">,</span>
+<span class="p">]);</span>
+</pre></div>
+</div>
+<p>Will render like</p>
+<div class="form-group">
+    <label class="col-form-label" for="donation">Donation</label>
+    <div class="input-group">
+        <span class="input-group-addon">£</span>
+        <input type="text" name="Donation" id="donation" class="form-control"/>
+        <span class="input-group-addon">.00</span>
+    </div>
+</div></div>
+<div class="section" id="buttons">
+<h4>Buttons<a class="headerlink" href="#buttons" title="Permalink to this headline">¶</a></h4>
+<p>As standard you will get <cite>static</cite> text elements but you can enhance the output by passing an array
+for <code class="docutils literal"><span class="pre">prefix</span></code>/<code class="docutils literal"><span class="pre">suffix</span></code> and use the <code class="docutils literal"><span class="pre">type</span></code> option to specify a button:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="nv">$button</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Html</span><span class="o">-&gt;</span><span class="na">button</span><span class="p">(</span><span class="s1">&#39;Go&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="p">[</span>
+    <span class="s1">&#39;type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;button&#39;</span>
+<span class="p">]);</span>
+
+<span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Form</span><span class="o">-&gt;</span><span class="na">control</span><span class="p">(</span><span class="s1">&#39;search&#39;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="s1">&#39;placeholder&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Search for...&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;label&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">,</span>
+    <span class="s1">&#39;suffix&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="s1">&#39;text&#39;</span> <span class="o">=&gt;</span> <span class="nv">$button</span><span class="p">,</span>
+        <span class="s1">&#39;escape&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">,</span>
+
+        <span class="c1">// Also &#39;type&#39; can be &#39;btn&#39; both are accepted</span>
+        <span class="s1">&#39;type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;button&#39;</span>
+    <span class="p">]</span>
+<span class="p">]);</span>
+</pre></div>
+</div>
+<p>Will render like</p>
+<div class="form-group">
+    <div class="input-group">
+        <input type="text" name="search" placeholder="Search for..." id="search" class="form-control"/>
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-primary">Go</button>
+        </span>
+    </div>
+</div><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You need to use <code class="docutils literal"><span class="pre">'escape'</span> <span class="pre">=&gt;</span> <span class="pre">false</span></code> to stop the button html from being escaped</p>
+</div>
+</div>
+<div class="section" id="attributes">
+<h4>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline">¶</a></h4>
+<p>You can also pass attributes to the <code class="docutils literal"><span class="pre">prefix</span></code>/<code class="docutils literal"><span class="pre">suffix</span></code> using the array described above such as <code class="docutils literal"><span class="pre">class</span></code>:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Form</span><span class="o">-&gt;</span><span class="na">control</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="s1">&#39;suffix&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="s1">&#39;text&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;&lt;i class=&quot;fa fa-exclamation-triangle fa-lg&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;class&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;bg-danger&#39;</span><span class="p">,</span> <span class="s1">&#39;text-white&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;escape&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span>
+    <span class="p">]</span>
+<span class="p">]);</span>
+</pre></div>
+</div>
+<p>Will render like</p>
+<div class="form-group"><label class="col-form-label" for="name">Name</label><div class="input-group"><input type="text" name="name" id="name" class="form-control"/><span class="bg-danger text-white input-group-addon"><i class="fa fa-exclamation-triangle fa-lg" aria-hidden="true"></i></span></div></div><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This example uses <a class="reference external" href="http://fontawesome.io">fontawesome</a> to add icons</p>
+</div>
+</div>
+<div class="section" id="multiple">
+<h4>Multiple<a class="headerlink" href="#multiple" title="Permalink to this headline">¶</a></h4>
+<p>You can have a combination of multiple <code class="docutils literal"><span class="pre">Prefix</span></code>/<code class="docutils literal"><span class="pre">Suffix</span></code> by using a nested array:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Form</span><span class="o">-&gt;</span><span class="na">control</span><span class="p">(</span><span class="s1">&#39;Donation&#39;</span><span class="p">,</span> <span class="p">[</span>
+
+    <span class="c1">// Array of strings</span>
+    <span class="s1">&#39;prefix&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;£&#39;</span><span class="p">,</span> <span class="s1">&#39;$&#39;</span><span class="p">],</span>
+
+    <span class="c1">// Array of arrays allowing for &#39;class&#39; being passed and ofcourse &#39;type&#39;</span>
+    <span class="c1">// if required</span>
+    <span class="s1">&#39;suffix&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="p">[</span> <span class="s1">&#39;text&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;.00&#39;</span><span class="p">],</span>
+        <span class="p">[</span> <span class="s1">&#39;text&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Go&#39;</span><span class="p">,</span> <span class="s1">&#39;class&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;bg-info&#39;</span><span class="p">]</span>
+    <span class="p">]</span>
+<span class="p">]);</span>
+</pre></div>
+</div>
+<p>Will render like</p>
+<div class="form-group">
+    <label class="col-form-label" for="donation">Donation</label>
+    <div class="input-group">
+        <span class="input-group-addon">£</span>
+        <span class="input-group-addon">$</span>
+        <input type="text" name="Donation" id="donation" class="form-control"/>
+        <span class="input-group-addon">.00</span>
+        <span class="bg-info input-group-addon">Go</span>
+    </div>
+</div></div>
+<div class="section" id="sizing">
+<h4>Sizing<a class="headerlink" href="#sizing" title="Permalink to this headline">¶</a></h4>
+<p>You also have a choice of size larger size by passing <code class="docutils literal"><span class="pre">'size'</span> <span class="pre">=&gt;</span> <span class="pre">'large'</span></code>:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Form</span><span class="o">-&gt;</span><span class="na">control</span><span class="p">(</span><span class="s1">&#39;Donation&#39;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="s1">&#39;prefix&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">&#39;text&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;£&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;normal&#39;</span><span class="p">],</span>
+
+    <span class="c1">// Also &#39;size&#39; =&gt; &#39;lg` is supported</span>
+    <span class="s1">&#39;suffix&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">&#39;text&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Go&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;large&#39;</span><span class="p">]</span>
+    <span class="p">]</span>
+<span class="p">]);</span>
+</pre></div>
+</div>
+<p>Will render like</p>
+<div class="form-group">
+    <label class="col-form-label" for="donation">Donation</label>
+    <div class="input-group input-group-lg">
+        <span class="input-group-addon">£</span>
+        <input type="text" name="Donation" id="donation" class="form-control"/>
+        <span class="input-group-addon">Go</span>
+    </div>
+</div><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The largest size takes precedence over &#8216;normal&#8217; <cite>prefix</cite> here</p>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="datetime-elements">
+<h2>Datetime elements<a class="headerlink" href="#datetime-elements" title="Permalink to this headline">¶</a></h2>
+<p>This plugin overrides CakePHPs default rendering of datetime elements and renders using HTML5
+builtin date/time functionality, as follows:</p>
+<div class="form-group"><label class="col-form-label" for="date">Date</label><input type="datetime-local" name="date" class="form-control" id="date" class="form-control"/></div><p>If you prefer the CakePHP default of multiple <code class="docutils literal"><span class="pre">select</span></code> controls you can achieve this with
+the following option:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Form</span><span class="o">-&gt;</span><span class="na">control</span><span class="p">(</span><span class="s1">&#39;DateOfBirth&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;html5Render&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">]);</span>
+</pre></div>
+</div>
+<p>Will render like</p>
+<div class="form-group"><label class="col-form-label">Date</label><div class="form-inline"><select name="date[year]"><option value="2022">2022</option><option value="2021">2021</option><option value="2020">2020</option><option value="2019">2019</option><option value="2018">2018</option><option value="2017" selected="selected">2017</option><option value="2016">2016</option><option value="2015">2015</option><option value="2014">2014</option><option value="2013">2013</option><option value="2012">2012</option></select> <select name="date[month]"><option value="01">January</option><option value="02">February</option><option value="03" selected="selected">March</option><option value="04">April</option><option value="05">May</option><option value="06">June</option><option value="07">July</option><option value="08">August</option><option value="09">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select> <select name="date[day]"><option value="01">1</option><option value="02" selected="selected">2</option><option value="03">3</option><option value="04">4</option><option value="05">5</option><option value="06">6</option><option value="07">7</option><option value="08">8</option><option value="09">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option></select> <select name="date[hour]"><option value="00">0</option><option value="01">1</option><option value="02">2</option><option value="03">3</option><option value="04">4</option><option value="05">5</option><option value="06">6</option><option value="07">7</option><option value="08">8</option><option value="09">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19" selected="selected">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select> <select name="date[minute]"><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42" selected="selected">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option></select>  </div></div><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">A browser capable of render HTML5 datetime elements is required. Support is available in Chrome 49+,
+Opera 43+, MS Edge, Android browser + iOS Safari 7.1+ (Partial). For more information
+<a class="reference external" href="http://caniuse.com/#feat=input-datetime">check here</a></p>
+</div>
+</div>
+<div class="section" id="custom-form-controls">
+<h2>Custom Form Controls<a class="headerlink" href="#custom-form-controls" title="Permalink to this headline">¶</a></h2>
+<p>Bootstrap4 introduces the concept of <a class="reference external" href="https://v4-alpha.getbootstrap.com/components/forms/#custom-forms">custom form controls</a>
+and by default this plugin automatically renders certain controls as custom.</p>
+<p>The plugin supports the following custom form controls</p>
+<ul class="simple">
+<li>Checkboxes</li>
+<li>Radios</li>
+<li>File browser</li>
+</ul>
+<p>Here is an example of custom <cite>checkbox</cite> and <cite>radio</cite>:</p>
+<div class="form-group clearfix"><input type="hidden" name="terms_agreed" value="0"/><label class="custom-control custom-checkbox" for="terms-agreed"><input type="checkbox" name="terms_agreed" checked="checked" value="1" id="terms-agreed" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">I agree to the terms of use</span></label></div>
+
+<div class="form-group clearfix"><label for="gender">Gender</label><div class="custom-controls-stacked"><input type="hidden" name="gender" value=""/><label class="custom-control custom-radio selected" for="gender-1"><input type="radio" name="gender" value="1" id="gender-1" checked="checked" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">Male</span></label><label class="custom-control custom-radio" for="gender-2"><input type="radio" name="gender" value="2" id="gender-2" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">Female</span></label></div></div><div class="section" id="disabling-custom-controls">
+<h3>Disabling Custom Controls<a class="headerlink" href="#disabling-custom-controls" title="Permalink to this headline">¶</a></h3>
+<p>To disable this and revert to standard <cite>checkboxes</cite>/<cite>radios</cite> add the following option, either at Form creation time:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Form</span><span class="o">-&gt;</span><span class="na">create</span><span class="p">(</span><span class="nv">$registerUserForm</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;customControls&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">]);</span>
+</pre></div>
+</div>
+<p>or per input:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Form</span><span class="o">-&gt;</span><span class="na">control</span><span class="p">(</span><span class="s1">&#39;terms_agreed&#39;</span><span class="p">,</span> <span class="p">[</span>
+  <span class="s1">&#39;label&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;I agree to the terms of use&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;checkbox&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;customControls&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span>
+<span class="p">]);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="creating-custom-checkboxes">
+<h3>Creating Custom Checkboxes<a class="headerlink" href="#creating-custom-checkboxes" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="single">
+<h4>Single<a class="headerlink" href="#single" title="Permalink to this headline">¶</a></h4>
+<p>You can create checkboxes via the <code class="docutils literal"><span class="pre">control</span></code> method:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="c1">// If &#39;communications_opt_in&#39; is boolean type</span>
+<span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Form</span><span class="o">-&gt;</span><span class="na">control</span><span class="p">(</span><span class="s1">&#39;communications_opt_in&#39;</span><span class="p">,</span> <span class="p">[</span>
+  <span class="s1">&#39;label&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Please send me promotional emails&#39;</span><span class="p">,</span>
+<span class="p">]);</span>
+
+<span class="c1">// Or force to &#39;checkbox&#39;</span>
+<span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Form</span><span class="o">-&gt;</span><span class="na">control</span><span class="p">(</span><span class="s1">&#39;terms_agreed&#39;</span><span class="p">,</span> <span class="p">[</span>
+  <span class="s1">&#39;label&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;I agree to the terms of use&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;checkbox&#39;</span>
+<span class="p">]);</span>
+</pre></div>
+</div>
+<p>Will output</p>
+<div class="form-group clearfix"><input type="hidden" name="communications_opt_in" value="0"/><label class="custom-control custom-checkbox" for="communications-opt-in"><input type="checkbox" name="communications_opt_in" value="1" id="communications-opt-in" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">Please send me promotional emails</span></label></div>
+
+<div class="form-group clearfix"><input type="hidden" name="terms_agreed" value="0"/><label class="custom-control custom-checkbox" for="terms_agreed1"><input type="checkbox" name="terms_agreed" value="1" id="terms_agreed1" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">I agree to the terms of use</span></label></div></div>
+<div class="section" id="id2">
+<h4>Multiple<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<p>You can create multiple checkboxes via the <code class="docutils literal"><span class="pre">control</span></code> method:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Form</span><span class="o">-&gt;</span><span class="na">control</span><span class="p">(</span><span class="s1">&#39;checkbox1&#39;</span><span class="p">,</span> <span class="p">[</span>
+  <span class="s1">&#39;label&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;My checkboxes&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;default&#39;</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="s1">&#39;multiple&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;checkbox&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;select&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;options&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s1">&#39;text&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;First Checkbox&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;text&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Second Checkbox&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">]</span>
+  <span class="p">]</span>
+<span class="p">]);</span>
+</pre></div>
+</div>
+<p>Or via the <code class="docutils literal"><span class="pre">multiCheckbox</span></code> method which just creates the checkboxes so you need to add your container and labels separately:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Html</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;class&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;form-group clearfix&#39;</span><span class="p">]);</span>
+<span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Form</span><span class="o">-&gt;</span><span class="na">label</span><span class="p">(</span><span class="s1">&#39;My checkboxes&#39;</span><span class="p">);</span>
+<span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Html</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;class&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;custom-controls-stacked&#39;</span><span class="p">]);</span>
+
+<span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Form</span><span class="o">-&gt;</span><span class="na">multiCheckbox</span><span class="p">(</span><span class="s1">&#39;checkbox2&#39;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s1">&#39;text&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;First Checkbox&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;text&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Second Checkbox&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">]],</span>
+    <span class="p">[</span>
+        <span class="s1">&#39;default&#39;</span> <span class="o">=&gt;</span> <span class="mi">2</span>
+    <span class="p">]);</span>
+<span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Html</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">(</span><span class="s1">&#39;/div&#39;</span><span class="p">);</span>
+<span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Html</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">(</span><span class="s1">&#39;/div&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Will render like</p>
+<div class="form-group clearfix"><label for="checkbox1">My checkboxes</label><div class="custom-controls-stacked"><input type="hidden" name="checkbox1" value=""/><label for="checkbox1-1" class="custom-control custom-checkbox"><input type="checkbox" name="checkbox1[]" value="1" id="checkbox1-1" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">First Checkbox</span></label><label for="checkbox1-2" class="custom-control custom-checkbox selected"><input type="checkbox" name="checkbox1[]" value="2" checked="checked" id="checkbox1-2" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">Second Checkbox</span></label></div></div></div>
+</div>
+<div class="section" id="creating-custom-radios">
+<h3>Creating Custom Radios<a class="headerlink" href="#creating-custom-radios" title="Permalink to this headline">¶</a></h3>
+<p>You can create radio controls via the <code class="docutils literal"><span class="pre">control</span></code> method as you would normally do, however just like <code class="docutils literal"><span class="pre">multiCheckbox</span></code>
+you need to add container and label:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Html</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;class&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;form-group clearfix&#39;</span><span class="p">]);</span>
+<span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Form</span><span class="o">-&gt;</span><span class="na">label</span><span class="p">(</span><span class="s1">&#39;Favourite colour&#39;</span><span class="p">);</span>
+<span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Html</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;class&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;custom-controls-stacked&#39;</span><span class="p">]);</span>
+
+<span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Form</span><span class="o">-&gt;</span><span class="na">radio</span><span class="p">(</span><span class="s1">&#39;favourite_colour&#39;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s1">&#39;text&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Red&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;red&#39;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;text&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Blue&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;blue&#39;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;text&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Green&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;green&#39;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;text&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Orange&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;orange&#39;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;text&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Purple&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;purple&#39;</span><span class="p">]],</span>
+    <span class="p">[</span><span class="s1">&#39;default&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;blue&#39;</span><span class="p">]);</span>
+<span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Html</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">(</span><span class="s1">&#39;/div&#39;</span><span class="p">);</span>
+<span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Html</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">(</span><span class="s1">&#39;/div&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Will render like</p>
+<div class="form-group clearfix"><label for="favourite-colour">Favourite Colour</label><div class="custom-controls-stacked"><input type="hidden" name="favourite_colour" value=""/><label class="custom-control custom-radio" for="favourite-colour-red"><input type="radio" name="favourite_colour" value="red" id="favourite-colour-red" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">Red</span></label><label class="custom-control custom-radio selected" for="favourite-colour-blue"><input type="radio" name="favourite_colour" value="blue" id="favourite-colour-blue" checked="checked" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">Blue</span></label><label class="custom-control custom-radio" for="favourite-colour-green"><input type="radio" name="favourite_colour" value="green" id="favourite-colour-green" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">Green</span></label><label class="custom-control custom-radio" for="favourite-colour-orange"><input type="radio" name="favourite_colour" value="orange" id="favourite-colour-orange" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">Orange</span></label><label class="custom-control custom-radio" for="favourite-colour-purple"><input type="radio" name="favourite_colour" value="purple" id="favourite-colour-purple" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">Purple</span></label></div></div></div>
+<div class="section" id="creating-custom-file-browser">
+<h3>Creating Custom File Browser<a class="headerlink" href="#creating-custom-file-browser" title="Permalink to this headline">¶</a></h3>
+<p>Custom File Browser control is a vast improvement on the standard HTML control as below</p>
+<div class="form-group">
+    <label for="profileImage">Profile Image</label>
+    <input type="file" class="form-control-file" id="profileImage">
+    <small class="form-text text-muted">Your profile image will be visible on forum posts</small>
+</div><p>To render a custom File Browser control create a file as you normally would:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Html</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;class&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;form-group clearfix&#39;</span><span class="p">]);</span>
+<span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Form</span><span class="o">-&gt;</span><span class="na">label</span><span class="p">(</span><span class="s1">&#39;ProfileImage&#39;</span><span class="p">,</span> <span class="s1">&#39;Profile Image&#39;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="s1">&#39;class&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;col-form-label d-block&#39;</span>
+<span class="p">]);</span>
+<span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Form</span><span class="o">-&gt;</span><span class="na">control</span><span class="p">(</span><span class="s1">&#39;ProfileImage&#39;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="s1">&#39;help&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Your profile image will be visible on forum posts&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;file&#39;</span>
+<span class="p">]);</span>
+<span class="k">echo</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Html</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">(</span><span class="s1">&#39;/div&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="form-group clearfix">
+    <label class="col-form-label d-block" for="profileimage">Profile Image</label>
+    <label class="custom-file" for="profileimage">
+        <input type="file" name="ProfileImage" id="profileimage" class="custom-file-input">
+        <span class="custom-file-control"></span>
+    </label>
+    <small class="form-text text-muted">Your profile image will be visible on forum posts</small>
+</div></div>
+</div>
+</div>
+
+
+            </div>
+        </div>
+
+        
+        <div class="col-md-2 pull-md-10 hidden-xs hidden-sm bg-grey p-2">
+            <aside class="sidebar">
+                <div class="row">
+<div id="sidebar-navigation" class="col hidden-xs">
+    <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Welcome</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../helpers.html">Helpers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="flash.html">Flash</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="html.html">Html</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery first, then Tether, then Bootstrap JS. -->
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+        integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+        integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
+</body>
+</html>
