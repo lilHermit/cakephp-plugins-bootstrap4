@@ -22,12 +22,20 @@ class FlashHelperTest extends \Cake\Test\TestCase\View\Helper\FlashHelperTest {
         // Save the session with all the flashes (set by parent
         $session = $this->View->request->session();
 
-        // Use our View (Boostrap)
+        // Use our View (Bootstrap)
         $this->View = new BootstrapView();
         $this->View->request = new Request(['session' => $session]);
         $this->Flash = new FlashHelper($this->View);
 
         Plugin::load('lilHermit/Bootstrap4', ['path' => ROOT . DS]);
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+
+        unset($this->View, $this->Flash);
+
+        Plugin::unload('lilHermit/Bootstrap4');
     }
 
     /**

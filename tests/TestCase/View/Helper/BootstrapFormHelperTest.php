@@ -32,6 +32,12 @@ class BootstrapFormHelperTest extends TestCase {
 
     }
 
+    public function tearDown() {
+        parent::tearDown();
+
+        unset($this->Form);
+    }
+
     public function testMultiCheckbox() {
 
         $result = $this->Form->multiCheckbox('checkbox1',
