@@ -136,10 +136,6 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         // Move certain options to templateVars
         $this->_parseTemplateVar($options, ['help', 'prefix', 'suffix']);
 
-        if ($options['type'] === 'file' && $options['customControls']) {
-            $options['nestedInput'] = true;
-        }
-
         if (method_exists(get_parent_class($this), 'control')) {
             return parent::control($fieldName, $options);
         } else {
@@ -379,8 +375,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     protected function _addWidgetClass($options = [], $widgetType = null) {
 
         $skipClassFallback = [
-            'hidden',
-            'file'
+            'hidden'
         ];
 
         $widgetsClassMap = [
@@ -399,7 +394,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                         'multicheckbox' => 'form-check-input',
                         'checkbox' => 'form-check-input',
                         'radio' => 'form-check-input',
-                        'file' => null
+                        'file' => 'form-control-file'
                     ]);
             }
         }
@@ -647,9 +642,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                     break;
                 case 'file':
                     $this->setTemplates([
-                        'file' => '<input type="file" name="{{name}}"{{attrs}}><span class="custom-file-control"></span>{{placeholder}}',
-                        'fileContainer' => '{{content}}{{help}}',
-                        'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}</label>',
+                        'file' => '<label class="custom-file"><input type="file" name="{{name}}"{{attrs}}><span class="custom-file-control"></span></label>',
                     ]);
                     break;
             }
@@ -682,9 +675,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                     break;
                 case 'file':
                     $this->setTemplates([
-                        'file' => '<input type="file" name="{{name}}"{{attrs}}>{{placeholder}}',
-                        'fileContainer' => '<div class="input {{type}}{{required}}">{{content}}</div>',
-                        'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
+                        'file' => '<input type="file" name="{{name}}"{{attrs}}>'
                     ]);
                     break;
             }
@@ -708,7 +699,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         $index = 'label';
         if ($type === 'file') {
             if ($customControls) {
-                $label = 'custom-file';
+                $label = 'col-form-label d-block';
             }
         } elseif ($type === 'radio' || $type === 'checkbox' || $type === 'multicheckbox') {
 

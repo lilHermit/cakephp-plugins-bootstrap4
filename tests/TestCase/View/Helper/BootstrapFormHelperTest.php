@@ -660,6 +660,27 @@ class BootstrapFormHelperTest extends TestCase {
             '/small',
             '/div'
         ], $result);
+
+        // Test help after custom file form control
+        $result = $this->Form->control('profileImage', [
+            'help' => 'Upload a profile image for the forum',
+            'type' => 'file'
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['for' => 'profileimage', 'class' => 'col-form-label d-block']],
+            'Profile Image',
+            '/label',
+            'label' => ['class' => 'custom-file'],
+            'input' => ['type' => 'file', 'name' => 'profileImage', 'class' => 'custom-file-input', 'id' => 'profileimage'],
+            'span' => ['class' => 'custom-file-control'],
+            '/span',
+            '/label',
+            'small' => ['class' => 'form-text text-muted'],
+            'Upload a profile image for the forum',
+            '/small',
+            '/div'
+        ], $result);
     }
 
     /**
@@ -715,15 +736,17 @@ class BootstrapFormHelperTest extends TestCase {
 
         $result = $this->Form->file('Model.upload', ['customControls' => false]);
         $this->assertHtml([
-            'input' => ['type' => 'file', 'name' => 'Model[upload]'],
+            'input' => ['type' => 'file', 'name' => 'Model[upload]', 'class' => 'form-control-file'],
             'preg:/$/'
         ], $result);
 
         $result = $this->Form->file('Model.upload', ['customControls' => true]);
         $this->assertHtml([
+            'label' => ['class' => 'custom-file'],
             'input' => ['type' => 'file', 'name' => 'Model[upload]', 'class' => 'custom-file-input'],
             'span' => ['class' => 'custom-file-control'],
-            '/span'
+            '/span',
+            '/label'
 
         ], $result);
     }
@@ -739,26 +762,31 @@ class BootstrapFormHelperTest extends TestCase {
 
         $result = $this->Form->input('Model.upload', ['type' => 'file', 'customControls' => false]);
         $this->assertHtml([
-            'div' => ['class' => 'input file'],
+            'div' => ['class' => 'form-group'],
             'label' => ['for' => 'model-upload'],
             'Upload',
             '/label',
             ['input' => [
                 'type' => 'file',
                 'name' => 'Model[upload]',
-                'id' => 'model-upload'
+                'id' => 'model-upload',
+                'class' => 'form-control-file'
             ]],
             '/div'
         ], $result);
 
         $result = $this->Form->input('Model.upload', ['type' => 'file', 'customControls' => true]);
         $this->assertHtml([
-            'label' => ['class' => 'custom-file', 'for' => 'model-upload'],
+            'div' => ['class' => 'form-group'],
+            ['label' => ['for' => 'model-upload', 'class' => 'col-form-label d-block']],
+            'Upload',
+            '/label',
+            'label' => ['class' => 'custom-file'],
             'input' => ['type' => 'file', 'name' => 'Model[upload]', 'class' => 'custom-file-input', 'id' => 'model-upload'],
             'span' => ['class' => 'custom-file-control'],
             '/span',
-            '/label'
-
+            '/label',
+            '/div'
         ], $result);
     }
 

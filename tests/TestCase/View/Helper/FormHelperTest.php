@@ -1032,7 +1032,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'class' => 'textbox'
         ]);
         $expected = [
-            'div' => ['class' => 'input file'],
+            'div' => ['class' => 'form-group'],
             'label' => ['for' => 'contact-email'],
             'Email',
             '/label',
@@ -1040,7 +1040,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'input' => [
                     'type' => 'file',
                     'name' => 'Contact[email]',
-                    'class' => 'textbox',
+                    'class' => 'textbox form-control-file',
                     'id' => 'contact-email'
                 ]
             ],
@@ -1233,7 +1233,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             'input' => [
                 'type' => 'file',
-                'name' => 'nested[file][]'
+                'name' => 'nested[file][]',
+                'class' => 'form-control-file'
             ],
         ];
         $this->assertHtml($expected, $result);
@@ -5360,6 +5361,80 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/label',
             '/div',
             '/div'
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * Tests correct generation of file upload fields for binary fields
+     *
+     * @return void
+     */
+    public function testFileUploadFieldTypeGenerationForBinaries() {
+        $table = TableRegistry::get('Contacts', [
+            'className' => 'Cake\Test\TestCase\View\Helper\ContactsTable'
+        ]);
+        $table->schema(['foo' => [
+            'type' => 'binary',
+            'null' => false,
+            'default' => null,
+            'length' => 1024
+        ]]);
+        $this->Form->create([], ['context' => ['table' => 'Contacts']]);
+
+        $result = $this->Form->input('foo');
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'foo'],
+            'Foo',
+            '/label',
+            ['input' => [
+                'type' => 'file', 'name' => 'foo',
+                'id' => 'foo',
+                'class' => 'form-control-file'
+            ]],
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testFileUploadField method
+     *
+     * Test generation of a file upload input.
+     *
+     * @return void
+     */
+    public function testFileUploadField() {
+        $expected = ['input' => ['type' => 'file', 'name' => 'Model[upload]', 'class' => 'form-control-file']];
+
+        $result = $this->Form->file('Model.upload');
+        $this->assertHtml($expected, $result);
+
+        $this->Form->request->data['Model']['upload'] = [
+            'name' => '', 'type' => '', 'tmp_name' => '',
+            'error' => 4, 'size' => 0
+        ];
+        $result = $this->Form->file('Model.upload');
+        $this->assertHtml($expected, $result);
+
+        $this->Form->request->data['Model']['upload'] = 'no data should be set in value';
+        $result = $this->Form->file('Model.upload');
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testFileUploadOnOtherModel method
+     *
+     * Test File upload input on a model not used in create().
+     *
+     * @return void
+     */
+    public function testFileUploadOnOtherModel() {
+        $this->Form->create($this->article, ['type' => 'file']);
+        $result = $this->Form->file('ValidateProfile.city');
+        $expected = [
+            'input' => ['type' => 'file', 'name' => 'ValidateProfile[city]', 'class' => 'form-control-file']
         ];
         $this->assertHtml($expected, $result);
     }
