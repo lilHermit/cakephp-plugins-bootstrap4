@@ -2,4 +2,4 @@
 
 # Bootstrap4 plugin
 
-The documentation for the plugin can be [found here](https://bitbucket.org/lilHermit/cakephp-plugins-bootstrap4/src/newdocs/docs/build/intro.html)
+The documentation for the plugin can be [found here](https://projects.lilhermit.co.uk/cakephp-plugins-bootstrap4)
