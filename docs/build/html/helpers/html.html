@@ -1,0 +1,162 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    
+    <title>Html</title>
+    <link href="../_static/favicon.png" type="image/png" rel="icon"/>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
+    
+<link rel="stylesheet" href="../_static/css/app.css" type="text/css"/>
+<link rel="stylesheet" href="../_static/css/pygments.css" type="text/css"/>
+    
+
+</head>
+<body>
+<div class="container">
+    <div class="row">
+
+        <div class="col-12 col-md-10 push-md-2">
+            <div class="page-contents col-sm-4 float-right p-2 mb-2 ml-2 bg-grey">
+                <h3>Page Contents</h3>
+                <ul>
+<li><a class="reference internal" href="#">Html</a><ul>
+<li><a class="reference internal" href="#bootstrap-css">Bootstrap css</a></li>
+<li><a class="reference internal" href="#bootstrap-javascript">Bootstrap Javascript</a></li>
+</ul>
+</li>
+</ul>
+
+            </div>
+
+            <div class="document-body">
+                
+<div class="section" id="namespace-lilHermit\Bootstrap4\View\Helper">
+<span id="html"></span><h1>Html<a class="headerlink" href="#namespace-lilHermit\Bootstrap4\View\Helper" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="lilHermit\Bootstrap4\View\Helper\HtmlHelper">
+<em class="property">class </em><code class="descclassname">lilHermit\Bootstrap4\View\Helper\</code><code class="descname">HtmlHelper</code><span class="sig-paren">(</span><em>View $view</em>, <em>array $config = []</em><span class="sig-paren">)</span><a class="headerlink" href="#lilHermit\Bootstrap4\View\Helper\HtmlHelper" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The <code class="docutils literal"><span class="pre">HtmlHelper</span></code> builds upon the CakePHP core <code class="docutils literal"><span class="pre">HtmlHelper</span></code> and transparently
+styles elements. Buttons, crumbs and progress bars are styled to Bootstrap4.</p>
+<div class="section" id="bootstrap-css">
+<h2>Bootstrap css<a class="headerlink" href="#bootstrap-css" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="lilHermit\Bootstrap4\View\Helper\HtmlHelper::bootstrapScript">
+<code class="descclassname">lilHermit\Bootstrap4\View\Helper\HtmlHelper::</code><code class="descname">bootstrapScript</code><span class="sig-paren">(</span><em>$version</em><span class="sig-paren">)</span><a class="headerlink" href="#lilHermit\Bootstrap4\View\Helper\HtmlHelper::bootstrapScript" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The plugin provides markup for css from the official Bootstrap CDN</p>
+<p>For adding the latest official css that the plugin is built (4.0.0-alpha6) for add in your layout:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="o">&lt;?=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Html</span><span class="o">-&gt;</span><span class="na">bootstrapCss</span><span class="p">();</span> <span class="cp">?&gt;</span><span class="x"></span>
+</pre></div>
+</div>
+<p>Something similar to the following html will be rendered to your view</p>
+<div class="highlight-html"><div class="highlight"><pre><span></span>&#39;<span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css&quot;</span>
+    <span class="na">integrity</span><span class="o">=</span><span class="s">&quot;sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ&quot;</span> <span class="na">crossorigin</span><span class="o">=</span><span class="s">&quot;anonymous&quot;</span><span class="p">/&gt;</span>
+</pre></div>
+</div>
+<p>If you want an older css version then pass in a string as the first parameter. For example:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="o">&lt;?=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Html</span><span class="o">-&gt;</span><span class="na">bootstrapCss</span><span class="p">(</span><span class="s1">&#39;4.0.0-alpha.5&#39;</span><span class="p">);</span> <span class="cp">?&gt;</span><span class="x"></span>
+</pre></div>
+</div>
+<p>If you want to use a version unknown to the plugin you can pass in an array, for example
+to use <code class="docutils literal"><span class="pre">bootstrap4.0.0-alpha3</span></code>:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="o">&lt;?=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Html</span><span class="o">-&gt;</span><span class="na">bootstrapCss</span><span class="p">([</span>
+    <span class="s1">&#39;url&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.3/css/bootstrap.min.css&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;integrity&#39;</span> <span class="o">-&gt;</span> <span class="s1">&#39;sha384-MIwDKRSSImVFAZCVLtU0LMDdON6KVCrZHyVQQj6e8wIEJkW4tvwqXrbMIya1vriY&#39;</span><span class="p">]</span>
+<span class="p">);</span> <span class="cp">?&gt;</span><span class="x"></span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="bootstrap-javascript">
+<h2>Bootstrap Javascript<a class="headerlink" href="#bootstrap-javascript" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt>
+<code class="descclassname">lilHermit\Bootstrap4\View\Helper\HtmlHelper::</code><code class="descname">bootstrapScript</code><span class="sig-paren">(</span><em>$version = []</em><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<p>The plugin provides markup for javascript from the official Bootstrap CDN</p>
+<p>For adding the latest official bootstrap and <a class="reference external" href="http://tether.io/">tether</a> javascript that the plugin is build for (4.0.0-alpha6) add the following
+to your layout.</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="o">&lt;?=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Html</span><span class="o">-&gt;</span><span class="na">bootstrapScript</span><span class="p">();</span> <span class="cp">?&gt;</span><span class="x"></span>
+</pre></div>
+</div>
+<p>You will get something similar to in your view</p>
+<div class="highlight-html"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js&quot;</span>
+    <span class="na">integrity</span><span class="o">=</span><span class="s">&quot;sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb&quot;</span> <span class="na">crossorigin</span><span class="o">=</span><span class="s">&quot;anonymous&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js&quot;</span>
+    <span class="na">integrity</span><span class="o">=</span><span class="s">&quot;sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn&quot;</span> <span class="na">crossorigin</span><span class="o">=</span><span class="s">&quot;anonymous&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</pre></div>
+</div>
+<p>To disabled the inclusion of <code class="docutils literal"><span class="pre">tether</span></code> javascript then add use the following:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="o">&lt;?=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Html</span><span class="o">-&gt;</span><span class="na">bootstrapScript</span><span class="p">([</span><span class="s1">&#39;tether&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">]);</span> <span class="cp">?&gt;</span><span class="x"></span>
+</pre></div>
+</div>
+<p>If you want an older javascript then pass in an array with <cite>version</cite> key as the first parameter. For example:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="o">&lt;?=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Html</span><span class="o">-&gt;</span><span class="na">bootstrapScript</span><span class="p">([</span> <span class="s1">&#39;version&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;4.0.0-alpha.5&#39;</span><span class="p">]);</span> <span class="cp">?&gt;</span><span class="x"></span>
+</pre></div>
+</div>
+<p>You can also add urls that the plugin does not currently support by providing the <cite>url</cite> and <cite>integrity</cite> keys. For example to use 4.0.0-alpha4:</p>
+<div class="highlight-phpinline"><div class="highlight"><pre><span></span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Html</span><span class="o">-&gt;</span><span class="na">bootstrapScript</span><span class="p">([</span>
+    <span class="s1">&#39;url&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;integrity&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;VjEeINv9OSwtWFLAtmc4JCtEJXXBub00gtSnszmspDLCtC0I4z4nqz7rEFbIZLLU&#39;</span>
+    <span class="p">]);</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+            </div>
+        </div>
+
+        
+        <div class="col-md-2 pull-md-10 hidden-xs hidden-sm bg-grey p-2">
+            <aside class="sidebar">
+                <div class="row">
+<div id="sidebar-navigation" class="col hidden-xs">
+    <p class="caption"><span class="caption-text">Index</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Welcome</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../helpers.html">Helpers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="flash.html">Flash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="form.html">Form</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Html</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery first, then Tether, then Bootstrap JS. -->
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+        integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+        integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
+</body>
+</html>
