@@ -29,3 +29,4 @@
 tests export-ignore
 phpunit.xml export-ignore
 docs export-ignore
+update-docs.sh export-ignore

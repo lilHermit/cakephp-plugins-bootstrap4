@@ -175,4 +175,7 @@ div.form-group, .bootstrap-example {
 div.shields {
   padding: 20px 2px; }
 
+div.section#changelog dt {
+  font-weight: inherit; }
+
 /*# sourceMappingURL=app.css.map */

@@ -6,3 +6,4 @@
     index
     installation
     helpers
+    changelog
