@@ -13,6 +13,7 @@ Use the `FlashComponent` as you normally would::
     $this->Flash->error('Something bad happened');
     $this->Flash->success('Everything worked as expected');
     $this->Flash->warning('Warning: Might not have saved!');
+
 would render as
 
 .. raw:: html

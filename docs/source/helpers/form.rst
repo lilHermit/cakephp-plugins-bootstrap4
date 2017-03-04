@@ -332,7 +332,6 @@ Will render like
 
 Creating Custom Radios
 ----------------------
-::
 
 You can create radio controls via the ``control`` method as you would normally do, however just like ``multiCheckbox``
 you need to add container and label::
