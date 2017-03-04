@@ -192,7 +192,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      *
      * @param array $fields  An array of the fields to generate. This array allows
      *                       you to set custom types, labels, or other options.
-q     * @param array $options Options array. Valid keys are:
+     * @param array $options Options array. Valid keys are:
      *                       - `fieldset` Set to false to disable the fieldset. You can also pass an
      *                       array of params to be applied as HTML attributes to the fieldset tag.
      *                       If you pass an empty array, the fieldset will be enabled.
@@ -816,6 +816,26 @@ q     * @param array $options Options array. Valid keys are:
 
         $options = Html::addClass($options, $newClasses);
 
+        return $options;
+    }
+
+    /**
+     *
+     * This is where we add the class for each select control in the
+     * datetime
+     *
+     * @param array $options
+     *
+     * @return array This options with new added class
+     */
+    protected function _datetimeOptions($options) {
+        $options = parent::_datetimeOptions($options);
+
+        foreach ($this->_datetimeParts as $type) {
+            if ($options[$type]) {
+                $options[$type] = Html::addClass($options[$type], 'form-control');
+            }
+        }
         return $options;
     }
 

@@ -5439,4 +5439,695 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->assertHtml($expected, $result);
     }
 
+    /**
+     * testMonth method
+     *
+     * Test generation of a month input.
+     *
+     * @return void
+     */
+    public function testMonth() {
+        $result = $this->Form->month('Model.field', ['value' => '']);
+        $expected = [
+            ['select' => ['name' => 'Model[field][month]', 'class' => 'form-control']],
+            ['option' => ['value' => '', 'selected' => 'selected']],
+            '/option',
+            ['option' => ['value' => '01']],
+            date('F', strtotime('2008-01-01 00:00:00')),
+            '/option',
+            ['option' => ['value' => '02']],
+            date('F', strtotime('2008-02-01 00:00:00')),
+            '/option',
+            '*/select',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->month('Model.field', ['empty' => true, 'value' => '']);
+        $expected = [
+            ['select' => ['name' => 'Model[field][month]', 'class' => 'form-control']],
+            ['option' => ['selected' => 'selected', 'value' => '']],
+            '/option',
+            ['option' => ['value' => '01']],
+            date('F', strtotime('2008-01-01 00:00:00')),
+            '/option',
+            ['option' => ['value' => '02']],
+            date('F', strtotime('2008-02-01 00:00:00')),
+            '/option',
+            '*/select',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->month('Model.field', ['value' => '', 'monthNames' => false]);
+        $expected = [
+            ['select' => ['name' => 'Model[field][month]', 'class' => 'form-control']],
+            ['option' => ['selected' => 'selected', 'value' => '']],
+            '/option',
+            ['option' => ['value' => '01']],
+            '1',
+            '/option',
+            ['option' => ['value' => '02']],
+            '2',
+            '/option',
+            '*/select',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $monthNames = [
+            '01' => 'Jan', '02' => 'Feb', '03' => 'Mar', '04' => 'Apr', '05' => 'May', '06' => 'Jun',
+            '07' => 'Jul', '08' => 'Aug', '09' => 'Sep', '10' => 'Oct', '11' => 'Nov', '12' => 'Dec'
+        ];
+        $result = $this->Form->month('Model.field', ['value' => '1', 'monthNames' => $monthNames]);
+        $expected = [
+            ['select' => ['name' => 'Model[field][month]', 'class' => 'form-control']],
+            ['option' => ['value' => '']],
+            '/option',
+            ['option' => ['value' => '01', 'selected' => 'selected']],
+            'Jan',
+            '/option',
+            ['option' => ['value' => '02']],
+            'Feb',
+            '/option',
+            '*/select',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->request->data['Project']['release'] = '2050-02-10';
+        $result = $this->Form->month('Project.release');
+
+        $expected = [
+            ['select' => ['name' => 'Project[release][month]', 'class' => 'form-control']],
+            ['option' => ['value' => '']],
+            '/option',
+            ['option' => ['value' => '01']],
+            'January',
+            '/option',
+            ['option' => ['value' => '02', 'selected' => 'selected']],
+            'February',
+            '/option',
+            '*/select',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->month('Contact.published', [
+            'empty' => 'Published on',
+        ]);
+        $this->assertContains('Published on', $result);
+    }
+
+    /**
+     * testDay method
+     *
+     * Test generation of a day input.
+     *
+     * @return void
+     */
+    public function testDay() {
+        extract($this->dateRegex);
+
+        $result = $this->Form->day('Model.field', ['value' => '', 'class' => 'form-control']);
+        $expected = [
+            ['select' => ['name' => 'Model[field][day]', 'class' => 'form-control']],
+            ['option' => ['selected' => 'selected', 'value' => '']],
+            '/option',
+            ['option' => ['value' => '01']],
+            '1',
+            '/option',
+            ['option' => ['value' => '02']],
+            '2',
+            '/option',
+            $daysRegex,
+            '/select',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->request->data['Model']['field'] = '2006-10-10 23:12:32';
+        $result = $this->Form->day('Model.field');
+        $expected = [
+            ['select' => ['name' => 'Model[field][day]', 'class' => 'form-control']],
+            ['option' => ['value' => '']],
+            '/option',
+            ['option' => ['value' => '01']],
+            '1',
+            '/option',
+            ['option' => ['value' => '02']],
+            '2',
+            '/option',
+            $daysRegex,
+            ['option' => ['value' => '10', 'selected' => 'selected']],
+            '10',
+            '/option',
+            $daysRegex,
+            '/select',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->request->data['Model']['field'] = '';
+        $result = $this->Form->day('Model.field', ['value' => '10']);
+        $expected = [
+            ['select' => ['name' => 'Model[field][day]', 'class' => 'form-control']],
+            ['option' => ['value' => '']],
+            '/option',
+            ['option' => ['value' => '01']],
+            '1',
+            '/option',
+            ['option' => ['value' => '02']],
+            '2',
+            '/option',
+            $daysRegex,
+            ['option' => ['value' => '10', 'selected' => 'selected']],
+            '10',
+            '/option',
+            $daysRegex,
+            '/select',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->request->data['Project']['release'] = '2050-10-10';
+        $result = $this->Form->day('Project.release');
+
+        $expected = [
+            ['select' => ['name' => 'Project[release][day]', 'class' => 'form-control']],
+            ['option' => ['value' => '']],
+            '/option',
+            ['option' => ['value' => '01']],
+            '1',
+            '/option',
+            ['option' => ['value' => '02']],
+            '2',
+            '/option',
+            $daysRegex,
+            ['option' => ['value' => '10', 'selected' => 'selected']],
+            '10',
+            '/option',
+            $daysRegex,
+            '/select',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->day('Contact.published', [
+            'empty' => 'Published on',
+        ]);
+        $this->assertContains('Published on', $result);
+    }
+
+    /**
+     * testMinute method
+     *
+     * Test generation of a minute input.
+     *
+     * @return void
+     */
+    public function testMinute() {
+        extract($this->dateRegex);
+
+        $result = $this->Form->minute('Model.field', ['value' => '']);
+        $expected = [
+            ['select' => ['name' => 'Model[field][minute]', 'class' => 'form-control']],
+            ['option' => ['selected' => 'selected', 'value' => '']],
+            '/option',
+            ['option' => ['value' => '00']],
+            '00',
+            '/option',
+            ['option' => ['value' => '01']],
+            '01',
+            '/option',
+            ['option' => ['value' => '02']],
+            '02',
+            '/option',
+            $minutesRegex,
+            '/select',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->request->data['Model']['field'] = '2006-10-10 00:12:32';
+        $result = $this->Form->minute('Model.field');
+        $expected = [
+            ['select' => ['name' => 'Model[field][minute]', 'class' => 'form-control']],
+            ['option' => ['value' => '']],
+            '/option',
+            ['option' => ['value' => '00']],
+            '00',
+            '/option',
+            ['option' => ['value' => '01']],
+            '01',
+            '/option',
+            ['option' => ['value' => '02']],
+            '02',
+            '/option',
+            $minutesRegex,
+            ['option' => ['value' => '12', 'selected' => 'selected']],
+            '12',
+            '/option',
+            $minutesRegex,
+            '/select',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->request->data['Model']['field'] = '';
+        $result = $this->Form->minute('Model.field', ['interval' => 5]);
+        $expected = [
+            ['select' => ['name' => 'Model[field][minute]', 'class' => 'form-control']],
+            ['option' => ['selected' => 'selected', 'value' => '']],
+            '/option',
+            ['option' => ['value' => '00']],
+            '00',
+            '/option',
+            ['option' => ['value' => '05']],
+            '05',
+            '/option',
+            ['option' => ['value' => '10']],
+            '10',
+            '/option',
+            $minutesRegex,
+            '/select',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->request->data['Model']['field'] = '2006-10-10 00:10:32';
+        $result = $this->Form->minute('Model.field', ['interval' => 5]);
+        $expected = [
+            ['select' => ['name' => 'Model[field][minute]', 'class' => 'form-control']],
+            ['option' => ['value' => '']],
+            '/option',
+            ['option' => ['value' => '00']],
+            '00',
+            '/option',
+            ['option' => ['value' => '05']],
+            '05',
+            '/option',
+            ['option' => ['value' => '10', 'selected' => 'selected']],
+            '10',
+            '/option',
+            $minutesRegex,
+            '/select',
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testMeridian method
+     *
+     * Test generating an input for the meridian.
+     *
+     * @return void
+     */
+    public function testMeridian() {
+        extract($this->dateRegex);
+
+        $now = new \DateTime();
+        $result = $this->Form->meridian('Model.field', ['value' => 'am']);
+        $expected = [
+            ['select' => ['name' => 'Model[field][meridian]', 'class' => 'form-control']],
+            ['option' => ['value' => '']],
+            '/option',
+            $meridianRegex,
+            ['option' => ['value' => $now->format('a'), 'selected' => 'selected']],
+            $now->format('a'),
+            '/option',
+            '*/select'
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testHour method
+     *
+     * Test generation of an hour input.
+     *
+     * @return void
+     */
+    public function testHour() {
+        extract($this->dateRegex);
+
+        $result = $this->Form->hour('Model.field', ['format' => 12, 'value' => '']);
+        $expected = [
+            ['select' => ['name' => 'Model[field][hour]', 'class' => 'form-control']],
+            ['option' => ['selected' => 'selected', 'value' => '']],
+            '/option',
+            ['option' => ['value' => '01']],
+            '1',
+            '/option',
+            ['option' => ['value' => '02']],
+            '2',
+            '/option',
+            $hoursRegex,
+            '/select',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->request->data['Model']['field'] = '2006-10-10 00:12:32';
+        $result = $this->Form->hour('Model.field', ['format' => 12]);
+        $expected = [
+            ['select' => ['name' => 'Model[field][hour]', 'class' => 'form-control']],
+            ['option' => ['value' => '']],
+            '/option',
+            ['option' => ['value' => '01']],
+            '1',
+            '/option',
+            ['option' => ['value' => '02']],
+            '2',
+            '/option',
+            $hoursRegex,
+            ['option' => ['value' => '12', 'selected' => 'selected']],
+            '12',
+            '/option',
+            '/select',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->request->data['Model']['field'] = '';
+        $result = $this->Form->hour('Model.field', ['format' => 24, 'value' => '23']);
+        $this->assertContains('<option value="23" selected="selected">23</option>', $result);
+
+        $result = $this->Form->hour('Model.field', ['format' => 12, 'value' => '23']);
+        $this->assertContains('<option value="11" selected="selected">11</option>', $result);
+
+        $this->Form->request->data['Model']['field'] = '2006-10-10 00:12:32';
+        $result = $this->Form->hour('Model.field', ['format' => 24]);
+        $expected = [
+            ['select' => ['name' => 'Model[field][hour]', 'class' => 'form-control']],
+            ['option' => ['value' => '']],
+            '/option',
+            ['option' => ['value' => '00', 'selected' => 'selected']],
+            '0',
+            '/option',
+            ['option' => ['value' => '01']],
+            '1',
+            '/option',
+            ['option' => ['value' => '02']],
+            '2',
+            '/option',
+            $hoursRegex,
+            '/select',
+        ];
+        $this->assertHtml($expected, $result);
+
+        unset($this->Form->request->data['Model']['field']);
+        $result = $this->Form->hour('Model.field', ['format' => 24, 'value' => 'now']);
+        $thisHour = date('H');
+        $optValue = date('G');
+        $this->assertRegExp('/<option value="' . $thisHour . '" selected="selected">' . $optValue . '<\/option>/', $result);
+
+        $this->Form->request->data['Model']['field'] = '2050-10-10 01:12:32';
+        $result = $this->Form->hour('Model.field', ['format' => 24]);
+        $expected = [
+            ['select' => ['name' => 'Model[field][hour]', 'class' => 'form-control']],
+            ['option' => ['value' => '']],
+            '/option',
+            ['option' => ['value' => '00']],
+            '0',
+            '/option',
+            ['option' => ['value' => '01', 'selected' => 'selected']],
+            '1',
+            '/option',
+            ['option' => ['value' => '02']],
+            '2',
+            '/option',
+            $hoursRegex,
+            '/select',
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testYear method
+     *
+     * Test generation of a year input.
+     *
+     * @return void
+     */
+    public function testYear() {
+        $result = $this->Form->year('Model.field', ['value' => '', 'minYear' => 2006, 'maxYear' => 2007]);
+        $expected = [
+            ['select' => ['name' => 'Model[field][year]', 'class' => 'form-control']],
+            ['option' => ['selected' => 'selected', 'value' => '']],
+            '/option',
+            ['option' => ['value' => '2007']],
+            '2007',
+            '/option',
+            ['option' => ['value' => '2006']],
+            '2006',
+            '/option',
+            '/select',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->year('Model.field', [
+            'value' => '',
+            'minYear' => 2006,
+            'maxYear' => 2007,
+            'orderYear' => 'asc'
+        ]);
+        $expected = [
+            ['select' => ['name' => 'Model[field][year]', 'class' => 'form-control']],
+            ['option' => ['selected' => 'selected', 'value' => '']],
+            '/option',
+            ['option' => ['value' => '2006']],
+            '2006',
+            '/option',
+            ['option' => ['value' => '2007']],
+            '2007',
+            '/option',
+            '/select',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->request->data['Contact']['published'] = '2006-10-10';
+        $result = $this->Form->year('Contact.published', [
+            'empty' => false,
+            'minYear' => 2006,
+            'maxYear' => 2007,
+        ]);
+        $expected = [
+            ['select' => ['name' => 'Contact[published][year]', 'class' => 'form-control']],
+            ['option' => ['value' => '2007']],
+            '2007',
+            '/option',
+            ['option' => ['value' => '2006', 'selected' => 'selected']],
+            '2006',
+            '/option',
+            '/select',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->year('Contact.published', [
+            'empty' => 'Published on',
+        ]);
+        $this->assertContains('Published on', $result);
+    }
+
+    /**
+     * testDateTime method
+     *
+     * Test generation of date/time select elements.
+     *
+     * @return void
+     */
+    public function testDateTime() {
+        extract($this->dateRegex);
+
+        $result = $this->Form->dateTime('Contact.date', ['default' => true]);
+        $now = strtotime('now');
+        $expected = [
+            ['select' => ['name' => 'Contact[date][year]', 'class' => 'form-control']],
+            ['option' => ['value' => '']],
+            '/option',
+            $yearsRegex,
+            ['option' => ['value' => date('Y', $now), 'selected' => 'selected']],
+            date('Y', $now),
+            '/option',
+            '*/select',
+
+            ['select' => ['name' => 'Contact[date][month]', 'class' => 'form-control']],
+            ['option' => ['value' => '']],
+            '/option',
+            $monthsRegex,
+            ['option' => ['value' => date('m', $now), 'selected' => 'selected']],
+            date('F', $now),
+            '/option',
+            '*/select',
+
+            ['select' => ['name' => 'Contact[date][day]', 'class' => 'form-control']],
+            ['option' => ['value' => '']],
+            '/option',
+            $daysRegex,
+            ['option' => ['value' => date('d', $now), 'selected' => 'selected']],
+            date('j', $now),
+            '/option',
+            '*/select',
+
+            ['select' => ['name' => 'Contact[date][hour]', 'class' => 'form-control']],
+            ['option' => ['value' => '']],
+            '/option',
+            $hoursRegex,
+            ['option' => ['value' => date('H', $now), 'selected' => 'selected']],
+            date('G', $now),
+            '/option',
+            '*/select',
+
+            ['select' => ['name' => 'Contact[date][minute]', 'class' => 'form-control']],
+            ['option' => ['value' => '']],
+            '/option',
+            $minutesRegex,
+            ['option' => ['value' => date('i', $now), 'selected' => 'selected']],
+            date('i', $now),
+            '/option',
+            '*/select',
+        ];
+        $this->assertHtml($expected, $result);
+
+        // Empty=>false implies Default=>true, as selecting the "first" dropdown value is useless
+        $result = $this->Form->dateTime('Contact.date', ['empty' => false]);
+        $now = strtotime('now');
+        $expected = [
+            ['select' => ['name' => 'Contact[date][year]', 'class' => 'form-control']],
+            $yearsRegex,
+            ['option' => ['value' => date('Y', $now), 'selected' => 'selected']],
+            date('Y', $now),
+            '/option',
+            '*/select',
+
+            ['select' => ['name' => 'Contact[date][month]', 'class' => 'form-control']],
+            $monthsRegex,
+            ['option' => ['value' => date('m', $now), 'selected' => 'selected']],
+            date('F', $now),
+            '/option',
+            '*/select',
+
+            ['select' => ['name' => 'Contact[date][day]']],
+            $daysRegex,
+            ['option' => ['value' => date('d', $now), 'selected' => 'selected']],
+            date('j', $now),
+            '/option',
+            '*/select',
+
+            ['select' => ['name' => 'Contact[date][hour]', 'class' => 'form-control']],
+            $hoursRegex,
+            ['option' => ['value' => date('H', $now), 'selected' => 'selected']],
+            date('G', $now),
+            '/option',
+            '*/select',
+
+            ['select' => ['name' => 'Contact[date][minute]', 'class' => 'form-control']],
+            $minutesRegex,
+            ['option' => ['value' => date('i', $now), 'selected' => 'selected']],
+            date('i', $now),
+            '/option',
+            '*/select',
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testDatetimeEmpty method
+     *
+     * Test empty defaulting to true for datetime.
+     *
+     * @return void
+     */
+    public function testDatetimeEmpty() {
+        extract($this->dateRegex);
+
+        $result = $this->Form->dateTime('Contact.date', [
+            'timeFormat' => 12,
+            'empty' => true,
+            'default' => true
+        ]);
+        $expected = [
+            ['select' => ['name' => 'Contact[date][year]', 'class' => 'form-control']],
+            $yearsRegex,
+            ['option' => ['value' => '']],
+            '/option',
+            '*/select',
+
+            ['select' => ['name' => 'Contact[date][month]', 'class' => 'form-control']],
+            $monthsRegex,
+            ['option' => ['value' => '']],
+            '/option',
+            '*/select',
+
+            ['select' => ['name' => 'Contact[date][day]', 'class' => 'form-control']],
+            $daysRegex,
+            ['option' => ['value' => '']],
+            '/option',
+            '*/select',
+
+            ['select' => ['name' => 'Contact[date][hour]', 'class' => 'form-control']],
+            $hoursRegex,
+            ['option' => ['value' => '']],
+            '/option',
+            '*/select',
+
+            ['select' => ['name' => 'Contact[date][minute]', 'class' => 'form-control']],
+            $minutesRegex,
+            ['option' => ['value' => '']],
+            '/option',
+            '*/select',
+
+            ['select' => ['name' => 'Contact[date][meridian]', 'class' => 'form-control']],
+            $meridianRegex,
+            ['option' => ['value' => '']],
+            '/option',
+            '*/select'
+        ];
+        $this->assertHtml($expected, $result);
+        $this->assertNotRegExp('/<option[^<>]+value=""[^<>]+selected="selected"[^>]*>/', $result);
+    }
+
+    /**
+     * testDatetimeMinuteInterval method
+     *
+     * Test datetime with interval option.
+     *
+     * @return void
+     */
+    public function testDatetimeMinuteInterval() {
+        extract($this->dateRegex);
+
+        $result = $this->Form->dateTime('Contact.date', [
+            'interval' => 5,
+            'value' => ''
+        ]);
+        $expected = [
+            ['select' => ['name' => 'Contact[date][year]', 'class' => 'form-control']],
+            $yearsRegex,
+            ['option' => ['selected' => 'selected', 'value' => '']],
+            '/option',
+            '*/select',
+
+            ['select' => ['name' => 'Contact[date][month]', 'class' => 'form-control']],
+            $monthsRegex,
+            ['option' => ['selected' => 'selected', 'value' => '']],
+            '/option',
+            '*/select',
+
+            ['select' => ['name' => 'Contact[date][day]', 'class' => 'form-control']],
+            $daysRegex,
+            ['option' => ['selected' => 'selected', 'value' => '']],
+            '/option',
+            '*/select',
+
+            ['select' => ['name' => 'Contact[date][hour]', 'class' => 'form-control']],
+            $hoursRegex,
+            ['option' => ['selected' => 'selected', 'value' => '']],
+            '/option',
+            '*/select',
+
+            ['select' => ['name' => 'Contact[date][minute]', 'class' => 'form-control']],
+            $minutesRegex,
+            ['option' => ['selected' => 'selected', 'value' => '']],
+            '/option',
+            ['option' => ['value' => '00']],
+            '00',
+            '/option',
+            ['option' => ['value' => '05']],
+            '05',
+            '/option',
+            ['option' => ['value' => '10']],
+            '10',
+            '/option',
+            '*/select',
+        ];
+        $this->assertHtml($expected, $result);
+    }
 }
