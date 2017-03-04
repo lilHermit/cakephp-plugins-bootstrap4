@@ -1,4 +1,6 @@
-$menuLinkCode: rgba(86, 142, 213, 1);
+$menuLinkActiveColour: #bd4147;
+$menuLinkHoverColour: rgba(86, 142, 213, 1);
+
 
 
 .bg-grey {
@@ -126,7 +128,12 @@ div.page-contents, aside.sidebar {
     margin-bottom: 8px;
 
     &.current {
-      color: $menuLinkCode;
+      color: $menuLinkActiveColour;
+    }
+
+    &:hover {
+      text-decoration: none;
+      color: $menuLinkHoverColour;
     }
   }
 

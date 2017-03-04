@@ -107,6 +107,9 @@ div.page-contents a, aside.sidebar a {
   display: block;
   margin-bottom: 8px; }
   div.page-contents a.current, aside.sidebar a.current {
+    color: #bd4147; }
+  div.page-contents a:hover, aside.sidebar a:hover {
+    text-decoration: none;
     color: #568ed5; }
 div.page-contents ul, aside.sidebar ul {
   list-style: none;
