@@ -11,9 +11,6 @@ use lilHermit\Bootstrap4\View\Helper\HtmlHelper;
 
 class BootstrapFormHelperTest extends TestCase {
 
-    // TODO
-    // - Add Test for error message on file input (customControls and  not)
-
     /**
      * @var FormHelper $Form
      */
@@ -1516,6 +1513,324 @@ class BootstrapFormHelperTest extends TestCase {
             ['span' => ['class' => 'input-group-addon']],
             'suffix',
             '/span',
+            '/div',
+            '/div'
+        ], $result);
+    }
+
+    public function testCustomControlsErrorMsg() {
+
+        $content = [
+            'schema' => ['radio1', 'multicheckbox1'],
+            'errors' => [
+                'radio1' => 'something is wrong',
+                'profile-image' => 'wrong file type',
+                'multicheckbox1' => 'multicheckbox error'
+            ]];
+
+        $this->Form->create($content);
+
+        $result = $this->Form->control(
+            'radio1',
+            [
+                'label' => 'My Radios',
+                'default' => 2,
+                'type' => 'radio',
+                'options' => [
+                    ['text' => 'First Radio', 'value' => 1],
+                    ['text' => 'Second Radio', 'value' => 2]
+                ],
+                'customControls' => true
+            ]
+        );
+        $this->assertHtml([
+            'div' => ['class' => 'form-group has-danger'],
+            '<label',
+            'My Radios',
+            '/label',
+            'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => '', 'class' => 'form-control-danger'],
+            ['label' => ['for' => 'radio1-1', 'class' => 'custom-control custom-radio']],
+            [
+                'input' => [
+                    'type' => 'radio',
+                    'name' => 'radio1',
+                    'value' => '1',
+                    'id' => 'radio1-1',
+                    'class' => 'form-control-danger custom-control-input'
+                ]
+            ],
+            ['span' => ['class' => 'custom-control-indicator']],
+            '/span',
+            ['span' => ['class' => 'custom-control-description']],
+            'First Radio',
+            '/span',
+            '/label',
+
+            ['label' => ['for' => 'radio1-2', 'class' => 'custom-control custom-radio selected']],
+            [
+                'input' => [
+                    'type' => 'radio',
+                    'name' => 'radio1',
+                    'value' => '2',
+                    'id' => 'radio1-2',
+                    'checked' => 'checked',
+                    'class' => 'form-control-danger custom-control-input'
+                ]
+            ],
+            ['span' => ['class' => 'custom-control-indicator']],
+            '/span',
+            ['span' => ['class' => 'custom-control-description']],
+            'Second Radio',
+            '/span',
+            '/label',
+            ['div' => ['class' => 'form-control-feedback']],
+            'something is wrong',
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Form->radio(
+            'radio1',
+            [
+                ['text' => 'First Radio', 'value' => 1],
+                ['text' => 'Second Radio', 'value' => 2]
+            ],
+            [
+                'default' => 2,
+                'customControls' => true
+            ]
+        );
+        $this->assertHtml([
+            'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => '', 'class' => 'form-control-danger'],
+
+            ['label' => ['for' => 'radio1-1', 'class' => 'custom-control custom-radio']],
+            [
+                'input' => [
+                    'type' => 'radio',
+                    'name' => 'radio1',
+                    'value' => '1',
+                    'id' => 'radio1-1',
+                    'class' => 'form-control-danger custom-control-input'
+                ]
+            ],
+            ['span' => ['class' => 'custom-control-indicator']],
+            '/span',
+            ['span' => ['class' => 'custom-control-description']],
+            'First Radio',
+            '/span',
+            '/label',
+
+            ['label' => ['for' => 'radio1-2', 'class' => 'custom-control custom-radio selected']],
+            [
+                'input' => [
+                    'type' => 'radio',
+                    'name' => 'radio1',
+                    'value' => '2',
+                    'id' => 'radio1-2',
+                    'checked' => 'checked',
+                    'class' => 'form-control-danger custom-control-input'
+                ]
+            ],
+            ['span' => ['class' => 'custom-control-indicator']],
+            '/span',
+            ['span' => ['class' => 'custom-control-description']],
+            'Second Radio',
+            '/span',
+            '/label',
+
+
+        ], $result);
+
+        $result = $this->Form->multiCheckbox('multicheckbox1',
+            [
+                ['text' => 'First Checkbox', 'value' => 1],
+                ['text' => 'Second Checkbox', 'value' => 2]
+            ],
+            [
+                'default' => 2,
+                'customControls' => true
+            ]);
+
+        $this->assertHtml([
+            'input' => ['type' => 'hidden', 'name' => 'multicheckbox1', 'value' => '', 'class' => 'form-control-danger'],
+
+            ['label' => ['for' => 'multicheckbox1-1', 'class' => 'custom-control custom-checkbox']],
+            [
+                'input' => [
+                    'type' => 'checkbox',
+                    'name' => 'multicheckbox1[]',
+                    'value' => '1',
+                    'id' => 'multicheckbox1-1',
+                    'class' => 'form-control-danger custom-control-input'
+                ]
+            ],
+            ['span' => ['class' => 'custom-control-indicator']],
+            '/span',
+            ['span' => ['class' => 'custom-control-description']],
+            'First Checkbox',
+            '/span',
+            '/label',
+
+            ['label' => ['for' => 'multicheckbox1-2', 'class' => 'custom-control custom-checkbox selected']],
+            [
+                'input' => [
+                    'type' => 'checkbox',
+                    'name' => 'multicheckbox1[]',
+                    'value' => '2',
+                    'checked' => 'checked',
+                    'id' => 'multicheckbox1-2',
+                    'class' => 'form-control-danger custom-control-input'
+                ]
+            ],
+            ['span' => ['class' => 'custom-control-indicator']],
+            '/span',
+            ['span' => ['class' => 'custom-control-description']],
+            'Second Checkbox',
+            '/span',
+            '/label'
+        ], $result);
+
+        $result = $this->Form->input('multicheckbox1', [
+            'label' => 'My checkboxes',
+            'default' => 2,
+            'multiple' => 'checkbox',
+            'type' => 'select',
+            'options' => [
+                ['text' => 'First Checkbox', 'value' => 1],
+                ['text' => 'Second Checkbox', 'value' => 2]
+            ]
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group clearfix has-danger'],
+            ['label' => ['for' => 'multicheckbox1']],
+            'My checkboxes',
+            '/label',
+            ['div' => ['class' => 'custom-controls-stacked']],
+            'input' => ['type' => 'hidden', 'name' => 'multicheckbox1', 'value' => '', 'class' => 'form-control-danger'],
+
+            ['label' => ['for' => 'multicheckbox1-1', 'class' => 'custom-control custom-checkbox']],
+            [
+                'input' => [
+                    'type' => 'checkbox',
+                    'name' => 'multicheckbox1[]',
+                    'value' => '1',
+                    'id' => 'multicheckbox1-1',
+                    'class' => 'form-control-danger custom-control-input'
+                ]
+            ],
+            ['span' => ['class' => 'custom-control-indicator']],
+            '/span',
+            ['span' => ['class' => 'custom-control-description']],
+            'First Checkbox',
+            '/span',
+            '/label',
+
+            ['label' => ['for' => 'multicheckbox1-2', 'class' => 'custom-control custom-checkbox selected']],
+            [
+                'input' => [
+                    'type' => 'checkbox',
+                    'name' => 'multicheckbox1[]',
+                    'value' => '2',
+                    'checked' => 'checked',
+                    'id' => 'multicheckbox1-2',
+                    'class' => 'form-control-danger custom-control-input'
+                ]
+            ],
+            ['span' => ['class' => 'custom-control-indicator']],
+            '/span',
+            ['span' => ['class' => 'custom-control-description']],
+            'Second Checkbox',
+            '/span',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-control-feedback']],
+            'multicheckbox error',
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Form->input('multicheckbox1', [
+            'label' => 'My checkboxes',
+            'default' => 2,
+            'multiple' => 'checkbox',
+            'type' => 'select',
+            'options' => [
+                ['text' => 'First Checkbox', 'value' => 1],
+                ['text' => 'Second Checkbox', 'value' => 2]
+            ]
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group clearfix has-danger'],
+            ['label' => ['for' => 'multicheckbox1']],
+            'My checkboxes',
+            '/label',
+            ['div' => ['class' => 'custom-controls-stacked']],
+            'input' => ['type' => 'hidden', 'name' => 'multicheckbox1', 'value' => '', 'class' => 'form-control-danger'],
+
+            ['label' => ['for' => 'multicheckbox1-1', 'class' => 'custom-control custom-checkbox']],
+            [
+                'input' => [
+                    'type' => 'checkbox',
+                    'name' => 'multicheckbox1[]',
+                    'value' => '1',
+                    'id' => 'multicheckbox1-1',
+                    'class' => 'form-control-danger custom-control-input'
+                ]
+            ],
+            ['span' => ['class' => 'custom-control-indicator']],
+            '/span',
+            ['span' => ['class' => 'custom-control-description']],
+            'First Checkbox',
+            '/span',
+            '/label',
+
+            ['label' => ['for' => 'multicheckbox1-2', 'class' => 'custom-control custom-checkbox selected']],
+            [
+                'input' => [
+                    'type' => 'checkbox',
+                    'name' => 'multicheckbox1[]',
+                    'value' => '2',
+                    'checked' => 'checked',
+                    'id' => 'multicheckbox1-2',
+                    'class' => 'form-control-danger custom-control-input'
+                ]
+            ],
+            ['span' => ['class' => 'custom-control-indicator']],
+            '/span',
+            ['span' => ['class' => 'custom-control-description']],
+            'Second Checkbox',
+            '/span',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-control-feedback']],
+            'multicheckbox error',
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Form->file('profile-image', ['customControls' => true]);
+        $this->assertHtml([
+            'label' => ['class' => 'custom-file'],
+            'input' => ['type' => 'file', 'name' => 'profile-image', 'class' => 'form-control-danger custom-file-input'],
+            'span' => ['class' => 'custom-file-control'],
+            '/span',
+            '/label'
+
+        ], $result);
+
+        $result = $this->Form->input('profile-image', ['type' => 'file', 'customControls' => true]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group has-danger'],
+            ['label' => ['for' => 'profile-image', 'class' => 'col-form-label d-block']],
+            'Profile Image',
+            '/label',
+            'label' => ['class' => 'custom-file'],
+            'input' => ['type' => 'file', 'name' => 'profile-image', 'class' => 'form-control-danger custom-file-input', 'id' => 'profile-image'],
+            'span' => ['class' => 'custom-file-control'],
+            '/span',
+            '/label',
+            ['div' => ['class' => 'form-control-feedback']],
+            'wrong file type',
             '/div',
             '/div'
         ], $result);

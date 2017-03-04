@@ -637,6 +637,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
                         // Select because we might be using the ['type' => 'select', 'multiple' => 'checkbox']
                         'selectContainer' => '<div class="form-group clearfix"{{attrs}}>{{content}}{{error}}{{help}}</div>',
+                        'selectContainerError' => '<div class="form-group clearfix has-danger"{{attrs}}>{{content}}{{error}}{{help}}</div>',
+
                         'selectFormGroup' => '{{label}}<div class="custom-controls-stacked"{{attrs}}>{{input}}</div>',
                     ]);
                     break;
