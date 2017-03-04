@@ -2,9 +2,4 @@
 /vendor/*
 /tmp/*
 docs/.sass-cache
-docs/build/doctrees
-docs/build/html/php-modindex.html
-docs/build/html/objects.inv
-docs/build/html/.buildinfo
-docs/build/html/search*
-docs/build/html/genindex.html
+docs/build
