@@ -1,31 +1,47 @@
 Changelog
 #########
 
+.. raw:: html
 
+    <span class="badge badge-primary float-right">Bootstrap 4.0.0-alpha6</span>
+2.1.6.4 (05-Mar-2017)
+---------------------
+
+- New documentation
+- Improved File Browser control
+- Select controls now render as bootstrap
+- Added more tests and Fixed some others
+
+.. raw:: html
+
+    <span class="badge badge-primary float-right">Bootstrap 4.0.0-alpha6</span>
 2.1.6.3 (27-Feb-2017)
 ---------------------
 
-   - Fixed non-dismissible alert css
-   - Excluded certain files from packagist dists
-   - Added tether javascript output
-   - Add tests for HtmlHelper::bootstrapScript and HtmlHelper::bootstrapCss
+- Fixed non-dismissible alert css
+- Excluded certain files from packagist dists
+- Added tether javascript output
+- Add tests for HtmlHelper::bootstrapScript and HtmlHelper::bootstrapCss
 
+.. raw:: html
+
+    <span class="badge badge-primary float-right">Bootstrap 4.0.0-alpha6</span>
 2.1.6.2 (13-Feb-2017)
 ---------------------
 
-   - Fixed help container (now not rendered as empty when no help)
-   - Plugin javascript is no longer required
-   - Plugin javascript is defaulted to not included now with HtmlHelper::bootstrapScript
-   - Updated Prefix/Suffix in FormHelper
-      - Supports attributes / css
-      - Supports multiple
-      - Supports non-escaping
-      - Now Support button type
-      - Now Supports large size
-   - Added Progress method to HtmlHelper
-      - Supports multiple
-      - Supports stripes (inc animated)
-      - Supports label
-   - Now requires CakePHP 3.3.15 now (Requires modification we submitted)
+- Fixed help container (now not rendered as empty when no help)
+- Plugin javascript is no longer required
+- Plugin javascript is defaulted to not included now with HtmlHelper::bootstrapScript
+- Updated Prefix/Suffix in FormHelper
+    - Supports attributes / css
+    - Supports multiple
+    - Supports non-escaping
+    - Now Support button type
+    - Now Supports large size
+- Added Progress method to HtmlHelper
+    - Supports multiple
+    - Supports stripes (inc animated)
+    - Supports label
+- Now requires CakePHP 3.3.15 now (Requires modification we submitted)
 
 
