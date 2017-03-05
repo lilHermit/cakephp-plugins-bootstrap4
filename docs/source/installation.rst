@@ -17,10 +17,24 @@ Add the plugin with the following command from your application root filter
 Setting up your Application
 ---------------------------
 
-Load the plugin in your `bootstrap.php`::
+Load the plugin in your `bootstrap.php` before the ``Type::build`` statements ::
+
+    ...
 
     Plugin::load('lilHermit/Bootstrap4', ['bootstrap' => true]);
 
+    ...
+
+    Type::build('time')
+        ->useImmutable();
+    Type::build('date')
+        ->useImmutable();
+    Type::build('datetime')
+        ->useImmutable();
+    Type::build('timestamp')
+        ->useImmutable();
+
+    ...
 
 Configuring AppView
 -------------------

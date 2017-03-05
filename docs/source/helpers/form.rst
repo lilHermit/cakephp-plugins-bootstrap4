@@ -206,6 +206,9 @@ Will render like
 Datetime elements
 =================
 
+HTML5 Datetime
+--------------
+
 This plugin overrides CakePHPs default rendering of datetime elements and renders using HTML5
 builtin date/time functionality, as follows:
 
@@ -216,7 +219,7 @@ builtin date/time functionality, as follows:
 If you prefer the CakePHP default of multiple ``select`` controls you can achieve this with
 the following option::
 
-    echo $this->Form->control('DateOfBirth', ['html5Render' => false]);
+    echo $this->Form->control('CakePHPStyleDatetime', ['html5Render' => false]);
 
 Will render like
 
@@ -229,6 +232,53 @@ Will render like
     A browser capable of render HTML5 datetime elements is required. Support is available in Chrome 49+,
     Opera 43+, MS Edge, Android browser + iOS Safari 7.1+ (Partial). For more information
     `check here <http://caniuse.com/#feat=input-datetime>`_
+
+Validation
+----------
+
+If you want perform validation on HTML5 datetime elements then the standard dateTime Validator will fail.
+Therefore you need to register our validation provider and use `dateTime` rule as follows in your ``Tables``::
+
+    namespace App\Model\Table;
+
+    use Cake\ORM\Table;
+    use Cake\Validation\Validator;
+    use Cake\Validation\RulesProvider;
+
+    class MyTable extends Table {
+
+        public function validationDefault(Validator $validator) {
+
+            // Register the provider with the correct Validation class
+            $validator->provider('bootstrap4', new RulesProvider('\lilHermit\Bootstrap4\Validation\Validation'));
+
+            // Use the plugin provider for the `expires` field
+            $validator
+                ->add('expires',  'custom', [
+                    'rule' => 'dateTime',
+                    'provider' => 'bootstrap4',
+            ]);
+        }
+    }
+
+Disabling HTML5 datetime parsing
+--------------------------------
+
+By default the plugin automatically parses the html5 date format of `2014-12-31T23:59` as well as standard
+CakePHP datetime. You can to disable this by adding the following to your app config array::
+
+        return [
+
+             // ... other config
+
+                'lilHermit-plugin-bootstrap4' => [
+                     'disable-html5-datetime-type' => true
+                ]
+            ];
+
+.. note::
+
+    This Type parsing is backwards compatible so it is likely you will need to disable
 
 Custom Form Controls
 ====================
