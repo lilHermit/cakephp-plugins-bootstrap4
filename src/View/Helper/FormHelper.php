@@ -834,7 +834,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         $options = parent::_datetimeOptions($options);
 
         foreach ($this->_datetimeParts as $type) {
-            if ($options[$type]) {
+            if (is_array($options[$type])) {
                 $options[$type] = Html::addClass($options[$type], 'form-control');
             }
         }

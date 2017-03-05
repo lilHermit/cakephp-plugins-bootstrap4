@@ -5994,7 +5994,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/option',
             '*/select',
 
-            ['select' => ['name' => 'Contact[date][day]']],
+            ['select' => ['name' => 'Contact[date][day]', 'class' => 'form-control']],
             $daysRegex,
             ['option' => ['value' => date('d', $now), 'selected' => 'selected']],
             date('j', $now),
