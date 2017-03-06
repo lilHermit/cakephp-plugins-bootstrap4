@@ -3,3 +3,4 @@
 /tmp/*
 docs/.sass-cache
 docs/build
+composer.lock

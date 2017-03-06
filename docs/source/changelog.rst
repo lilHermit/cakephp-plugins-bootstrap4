@@ -4,6 +4,7 @@ Changelog
 .. raw:: html
 
     <span class="badge badge-primary float-right">Bootstrap 4.0.0-alpha6</span>
+
 2.1.6.4 (05-Mar-2017)
 ---------------------
 
@@ -15,6 +16,7 @@ Changelog
 .. raw:: html
 
     <span class="badge badge-primary float-right">Bootstrap 4.0.0-alpha6</span>
+
 2.1.6.3 (27-Feb-2017)
 ---------------------
 
@@ -26,6 +28,7 @@ Changelog
 .. raw:: html
 
     <span class="badge badge-primary float-right">Bootstrap 4.0.0-alpha6</span>
+
 2.1.6.2 (13-Feb-2017)
 ---------------------
 
