@@ -5,6 +5,16 @@ Changelog
 
     <span class="badge badge-primary float-right">Bootstrap 4.0.0-alpha6</span>
 
+2.1.6.5 (TBC)
+---------------------
+
+- Simplified Html5DateTime Validation with behavior
+- Unpinned from CakePHP 3.3.x (Now supports 3.4.x)
+
+.. raw:: html
+
+    <span class="badge badge-primary float-right">Bootstrap 4.0.0-alpha6</span>
+
 2.1.6.4 (05-Mar-2017)
 ---------------------
 

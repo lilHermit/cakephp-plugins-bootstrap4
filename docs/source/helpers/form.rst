@@ -237,7 +237,7 @@ Validation
 ----------
 
 If you want perform validation on HTML5 datetime elements then the standard dateTime Validator will fail.
-Therefore you need to register our validation provider and use `dateTime` rule as follows in your ``Tables``::
+Therefore you need to use ``Html5DateTimeBehavior`` as follows in your ``Tables`` ::
 
     namespace App\Model\Table;
 
@@ -247,19 +247,26 @@ Therefore you need to register our validation provider and use `dateTime` rule a
 
     class MyTable extends Table {
 
-        public function validationDefault(Validator $validator) {
-
-            // Register the provider with the correct Validation class
-            $validator->provider('bootstrap4', new RulesProvider('\lilHermit\Bootstrap4\Validation\Validation'));
-
-            // Use the plugin provider for the `expires` field
-            $validator
-                ->add('expires',  'custom', [
-                    'rule' => 'dateTime',
-                    'provider' => 'bootstrap4',
-            ]);
+        public function initialize(array $config)
+        {
+            $this->addBehavior('lilHermit/Bootstrap4.Html5DateTime');
         }
     }
+
+.. versionadded:: 2.1.6.5 (Previously you need to add the provider manually)
+
+Then add the rule as below to your ``validationDefault`` method::
+
+    public function validationDefault(Validator $validator) {
+
+        // Use the plugin provider for the `expiry` field
+        $validator
+            ->add('expiry',  'custom', [
+                'rule' => 'dateTime',
+                'provider' => 'bootstrap4',
+        ]);
+    }
+
 
 Disabling HTML5 datetime parsing
 --------------------------------
@@ -267,18 +274,18 @@ Disabling HTML5 datetime parsing
 By default the plugin automatically parses the html5 date format of `2014-12-31T23:59` as well as standard
 CakePHP datetime. You can to disable this by adding the following to your app config array::
 
-        return [
+    return [
 
-             // ... other config
+            // ... other config
 
-                'lilHermit-plugin-bootstrap4' => [
-                     'disable-html5-datetime-type' => true
-                ]
-            ];
+            'lilHermit-plugin-bootstrap4' => [
+                 'disable-html5-datetime-type' => true
+            ]
+        ];
 
 .. note::
 
-    This Type parsing is backwards compatible so it is likely you will need to disable
+    This Type parsing is backwards compatible so it is unlikely you will need to disable
 
 Custom Form Controls
 ====================
