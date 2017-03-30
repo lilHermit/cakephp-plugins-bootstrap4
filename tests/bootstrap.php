@@ -15,12 +15,13 @@ use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\Log\Log;
 
-require_once 'vendor/autoload.php';
-
 if (!defined('DS')) {
     define('DS', DIRECTORY_SEPARATOR);
 }
 define('ROOT', dirname(__DIR__));
+
+require_once ROOT . DS . 'vendor/autoload.php';
+
 define('APP_DIR', 'TestApp');
 
 define('TMP', sys_get_temp_dir() . DS);

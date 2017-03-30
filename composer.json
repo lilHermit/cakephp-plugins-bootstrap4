@@ -7,7 +7,7 @@
     "lilhermit/cakephp-plugin-toolkit": "^1.2.1"
   },
   "require-dev": {
-    "phpunit/phpunit": "^5.3",
+    "phpunit/phpunit": "^5.7|^6.0",
     "squizlabs/php_codesniffer": "2.*"
   },
   "autoload": {
