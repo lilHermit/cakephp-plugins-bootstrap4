@@ -217,7 +217,13 @@ builtin date/time functionality, as follows:
     <div class="form-group"><label class="col-form-label" for="date">HTML5 Style Datetime</label><input type="datetime-local" name="date" class="form-control" id="date" class="form-control"/></div>
 
 If you prefer the CakePHP default of multiple ``select`` controls you can achieve this with
-the following option::
+the following option with, either at Form creation time::
+
+    echo $this->Form->create($registerUserForm, ['html5Render' => false]);
+
+.. versionadded:: 2.1.6.5 Setting at Form creation time
+
+or per control::
 
     echo $this->Form->control('CakePHPStyleDatetime', ['html5Render' => false]);
 
