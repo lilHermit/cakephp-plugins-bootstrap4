@@ -12,6 +12,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     protected $customControls = true;
     protected $html5Render = true;
 
+    protected $_userChangedTemplates = [];
+
     protected $_bootstrapWidgets = [
         'bootstrapDateTime' => ['lilHermit/Bootstrap4.BootstrapDateTime'],
         'hidden' => ['lilHermit/Bootstrap4.Hidden']
@@ -606,11 +608,40 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * @return void
      */
     public function setTemplates(array $templates) {
+
+        if ($templates !== null && is_array($templates)) {
+            $this->_userChangedTemplates = array_merge(array_keys($templates), $this->_userChangedTemplates);
+        }
+
+        $this->_setTemplatesInternal($templates);
+    }
+
+    protected function _setTemplatesInternal(array $templates) {
+
         if (method_exists(get_parent_class($this), 'setTemplates')) {
             parent::setTemplates($templates);
         } else {
             parent::templates($templates);
         }
+    }
+
+    /**
+     * Gets/sets templates to use.
+     *
+     * @deprecated 3.4.0 Use setTemplates()/getTemplates() instead.
+     *
+     * @param string|null|array $templates null or string allow reading templates. An array
+     *                                     allows templates to be added.
+     *
+     * @return $this|string|array
+     */
+    public function templates($templates = null) {
+
+        if ($templates !== null && !is_string($templates)) {
+            $this->_userChangedTemplates = array_merge(array_keys($templates), $this->_userChangedTemplates);
+        }
+
+        return parent::templates($templates);
     }
 
     private function switchTemplates(&$options, $type = null) {
@@ -628,18 +659,19 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             return;
         }
 
+        $newTemplates = [];
         if ($options['customControls']) {
 
             switch ($type) {
                 case 'checkbox':
-                    $this->setTemplates([
+                    $newTemplates = [
                         'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}<span class="custom-control-indicator"></span> <span class="custom-control-description">{{text}}</span></label>',
                         'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}> ',
                         'checkboxContainer' => '<div class="form-group clearfix"{{attrs}}>{{content}}{{error}}{{help}}</div>',
-                    ]);
+                    ];
                     break;
                 case 'multicheckbox':
-                    $this->setTemplates([
+                    $newTemplates = [
                         'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}<span class="custom-control-indicator"></span> <span class="custom-control-description">{{text}}</span></label>',
                         'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}> ',
                         'checkboxWrapper' => '{{label}}',
@@ -649,25 +681,25 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                         'selectContainerError' => '<div class="form-group clearfix has-danger"{{attrs}}>{{content}}{{error}}{{help}}</div>',
 
                         'selectFormGroup' => '{{label}}<div class="custom-controls-stacked"{{attrs}}>{{input}}</div>',
-                    ]);
+                    ];
                     break;
                 case 'radio':
-                    $this->setTemplates([
+                    $newTemplates = [
                         'nestingLabel' => '<label{{attrs}}>{{input}}<span class="custom-control-indicator"></span> <span class="custom-control-description">{{text}}</span></label>',
                         'radio' => '<input type="radio" name="{{name}}" value="{{value}}"{{attrs}}> ',
                         'radioWrapper' => '{{label}}'
-                    ]);
+                    ];
                     break;
                 case 'file':
-                    $this->setTemplates([
+                    $newTemplates = [
                         'file' => '<label class="custom-file"><input type="file" name="{{name}}"{{attrs}}><span class="custom-file-control"></span></label>',
-                    ]);
+                    ];
                     break;
             }
         } else {
             switch ($type) {
                 case 'multicheckbox':
-                    $this->setTemplates([
+                    $newTemplates = [
                         'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
                         'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}>',
                         'checkboxWrapper' => '<div class="form-check">{{label}}</div>',
@@ -675,28 +707,40 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                         // Reset incase custom was previously used
                         'selectContainer' => null,
                         'selectFormGroup' => null,
-                    ]);
+                    ];
                     break;
                 case 'checkbox':
-                    $this->setTemplates([
+                    $newTemplates = [
                         'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
                         'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}>',
                         'checkboxContainer' => '<div class="form-check"{{attrs}}>{{content}}{{error}}{{help}}</div>',
-                    ]);
+                    ];
                     break;
                 case 'radio':
-                    $this->setTemplates([
+                    $newTemplates = [
                         'radioWrapper' => '<div class="form-check">{{label}}</div>',
                         'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
                         'radio' => '<input type="radio" name="{{name}}" value="{{value}}"{{attrs}}>',
-                    ]);
+                    ];
                     break;
                 case 'file':
-                    $this->setTemplates([
+                    $newTemplates = [
                         'file' => '<input type="file" name="{{name}}"{{attrs}}>'
-                    ]);
+                    ];
                     break;
             }
+        }
+
+        // Set any templates after removing the ones previously set by the user
+        if (!empty($newTemplates)) {
+
+            foreach ($this->_userChangedTemplates as $key) {
+
+                if (array_key_exists($key, $newTemplates)) {
+                    unset($newTemplates[$key]);
+                }
+            }
+            $this->_setTemplatesInternal($newTemplates);
         }
     }
 

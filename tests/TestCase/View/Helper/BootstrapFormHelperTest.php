@@ -1835,4 +1835,33 @@ class BootstrapFormHelperTest extends TestCase {
             '/div'
         ], $result);
     }
+
+    public function testTemplateOverriding() {
+
+        $this->Form->setTemplates([
+            'checkboxContainer' => '<div class="check">{{content}}</div>'
+        ]);
+        $result = $this->Form->control('agree_terms', ['type' => 'checkbox', 'customControls' => false]);
+
+        $this->assertHtml([
+            'div' => ['class' => 'check'],
+            'input' => [
+                'type' => 'hidden',
+                'name' => 'agree_terms',
+                'value' => '0'
+            ],
+            ['label' => ['class' => 'form-check-label', 'for' => 'agree-terms']],
+            ['input' => [
+                'type' => 'checkbox',
+                'name' => 'agree_terms',
+                'id' => 'agree-terms',
+                'value' => '1',
+                'class' => 'form-check-input'
+            ]],
+            'Agree Terms',
+            '/label',
+            '/div'
+        ], $result);
+    }
+
 }

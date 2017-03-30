@@ -2940,8 +2940,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'name' => 'Model[field]',
                 'value' => ''
             ]],
-
-            ['div' => ['class' => 'form-check']],
             ['label' => ['for' => 'model-field-0', 'class' => 'form-check-label']],
             ['input' => [
                 'type' => 'radio',
@@ -2952,8 +2950,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ]],
             'option A',
             '/label',
-            '/div',
-            ['div' => ['class' => 'form-check']],
             ['label' => ['for' => 'model-field-1', 'class' => 'form-check-label']],
             ['input' => [
                 'type' => 'radio',
@@ -2963,8 +2959,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'class' => 'form-check-input'
             ]],
             'option B',
-            '/label',
-            '/div'
+            '/label'
         ];
         //@codingStandardsIgnoreEnd
         $this->assertHtml($expected, $result);
@@ -7474,7 +7469,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'name' => 'Model[field]',
                 'value' => ''
             ]],
-            ['div' => ['class' => 'form-check']],
             ['label' => ['for' => 'model-field-0', 'class']],
             ['input' => [
                 'type' => 'radio',
@@ -7485,8 +7479,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ]],
             'option A',
             '/label',
-            '/div',
-            ['div' => ['class' => 'form-check']],
             ['label' => ['for' => 'model-field-1', 'class']],
             ['input' => [
                 'type' => 'radio',
@@ -7496,8 +7488,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'class'
             ]],
             'option B',
-            '/label',
-            '/div'
+            '/label'
         ];
         //@codingStandardsIgnoreEnd
         $this->assertHtml($expected, $result);
@@ -7891,9 +7882,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             'div' => ['class' => 'form-check'],
             ['input' => ['type' => 'hidden', 'name' => 'foo', 'value' => '0']],
-            'label' => ['for' => 'foo', 'class'],
             ['input' => ['type' => 'checkbox', 'name' => 'foo', 'id' => 'foo', 'value' => '1',
                 'class' => 'form-check-input']],
+            'label' => ['for' => 'foo', 'class'],
             'Foo',
             '/label',
             '/div'
@@ -7918,16 +7909,16 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'div' => ['class' => 'form-group'],
             ['input' => ['type' => 'hidden', 'name' => 'confirm', 'value' => '']],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'confirm-y', 'class']],
             ['input' => ['type' => 'radio', 'name' => 'confirm', 'id' => 'confirm-y', 'value' => 'Y',
                 'class' => 'form-check-input']],
+            ['label' => ['for' => 'confirm-y', 'class']],
             'Yes',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'confirm-n', 'class']],
             ['input' => ['type' => 'radio', 'name' => 'confirm', 'id' => 'confirm-n', 'value' => 'N',
                 'class' => 'form-check-input']],
+            ['label' => ['for' => 'confirm-n', 'class']],
             'No',
             '/label',
             '/div',
@@ -7945,14 +7936,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             'input' => ['type' => 'hidden', 'name' => 'fish', 'value' => ''],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'fish-0', 'class']],
             ['input' => ['type' => 'checkbox', 'name' => 'fish[]', 'value' => '0', 'id' => 'fish-0', 'class']],
+            ['label' => ['for' => 'fish-0', 'class']],
             '1',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'fish-1', 'class']],
             ['input' => ['type' => 'checkbox', 'name' => 'fish[]', 'value' => '1', 'id' => 'fish-1', 'class']],
+            ['label' => ['for' => 'fish-1', 'class']],
             '2',
             '/label',
             '/div'
@@ -7968,7 +7959,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testControlContainerTemplates() {
-        // TODO Honour template changes
         $this->Form->templates([
             'checkboxContainer' => '<div class="check">{{content}}</div>',
             'radioContainer' => '<div class="rad">{{content}}</div>',
@@ -7985,7 +7975,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'type' => 'checkbox',
         ]);
         $expected = [
-            'div' => ['class' => 'form-check'],
+            'div' => ['class' => 'check'],
             ['input' => ['type' => 'hidden', 'name' => 'accept', 'value' => 0]],
             'label' => ['for' => 'accept', 'class'],
             ['input' => ['id' => 'accept', 'type' => 'checkbox', 'name' => 'accept', 'value' => 1, 'class']],
