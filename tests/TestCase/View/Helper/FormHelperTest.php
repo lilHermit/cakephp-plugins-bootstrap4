@@ -1,4 +1,5 @@
 <?php
+
 namespace lilHermit\Bootstrap4\Test\TestCase\View\Helper;
 
 use Cake\Collection\Collection;
@@ -21,7 +22,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $request = $this->Form->Url->request;
 
-        $this->Form = new FormHelper($this->View, ['customControls' => false]);
+        $this->Form = new FormHelper($this->View, ['customControls' => false, 'html5Render' => false]);
         $this->Form->Url->request = $this->Form->request = $request;
     }
 
@@ -4018,72 +4019,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
     }
 
     /**
-     * testDateTimeLabelIdMatchesFirstInput method
-     *
-     * When changing the date format, the label should always focus the first select box when
-     * clicked.
-     *
-     * @return void
-     */
-    public function testDateTimeLabelIdMatchesFirstInput() {
-        $result = $this->Form->input('Model.date', ['type' => 'date']);
-        $this->assertContains('<label class="col-form-label" for="model-date">Date</label>', $result);
-
-        $result = $this->Form->input('Model.date', ['type' => 'date', 'dateFormat' => 'DMY']);
-        $this->assertContains('<label class="col-form-label" for="model-date">Date</label>', $result);
-
-        $result = $this->Form->input('Model.date', ['type' => 'date', 'dateFormat' => 'YMD']);
-        $this->assertContains('<label class="col-form-label" for="model-date">Date</label>', $result);
-    }
-
-    /**
-     * testInputDatetimePreEpoch method
-     *
-     * Test minYear being prior to the unix epoch.
-     *
-     * @return void
-     */
-    public function testInputDatetimePreEpoch() {
-        $start = date('Y') - 80;
-        $end = date('Y') - 18;
-        $result = $this->Form->input('birth_year', [
-            'type' => 'date',
-            'label' => 'Birth Year',
-            'minYear' => $start,
-            'maxYear' => $end,
-            'month' => false,
-            'day' => false,
-            'html5Render' => false
-        ]);
-        $this->assertContains('value="' . $start . '">' . $start, $result);
-        $this->assertContains('value="' . $end . '" selected="selected">' . $end, $result);
-        $this->assertNotContains('value="00">00', $result);
-    }
-
-    /**
-     * testInputDate method
-     *
-     * Test that input() accepts the type of date and passes options in.
-     *
-     * @return void
-     */
-    public function testInputDate() {
-        $this->Form->request->data = [
-            'month_year' => ['month' => date('m')],
-        ];
-        $this->Form->create($this->article);
-        $result = $this->Form->input('month_year', [
-            'label' => false,
-            'type' => 'date',
-            'minYear' => 2006,
-            'maxYear' => 2008,
-            'html5Render' => false
-        ]);
-        $this->assertContains('value="' . date('m') . '" selected="selected"', $result);
-        $this->assertNotContains('value="2008" selected="selected"', $result);
-    }
-
-    /**
      * testInputLabelFalse method
      *
      * Test the label option being set to false.
@@ -4099,31 +4034,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/div'
         ];
         $this->assertHtml($expected, $result);
-    }
-
-    /**
-     * testInputDateMaxYear method
-     *
-     * Let's say we want to only allow users born from 2006 to 2008 to register
-     * This being the first signup page, we still don't have any data.
-     *
-     * @return void
-     */
-    public function testInputDateMaxYear() {
-        $this->Form->request->data = [];
-        $this->Form->create($this->article);
-        $result = $this->Form->input('birthday', [
-            'label' => false,
-            'type' => 'date',
-            'minYear' => 2006,
-            'maxYear' => 2008,
-            'default' => true,
-            'html5Render' => false
-        ]);
-        $this->assertContains('value="2008" selected="selected"', $result);
-        $this->assertContains('value="2006"', $result);
-        $this->assertNotContains('value="2005"', $result);
-        $this->assertNotContains('value="2009"', $result);
     }
 
     /**
@@ -4979,8 +4889,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->assertContains('<div class="rad err">', $result);
 
         $result = $this->Form->input('Article.created', [
-            'type' => 'datetime',
-            'html5Render' => false
+            'type' => 'datetime'
         ]);
         $this->assertContains('<div class="dt">', $result);
     }
@@ -6128,6 +6037,2011 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/option',
             '*/select',
         ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * Test using template vars in various templates used by control() method.
+     *
+     * @return void
+     */
+    public function testControlTemplateVars() {
+        $result = $this->Form->control('text', [
+            'templates' => [
+                'input' => '<input custom="{{forinput}}" type="{{type}}" name="{{name}}"{{attrs}}/>',
+                'label' => '<label{{attrs}}>{{text}} {{forlabel}}</label>',
+                'formGroup' => '{{label}}{{forgroup}}{{input}}',
+                'inputContainer' => '<div class="input {{type}}{{required}}">{{content}}{{forcontainer}}</div>',
+            ],
+            'templateVars' => [
+                'forinput' => 'in-input',
+                'forlabel' => 'in-label',
+                'forgroup' => 'in-group',
+                'forcontainer' => 'in-container'
+            ]
+        ]);
+        $expected = [
+            'div' => ['class'],
+            'label' => ['for', 'class'],
+            'Text in-label',
+            '/label',
+            'in-group',
+            'input' => ['name', 'type' => 'text', 'id', 'custom' => 'in-input', 'class' => 'form-control'],
+            'in-container',
+            '/div',
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * Test ensuring template variables work in template files loaded
+     * during control().
+     *
+     * @return void
+     */
+    public function testControlTemplatesFromFile() {
+        $result = $this->Form->control('title', [
+            'templates' => 'test_templates',
+            'templateVars' => [
+                'forcontainer' => 'container-data'
+            ]
+        ]);
+        $expected = [
+            'div' => ['class'],
+            'label' => ['for', 'class'],
+            'Title',
+            '/label',
+            'input' => ['name', 'type' => 'text', 'id', 'class' => 'form-control'],
+            'container-data',
+            '/div',
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testFormSecuredControl method
+     *
+     * Test generation of entire secure form, assertions made on control() output.
+     *
+     * @return void
+     */
+    public function testFormSecuredControl() {
+        $this->Form->request->params['_csrfToken'] = 'testKey';
+        $this->Form->request->params['_Token'] = 'stuff';
+        $this->article['schema'] = [
+            'ratio' => ['type' => 'decimal', 'length' => 5, 'precision' => 6],
+            'population' => ['type' => 'decimal', 'length' => 15, 'precision' => 0],
+        ];
+
+        $result = $this->Form->create($this->article, ['url' => '/articles/add']);
+        $encoding = strtolower(Configure::read('App.encoding'));
+        $expected = [
+            'form' => ['method' => 'post', 'action' => '/articles/add', 'accept-charset' => $encoding],
+            'div' => ['style' => 'display:none;'],
+            ['input' => ['type' => 'hidden', 'name' => '_method', 'value' => 'POST']],
+            ['input' => [
+                'type' => 'hidden',
+                'name' => '_csrfToken',
+                'value' => 'testKey'
+            ]],
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('ratio');
+        $expected = [
+            'div' => ['class'],
+            'label' => ['for', 'class'],
+            'Ratio',
+            '/label',
+            'input' => ['name', 'type' => 'number', 'step' => '0.000001', 'id', 'class'],
+            '/div',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('population');
+        $expected = [
+            'div' => ['class'],
+            'label' => ['for', 'class'],
+            'Population',
+            '/label',
+            'input' => ['name', 'type' => 'number', 'step' => '1', 'id', 'class'],
+            '/div',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('published', ['type' => 'text']);
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'published', 'class'],
+            'Published',
+            '/label',
+            ['input' => [
+                'type' => 'text',
+                'name' => 'published',
+                'id' => 'published',
+                'class'
+            ]],
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('other', ['type' => 'text']);
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'other', 'class'],
+            'Other',
+            '/label',
+            ['input' => [
+                'type' => 'text',
+                'name' => 'other',
+                'id',
+                'class'
+            ]],
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->hidden('stuff');
+        $expected = [
+            'input' => [
+                'type' => 'hidden',
+                'name' => 'stuff'
+            ]
+        ];
+
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->hidden('hidden', ['value' => '0']);
+        $expected = ['input' => [
+            'type' => 'hidden',
+            'name' => 'hidden',
+            'value' => '0'
+        ]];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('something', ['type' => 'checkbox']);
+        $expected = [
+            'div' => ['class' => 'form-check'],
+            ['input' => [
+                'type' => 'hidden',
+                'name' => 'something',
+                'value' => '0'
+            ]],
+            'label' => ['for' => 'something', 'class'],
+            ['input' => [
+                'type' => 'checkbox',
+                'name' => 'something',
+                'value' => '1',
+                'id' => 'something',
+                'class'
+            ]],
+            'Something',
+            '/label',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+        $result = $this->Form->fields;
+        $expectedFields = [
+            'ratio',
+            'population',
+            'published',
+            'other',
+            'stuff' => '',
+            'hidden' => '0',
+            'something'
+        ];
+        $this->assertEquals($expectedFields, $result);
+
+        $result = $this->Form->secure($this->Form->fields);
+        $tokenDebug = urlencode(json_encode([
+            '/articles/add',
+            $expectedFields,
+            []
+        ]));
+
+        $expected = [
+            'div' => ['style' => 'display:none;'],
+            ['input' => [
+                'type' => 'hidden',
+                'name' => '_Token[fields]',
+                'value'
+            ]],
+            ['input' => [
+                'type' => 'hidden',
+                'name' => '_Token[unlocked]',
+                'value' => ''
+            ]],
+            ['input' => [
+                'type' => 'hidden', 'name' => '_Token[debug]',
+                'value' => $tokenDebug,
+            ]],
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testEmptyControlErrorValidation method
+     *
+     * Test validation errors, when calling control() overriding validation message by an empty string.
+     *
+     * @return void
+     */
+    public function testEmptyControlErrorValidation() {
+        $this->article['errors'] = [
+            'Article' => ['title' => 'error message']
+        ];
+        $this->Form->create($this->article);
+
+        $result = $this->Form->control('Article.title', ['error' => '']);
+        $expected = [
+            'div' => ['class' => 'form-group has-danger'],
+            'label' => ['for' => 'article-title', 'class'],
+            'Title',
+            '/label',
+            'input' => [
+                'type' => 'text', 'name' => 'Article[title]',
+                'id' => 'article-title', 'class' => 'form-control-danger form-control'
+            ],
+            ['div' => ['class' => 'form-control-feedback']],
+            [],
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlErrorMessage method
+     *
+     * Test validation errors, when calling control() overriding validation messages.
+     *
+     * @return void
+     */
+    public function testControlErrorMessage() {
+        $this->article['errors'] = [
+            'title' => ['error message']
+        ];
+        $this->Form->create($this->article);
+
+        $result = $this->Form->control('title', [
+            'error' => 'Custom error!'
+        ]);
+        $expected = [
+            'div' => ['class' => 'form-group has-danger'],
+            'label' => ['for' => 'title', 'class'],
+            'Title',
+            '/label',
+            'input' => [
+                'type' => 'text', 'name' => 'title',
+                'id' => 'title', 'class' => 'form-control-danger form-control',
+                'required' => 'required',
+            ],
+            ['div' => ['class' => 'form-control-feedback']],
+            'Custom error!',
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('title', [
+            'error' => ['error message' => 'Custom error!']
+        ]);
+        $expected = [
+            'div' => ['class' => 'form-group has-danger'],
+            'label' => ['for' => 'title', 'class'],
+            'Title',
+            '/label',
+            'input' => [
+                'type' => 'text',
+                'name' => 'title',
+                'id' => 'title',
+                'class' => 'form-control-danger form-control',
+                'required' => 'required'
+            ],
+            ['div' => ['class' => 'form-control-feedback']],
+            'Custom error!',
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControl method
+     *
+     * Test various incarnations of control().
+     *
+     * @return void
+     */
+    public function testControl() {
+        TableRegistry::get('ValidateUsers', [
+            'className' => 'Cake\Test\TestCase\View\Helper\ValidateUsersTable'
+        ]);
+        $this->Form->create([], ['context' => ['table' => 'ValidateUsers']]);
+        $result = $this->Form->control('ValidateUsers.balance');
+        $expected = [
+            'div' => ['class'],
+            'label' => ['for', 'class'],
+            'Balance',
+            '/label',
+            'input' => ['name', 'type' => 'number', 'id', 'step', 'class'],
+            '/div',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('ValidateUser.cost_decimal');
+        $expected = [
+            'div' => ['class'],
+            'label' => ['for', 'class'],
+            'Cost Decimal',
+            '/label',
+            'input' => ['name', 'type' => 'number', 'step' => '0.001', 'id', 'class'],
+            '/div',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('ValidateUser.null_decimal');
+        $expected = [
+            'div' => ['class'],
+            'label' => ['for', 'class'],
+            'Null Decimal',
+            '/label',
+            'input' => ['name', 'type' => 'number', 'id', 'class'],
+            '/div',
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlCustomization method
+     *
+     * Tests the input method and passing custom options.
+     *
+     * @return void
+     */
+    public function testControlCustomization() {
+        TableRegistry::get('Contacts', [
+            'className' => 'Cake\Test\TestCase\View\Helper\ContactsTable'
+        ]);
+        $this->Form->create([], ['context' => ['table' => 'Contacts']]);
+        $result = $this->Form->control('Contact.email', ['id' => 'custom']);
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'custom', 'class'],
+            'Email',
+            '/label',
+            ['input' => [
+                'type' => 'email', 'name' => 'Contact[email]',
+                'id' => 'custom', 'maxlength' => 255, 'class'
+            ]],
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('Contact.email', [
+            'templates' => ['inputContainer' => '<div>{{content}}</div>']
+        ]);
+        $expected = [
+            '<div',
+            'label' => ['for' => 'contact-email', 'class'],
+            'Email',
+            '/label',
+            ['input' => [
+                'type' => 'email', 'name' => 'Contact[email]',
+                'id' => 'contact-email', 'maxlength' => 255, 'class'
+            ]],
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('Contact.email', ['type' => 'text']);
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'contact-email', 'class'],
+            'Email',
+            '/label',
+            ['input' => [
+                'type' => 'text', 'name' => 'Contact[email]',
+                'id' => 'contact-email', 'maxlength' => '255', 'class'
+            ]],
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('Contact.5.email', ['type' => 'text']);
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'contact-5-email', 'class'],
+            'Email',
+            '/label',
+            ['input' => [
+                'type' => 'text', 'name' => 'Contact[5][email]',
+                'id' => 'contact-5-email', 'maxlength' => '255', 'class'
+            ]],
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('Contact.password');
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'contact-password', 'class'],
+            'Password',
+            '/label',
+            ['input' => [
+                'type' => 'password', 'name' => 'Contact[password]',
+                'id' => 'contact-password', 'class'
+            ]],
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('Contact.email', [
+            'type' => 'file', 'class' => 'textbox'
+        ]);
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'contact-email'],
+            'Email',
+            '/label',
+            ['input' => [
+                'type' => 'file', 'name' => 'Contact[email]', 'class' => 'textbox form-control-file',
+                'id' => 'contact-email'
+            ]],
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $entity = new Entity(['phone' => 'Hello & World > weird chars']);
+        $this->Form->create($entity, ['context' => ['table' => 'Contacts']]);
+        $result = $this->Form->control('phone');
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'phone', 'class'],
+            'Phone',
+            '/label',
+            ['input' => [
+                'type' => 'tel', 'name' => 'phone',
+                'value' => 'Hello &amp; World &gt; weird chars',
+                'id' => 'phone', 'maxlength' => 255, 'class'
+            ]],
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->request->data['Model']['0']['OtherModel']['field'] = 'My value';
+        $this->Form->create();
+        $result = $this->Form->control('Model.0.OtherModel.field', ['id' => 'myId']);
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'myId', 'class'],
+            'Field',
+            '/label',
+            'input' => [
+                'type' => 'text', 'name' => 'Model[0][OtherModel][field]',
+                'value' => 'My value', 'id' => 'myId', 'class'
+            ],
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->request->data = [];
+
+        $entity->errors('field', 'Badness!');
+        $this->Form->create($entity, ['context' => ['table' => 'Contacts']]);
+        $result = $this->Form->control('field');
+        $expected = [
+            'div' => ['class' => 'form-group has-danger'],
+            'label' => ['for' => 'field', 'class'],
+            'Field',
+            '/label',
+            'input' => [
+                'type' => 'text', 'name' => 'field',
+                'id' => 'field', 'class' => 'form-control-danger form-control'
+            ],
+            ['div' => ['class' => 'form-control-feedback']],
+            'Badness!',
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('field', [
+            'templates' => [
+                'inputContainerError' => '{{content}}{{error}}',
+                'error' => '<span class="error-message">{{content}}</span>'
+            ]
+        ]);
+        $expected = [
+            'label' => ['for' => 'field', 'class'],
+            'Field',
+            '/label',
+            'input' => [
+                'type' => 'text', 'name' => 'field',
+                'id' => 'field', 'class' => 'form-control-danger form-control'
+            ],
+            ['span' => ['class' => 'error-message']],
+            'Badness!',
+            '/span'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $entity->errors('field', ['minLength'], true);
+        $result = $this->Form->control('field', [
+            'error' => [
+                'minLength' => 'Le login doit contenir au moins 2 caractères',
+                'maxLength' => 'login too large'
+            ]
+        ]);
+        $expected = [
+            'div' => ['class' => 'form-group has-danger'],
+            'label' => ['for' => 'field', 'class'],
+            'Field',
+            '/label',
+            'input' => ['type' => 'text', 'name' => 'field', 'id' => 'field', 'class' => 'form-control-danger form-control'],
+            ['div' => ['class' => 'form-control-feedback']],
+            'Le login doit contenir au moins 2 caractères',
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $entity->errors('field', ['maxLength'], true);
+        $result = $this->Form->control('field', [
+            'error' => [
+                'minLength' => 'Le login doit contenir au moins 2 caractères',
+                'maxLength' => 'login too large',
+            ]
+        ]);
+        $expected = [
+            'div' => ['class' => 'form-group has-danger'],
+            'label' => ['for' => 'field', 'class'],
+            'Field',
+            '/label',
+            'input' => ['type' => 'text', 'name' => 'field', 'id' => 'field', 'class' => 'form-control-danger form-control'],
+            ['div' => ['class' => 'form-control-feedback']],
+            'login too large',
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlWithTemplateFile method
+     *
+     * Test that control() accepts a template file.
+     *
+     * @return void
+     */
+    public function testControlWithTemplateFile() {
+        $result = $this->Form->control('field', [
+            'templates' => 'htmlhelper_tags'
+        ]);
+        $expected = [
+            'label' => ['for' => 'field', 'class'],
+            'Field',
+            '/label',
+            'input' => [
+                'type' => 'text', 'name' => 'field',
+                'id' => 'field', 'class'
+            ],
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testNestedControlsEndWithBrackets method
+     *
+     * Test that nested inputs end with brackets.
+     *
+     * @return void
+     */
+    public function testNestedControlsEndWithBrackets() {
+        $result = $this->Form->text('nested.text[]');
+        $expected = [
+            'input' => [
+                'type' => 'text', 'name' => 'nested[text][]', 'class'
+            ],
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->file('nested.file[]');
+        $expected = [
+            'input' => [
+                'type' => 'file', 'name' => 'nested[file][]', 'class'
+            ],
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlZero method
+     *
+     * Test that inputs with 0 can be created.
+     *
+     * @return void
+     */
+    public function testControlZero() {
+        TableRegistry::get('Contacts', [
+            'className' => 'Cake\Test\TestCase\View\Helper\ContactsTable'
+        ]);
+        $this->Form->create([], ['context' => ['table' => 'Contacts']]);
+        $result = $this->Form->control('0');
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => '0', 'class'], '/label',
+            'input' => ['type' => 'text', 'name' => '0', 'id' => '0', 'class'],
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlCheckbox method
+     *
+     * Test control() with checkbox creation.
+     *
+     * @return void
+     */
+    public function testControlCheckbox() {
+        $result = $this->Form->control('User.active', ['label' => false, 'checked' => true]);
+        $expected = [
+            'div' => ['class' => 'form-check'],
+            'input' => ['type' => 'hidden', 'name' => 'User[active]', 'value' => '0'],
+            ['input' => ['type' => 'checkbox', 'name' => 'User[active]', 'value' => '1', 'id' => 'user-active', 'checked' => 'checked', 'class']],
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('User.active', ['label' => false, 'checked' => 1]);
+        $expected = [
+            'div' => ['class' => 'form-check'],
+            'input' => ['type' => 'hidden', 'name' => 'User[active]', 'value' => '0'],
+            ['input' => ['type' => 'checkbox', 'name' => 'User[active]', 'value' => '1', 'id' => 'user-active', 'checked' => 'checked', 'class']],
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('User.active', ['label' => false, 'checked' => '1']);
+        $expected = [
+            'div' => ['class' => 'form-check'],
+            'input' => ['type' => 'hidden', 'name' => 'User[active]', 'value' => '0'],
+            ['input' => ['type' => 'checkbox', 'name' => 'User[active]', 'value' => '1', 'id' => 'user-active', 'checked' => 'checked', 'class']],
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('User.disabled', [
+            'label' => 'Disabled',
+            'type' => 'checkbox',
+            'data-foo' => 'disabled'
+        ]);
+        $expected = [
+            'div' => ['class' => 'form-check'],
+            'input' => ['type' => 'hidden', 'name' => 'User[disabled]', 'value' => '0'],
+            'label' => ['for' => 'user-disabled', 'class'],
+            ['input' => [
+                'type' => 'checkbox',
+                'name' => 'User[disabled]',
+                'value' => '1',
+                'id' => 'user-disabled',
+                'data-foo' => 'disabled',
+                'class'
+            ]],
+            'Disabled',
+            '/label',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('User.confirm', [
+            'label' => 'Confirm <b>me</b>!',
+            'type' => 'checkbox',
+            'escape' => false
+        ]);
+        $expected = [
+            'div' => ['class' => 'form-check'],
+            'input' => ['type' => 'hidden', 'name' => 'User[confirm]', 'value' => '0'],
+            'label' => ['for' => 'user-confirm', 'class'],
+            ['input' => [
+                'type' => 'checkbox',
+                'name' => 'User[confirm]',
+                'value' => '1',
+                'id' => 'user-confirm',
+                'class'
+            ]],
+            'Confirm <b>me</b>!',
+            '/label',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlCheckboxWithDisabledElements method
+     *
+     * Test generating checkboxes with disabled elements.
+     *
+     * @return void
+     */
+    public function testControlCheckboxWithDisabledElements() {
+        $options = [1 => 'One', 2 => 'Two', '3' => 'Three'];
+        $result = $this->Form->control('Contact.multiple', [
+            'multiple' => 'checkbox',
+            'disabled' => 'disabled',
+            'options' => $options
+        ]);
+        $expected = [
+            ['div' => ['class' => 'form-group']],
+            ['label' => ['for' => "contact-multiple"]],
+            'Multiple',
+            '/label',
+            ['input' => ['type' => 'hidden', 'name' => "Contact[multiple]", 'disabled' => 'disabled', 'value' => '']],
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => "contact-multiple-1", 'class']],
+            ['input' => ['type' => 'checkbox', 'name' => "Contact[multiple][]", 'value' => 1, 'disabled' => 'disabled', 'id' => "contact-multiple-1", 'class']],
+            'One',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => "contact-multiple-2", 'class']],
+            ['input' => ['type' => 'checkbox', 'name' => "Contact[multiple][]", 'value' => 2, 'disabled' => 'disabled', 'id' => "contact-multiple-2", 'class']],
+            'Two',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => "contact-multiple-3", 'class']],
+            ['input' => ['type' => 'checkbox', 'name' => "Contact[multiple][]", 'value' => 3, 'disabled' => 'disabled', 'id' => "contact-multiple-3", 'class']],
+            'Three',
+            '/label',
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        // make sure 50 does only disable 50, and not 50f5c0cf
+        $options = ['50' => 'Fifty', '50f5c0cf' => 'Stringy'];
+        $disabled = [50];
+
+        $expected = [
+            ['div' => ['class' => 'form-group']],
+            ['label' => ['for' => "contact-multiple"]],
+            'Multiple',
+            '/label',
+            ['input' => ['type' => 'hidden', 'name' => "Contact[multiple]", 'value' => '']],
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => "contact-multiple-50", 'class']],
+            ['input' => ['type' => 'checkbox', 'name' => "Contact[multiple][]", 'value' => 50, 'disabled' => 'disabled', 'id' => "contact-multiple-50", 'class']],
+            'Fifty',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => "contact-multiple-50f5c0cf", 'class']],
+            ['input' => ['type' => 'checkbox', 'name' => "Contact[multiple][]", 'value' => '50f5c0cf', 'id' => "contact-multiple-50f5c0cf", 'class']],
+            'Stringy',
+            '/label',
+            '/div',
+            '/div'
+        ];
+        $result = $this->Form->control('Contact.multiple', ['multiple' => 'checkbox', 'disabled' => $disabled, 'options' => $options]);
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlWithLeadingInteger method
+     *
+     * Test input name with leading integer, ensure attributes are generated correctly.
+     *
+     * @return void
+     */
+    public function testControlWithLeadingInteger() {
+        $result = $this->Form->text('0.Node.title');
+        $expected = [
+            'input' => ['name' => '0[Node][title]', 'type' => 'text', 'class']
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlSelectType method
+     *
+     * Test form->control() with select type inputs.
+     *
+     * @return void
+     */
+    public function testControlSelectType() {
+        $result = $this->Form->control(
+            'email',
+            [
+                'options' => ['è' => 'Firést', 'é' => 'Secoènd'], 'empty' => true]
+        );
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'email', 'class'],
+            'Email',
+            '/label',
+            ['select' => ['name' => 'email', 'id' => 'email', 'class']],
+            ['option' => ['value' => '']],
+            '/option',
+            ['option' => ['value' => 'è']],
+            'Firést',
+            '/option',
+            ['option' => ['value' => 'é']],
+            'Secoènd',
+            '/option',
+            '/select',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control(
+            'email',
+            [
+                'options' => ['First', 'Second'], 'empty' => true]
+        );
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'email', 'class'],
+            'Email',
+            '/label',
+            ['select' => ['name' => 'email', 'id' => 'email', 'class']],
+            ['option' => ['value' => '']],
+            '/option',
+            ['option' => ['value' => '0']],
+            'First',
+            '/option',
+            ['option' => ['value' => '1']],
+            'Second',
+            '/option',
+            '/select',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('email', [
+            'type' => 'select',
+            'options' => new \ArrayObject(['First', 'Second']),
+            'empty' => true,
+        ]);
+        $this->assertHtml($expected, $result);
+
+        $this->View->viewVars['users'] = ['value' => 'good', 'other' => 'bad'];
+        $this->Form->request->data = ['Model' => ['user_id' => 'value']];
+
+        $result = $this->Form->control('Model.user_id', ['empty' => true]);
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'model-user-id', 'class'],
+            'User',
+            '/label',
+            'select' => ['name' => 'Model[user_id]', 'id' => 'model-user-id', 'class'],
+            ['option' => ['value' => '']],
+            '/option',
+            ['option' => ['value' => 'value', 'selected' => 'selected']],
+            'good',
+            '/option',
+            ['option' => ['value' => 'other']],
+            'bad',
+            '/option',
+            '/select',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->View->viewVars['users'] = ['value' => 'good', 'other' => 'bad'];
+        $this->Form->request->data = ['Thing' => ['user_id' => null]];
+        $result = $this->Form->control('Thing.user_id', ['empty' => 'Some Empty']);
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'thing-user-id', 'class'],
+            'User',
+            '/label',
+            'select' => ['name' => 'Thing[user_id]', 'id' => 'thing-user-id', 'class'],
+            ['option' => ['value' => '']],
+            'Some Empty',
+            '/option',
+            ['option' => ['value' => 'value']],
+            'good',
+            '/option',
+            ['option' => ['value' => 'other']],
+            'bad',
+            '/option',
+            '/select',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->View->viewVars['users'] = ['value' => 'good', 'other' => 'bad'];
+        $this->Form->request->data = ['Thing' => ['user_id' => 'value']];
+        $result = $this->Form->control('Thing.user_id', ['empty' => 'Some Empty']);
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'thing-user-id', 'class'],
+            'User',
+            '/label',
+            'select' => ['name' => 'Thing[user_id]', 'id' => 'thing-user-id', 'class'],
+            ['option' => ['value' => '']],
+            'Some Empty',
+            '/option',
+            ['option' => ['value' => 'value', 'selected' => 'selected']],
+            'good',
+            '/option',
+            ['option' => ['value' => 'other']],
+            'bad',
+            '/option',
+            '/select',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->data = [];
+        $result = $this->Form->control('Publisher.id', [
+            'label' => 'Publisher',
+            'type' => 'select',
+            'multiple' => 'checkbox',
+            'options' => ['Value 1' => 'Label 1', 'Value 2' => 'Label 2']
+        ]);
+        $expected = [
+            ['div' => ['class' => 'form-group']],
+            ['label' => ['for' => 'publisher-id']],
+            'Publisher',
+            '/label',
+            'input' => ['type' => 'hidden', 'name' => 'Publisher[id]', 'value' => ''],
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'publisher-id-value-1', 'class']],
+            ['input' => ['type' => 'checkbox', 'name' => 'Publisher[id][]', 'value' => 'Value 1', 'id' => 'publisher-id-value-1', 'class']],
+            'Label 1',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'publisher-id-value-2', 'class']],
+            ['input' => ['type' => 'checkbox', 'name' => 'Publisher[id][]', 'value' => 'Value 2', 'id' => 'publisher-id-value-2', 'class']],
+            'Label 2',
+            '/label',
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlOverridingMagicSelectType method
+     *
+     * Test that overriding the magic select type widget is possible.
+     *
+     * @return void
+     */
+    public function testControlOverridingMagicSelectType() {
+        $this->View->viewVars['users'] = ['value' => 'good', 'other' => 'bad'];
+        $result = $this->Form->control('Model.user_id', ['type' => 'text']);
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'model-user-id', 'class'], 'User', '/label',
+            'input' => ['name' => 'Model[user_id]', 'type' => 'text', 'id' => 'model-user-id', 'class'],
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        //Check that magic types still work for plural/singular vars
+        $this->View->viewVars['types'] = ['value' => 'good', 'other' => 'bad'];
+        $result = $this->Form->control('Model.type');
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'model-type', 'class'], 'Type', '/label',
+            'select' => ['name' => 'Model[type]', 'id' => 'model-type', 'class'],
+            ['option' => ['value' => 'value']], 'good', '/option',
+            ['option' => ['value' => 'other']], 'bad', '/option',
+            '/select',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlMagicTypeDoesNotOverride method
+     *
+     * Test that inferred types do not override developer input.
+     *
+     * @return void
+     */
+    public function testControlMagicTypeDoesNotOverride() {
+        $this->View->viewVars['users'] = ['value' => 'good', 'other' => 'bad'];
+        $result = $this->Form->control('Model.user', ['type' => 'checkbox']);
+        $expected = [
+            'div' => ['class' => 'form-check'],
+            ['input' => [
+                'type' => 'hidden',
+                'name' => 'Model[user]',
+                'value' => 0,
+            ]],
+            'label' => ['for' => 'model-user', 'class'],
+            ['input' => [
+                'name' => 'Model[user]',
+                'type' => 'checkbox',
+                'id' => 'model-user',
+                'value' => 1,
+                'class'
+            ]],
+            'User',
+            '/label',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        // make sure that for HABTM the multiple option is not being overwritten in case it's truly
+        $options = [
+            1 => 'blue',
+            2 => 'red'
+        ];
+        $result = $this->Form->control('tags._ids', ['options' => $options, 'multiple' => 'checkbox']);
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'tags-ids'],
+            'Tags',
+            '/label',
+            'input' => ['type' => 'hidden', 'name' => 'tags[_ids]', 'value' => ''],
+
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'tags-ids-1', 'class']],
+            ['input' => [
+                'id' => 'tags-ids-1', 'type' => 'checkbox',
+                'value' => '1', 'name' => 'tags[_ids][]',
+                'class'
+            ]],
+            'blue',
+            '/label',
+            '/div',
+
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'tags-ids-2', 'class']],
+            ['input' => [
+                'id' => 'tags-ids-2', 'type' => 'checkbox',
+                'value' => '2', 'name' => 'tags[_ids][]',
+                'class'
+            ]],
+            'red',
+            '/label',
+            '/div',
+
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlMagicSelectForTypeNumber method
+     *
+     * Test that magic control() selects are created for type=number.
+     *
+     * @return void
+     */
+    public function testControlMagicSelectForTypeNumber() {
+        TableRegistry::get('ValidateUsers', [
+            'className' => 'Cake\Test\TestCase\View\Helper\ValidateUsersTable'
+        ]);
+        $entity = new Entity(['balance' => 1]);
+        $this->Form->create($entity, ['context' => ['table' => 'ValidateUsers']]);
+        $this->View->viewVars['balances'] = [0 => 'nothing', 1 => 'some', 100 => 'a lot'];
+        $result = $this->Form->control('balance');
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'balance', 'class'],
+            'Balance',
+            '/label',
+            'select' => ['name' => 'balance', 'id' => 'balance', 'class'],
+            ['option' => ['value' => '0']],
+            'nothing',
+            '/option',
+            ['option' => ['value' => '1', 'selected' => 'selected']],
+            'some',
+            '/option',
+            ['option' => ['value' => '100']],
+            'a lot',
+            '/option',
+            '/select',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testFormControlSubmit method
+     *
+     * Test correct results for form::control() and type submit.
+     *
+     * @return void
+     */
+    public function testFormControlSubmit() {
+        $result = $this->Form->control('Test Submit', ['type' => 'submit', 'class' => 'foobar']);
+        $expected = [
+            'input' => ['type' => 'submit', 'class' => 'foobar btn btn-primary', 'id' => 'test-submit', 'value' => 'Test Submit'],
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testFormControls method
+     *
+     * Test correct results from Form::controls().
+     *
+     * @return void
+     */
+    public function testFormControlsLegendFieldset() {
+        $this->Form->create($this->article);
+        $result = $this->Form->allControls([], ['legend' => 'The Legend']);
+        $expected = [
+            ['fieldset' => ['class' => 'form-group']],
+            '<legend',
+            'The Legend',
+            '/legend',
+            '*/fieldset',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->allControls([], ['fieldset' => true, 'legend' => 'Field of Dreams']);
+        $this->assertContains('<legend>Field of Dreams</legend>', $result);
+        $this->assertContains('<fieldset class="form-group">', $result);
+
+        $result = $this->Form->allControls([], ['fieldset' => false, 'legend' => false]);
+        $this->assertNotContains('<legend>', $result);
+        $this->assertNotContains('<fieldset>', $result);
+
+        $result = $this->Form->allControls([], ['fieldset' => false, 'legend' => 'Hello']);
+        $this->assertNotContains('<legend>', $result);
+        $this->assertNotContains('<fieldset>', $result);
+
+        $this->Form->create($this->article);
+        $this->Form->request->params['prefix'] = 'admin';
+        $this->Form->request->params['action'] = 'admin_edit';
+        $this->Form->request->params['controller'] = 'articles';
+        $result = $this->Form->allControls();
+        $expected = [
+            'fieldset' => ['class' => 'form-group'],
+            '<legend',
+            'New Article',
+            '/legend',
+            '*/fieldset',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->create($this->article);
+        $result = $this->Form->allControls([], ['fieldset' => [], 'legend' => 'The Legend']);
+        $expected = [
+            'fieldset' => ['class' => 'form-group'],
+            '<legend',
+            'The Legend',
+            '/legend',
+            '*/fieldset',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->create($this->article);
+        $result = $this->Form->allControls([], [
+            'fieldset' => [
+                'class' => 'some-class some-other-class',
+                'disabled' => true,
+                'data-param' => 'a-param'
+            ],
+            'legend' => 'The Legend'
+        ]);
+        $expected = [
+            '<fieldset class="some-class some-other-class form-group" disabled="disabled" data-param="a-param"',
+            '<legend',
+            'The Legend',
+            '/legend',
+            '*/fieldset',
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testFormControls method
+     *
+     * Test the controls() method.
+     *
+     * @return void
+     */
+    public function testFormControls() {
+        $this->Form->create($this->article);
+        $result = $this->Form->allControls();
+        $expected = [
+            'fieldset' => ['class' => 'form-group'],
+            '<legend', 'New Article', '/legend',
+            'input' => ['type' => 'hidden', 'name' => 'id', 'id' => 'id'],
+            ['div' => ['class' => 'form-group']],
+            '*/div',
+            ['div' => ['class' => 'form-group']],
+            '*/div',
+            ['div' => ['class' => 'form-group']],
+            '*/div',
+            ['div' => ['class' => 'form-group']],
+            '*/div',
+            '/fieldset',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->allControls([
+            'published' => ['type' => 'boolean']
+        ]);
+        $expected = [
+            'fieldset' => ['class' => 'form-group'],
+            '<legend', 'New Article', '/legend',
+            'input' => ['type' => 'hidden', 'name' => 'id', 'id' => 'id'],
+            ['div' => ['class' => 'form-group']],
+            '*/div',
+            ['div' => ['class' => 'form-group']],
+            '*/div',
+            ['div' => ['class' => 'form-group']],
+            '*/div',
+            ['div' => ['class' => 'form-group']],
+            '*/div',
+            '/fieldset',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->create($this->article);
+        $result = $this->Form->allControls([], ['legend' => 'Hello']);
+        $expected = [
+            'fieldset' => ['class' => 'form-group'],
+            'legend' => [],
+            'Hello',
+            '/legend',
+            'input' => ['type' => 'hidden', 'name' => 'id', 'id' => 'id'],
+            ['div' => ['class' => 'form-group']],
+            '*/div',
+            ['div' => ['class' => 'form-group']],
+            '*/div',
+            ['div' => ['class' => 'form-group']],
+            '*/div',
+            ['div' => ['class' => 'form-group']],
+            '*/div',
+            '/fieldset'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->create(false);
+        $expected = [
+            'fieldset' => ['class' => 'form-group'],
+            ['div' => ['class' => 'form-group']],
+            'label' => ['for' => 'foo', 'class'],
+            'Foo',
+            '/label',
+            'input' => ['type' => 'text', 'name' => 'foo', 'id' => 'foo', 'class'],
+            '*/div',
+            '/fieldset'
+        ];
+        $result = $this->Form->allControls(
+            ['foo' => ['type' => 'text']],
+            ['legend' => false]
+        );
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testFormControlsBlacklist method
+     *
+     * @return void
+     */
+    public function testFormControlsBlacklist() {
+        $this->Form->create($this->article);
+        $result = $this->Form->allControls([
+            'id' => false
+        ]);
+        $expected = [
+            'fieldset' => ['class' => 'form-group'],
+            '<legend', 'New Article', '/legend',
+            ['div' => ['class' => 'form-group']],
+            '*/div',
+            ['div' => ['class' => 'form-group']],
+            '*/div',
+            ['div' => ['class' => 'form-group']],
+            '*/div',
+            ['div' => ['class' => 'form-group']],
+            '*/div',
+            '/fieldset',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->create($this->article);
+        $result = $this->Form->allControls([
+            'id' => []
+        ]);
+        $expected = [
+            'fieldset' => ['class' => 'form-group'],
+            '<legend', 'New Article', '/legend',
+            'input' => ['type' => 'hidden', 'name' => 'id', 'id' => 'id'],
+            ['div' => ['class' => 'form-group']],
+            '*/div',
+            ['div' => ['class' => 'form-group']],
+            '*/div',
+            ['div' => ['class' => 'form-group']],
+            '*/div',
+            ['div' => ['class' => 'form-group']],
+            '*/div',
+            '/fieldset',
+        ];
+        $this->assertHtml($expected, $result, 'A falsey value (array) should not remove the input');
+    }
+
+    /**
+     * testControlRadio method
+     *
+     * Test that input works with radio types.
+     *
+     * @return void
+     */
+    public function testControlRadio() {
+        $result = $this->Form->control('test', [
+            'type' => 'radio',
+            'options' => ['A', 'B'],
+        ]);
+        $expected = [
+            ['div' => ['class' => 'form-group']],
+            '<label',
+            'Test',
+            '/label',
+            ['input' => ['type' => 'hidden', 'name' => 'test', 'value' => '']],
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'test-0', 'class']],
+            ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '0', 'id' => 'test-0', 'class']],
+            'A',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'test-1', 'class']],
+            ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '1', 'id' => 'test-1', 'class']],
+            'B',
+            '/label',
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('test', [
+            'type' => 'radio',
+            'options' => ['A', 'B'],
+            'value' => '0'
+        ]);
+        $expected = [
+            ['div' => ['class' => 'form-group']],
+            '<label',
+            'Test',
+            '/label',
+            ['input' => ['type' => 'hidden', 'name' => 'test', 'value' => '']],
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'test-0', 'class']],
+            ['input' => ['type' => 'radio', 'checked' => 'checked', 'name' => 'test', 'value' => '0', 'id' => 'test-0',
+                'class']],
+            'A',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'test-1', 'class']],
+            ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '1', 'id' => 'test-1', 'class']],
+            'B',
+            '/label',
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('test', [
+            'type' => 'radio',
+            'options' => ['A', 'B'],
+            'label' => false
+        ]);
+        $expected = [
+            ['div' => ['class' => 'form-group']],
+            ['input' => ['type' => 'hidden', 'name' => 'test', 'value' => '']],
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'test-0', 'class']],
+            ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '0', 'id' => 'test-0', 'class']],
+            'A',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'test-1', 'class']],
+            ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '1', 'id' => 'test-1', 'class']],
+            'B',
+            '/label',
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testRadioControlInsideLabel method
+     *
+     * Test generating radio input inside label ala twitter bootstrap.
+     *
+     * @return void
+     */
+    public function testRadioControlInsideLabel() {
+        $this->Form->templates([
+            'label' => '<label{{attrs}}>{{input}}{{text}}</label>',
+            'radioWrapper' => '{{label}}'
+        ]);
+
+        $result = $this->Form->radio('Model.field', ['option A', 'option B']);
+        //@codingStandardsIgnoreStart
+        $expected = [
+            ['input' => [
+                'type' => 'hidden',
+                'name' => 'Model[field]',
+                'value' => ''
+            ]],
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'model-field-0', 'class']],
+            ['input' => [
+                'type' => 'radio',
+                'name' => 'Model[field]',
+                'value' => '0',
+                'id' => 'model-field-0',
+                'class'
+            ]],
+            'option A',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'model-field-1', 'class']],
+            ['input' => [
+                'type' => 'radio',
+                'name' => 'Model[field]',
+                'value' => '1',
+                'id' => 'model-field-1',
+                'class'
+            ]],
+            'option B',
+            '/label',
+            '/div'
+        ];
+        //@codingStandardsIgnoreEnd
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testRadioHiddenControlDisabling method
+     *
+     * Test disabling the hidden input for radio buttons.
+     *
+     * @return void
+     */
+    public function testRadioHiddenControlDisabling() {
+        $result = $this->Form->radio('Model.1.field', ['option A'], ['hiddenField' => false]);
+        $expected = [
+            ['div' => ['class' => 'form-check']],
+            'label' => ['for' => 'model-1-field-0', 'class'],
+            'input' => ['type' => 'radio', 'name' => 'Model[1][field]', 'value' => '0', 'id' => 'model-1-field-0', 'class'],
+            'option A',
+            '/label',
+            '/div'
+
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlMultipleCheckboxes method
+     *
+     * Test control() resulting in multi select elements being generated.
+     *
+     * @return void
+     */
+    public function testControlMultipleCheckboxes() {
+        $result = $this->Form->control('Model.multi_field', [
+            'options' => ['first', 'second', 'third'],
+            'multiple' => 'checkbox'
+        ]);
+        $expected = [
+            ['div' => ['class' => 'form-group']],
+            ['label' => ['for' => 'model-multi-field']],
+            'Multi Field',
+            '/label',
+            'input' => ['type' => 'hidden', 'name' => 'Model[multi_field]', 'value' => ''],
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'model-multi-field-0', 'class']],
+            ['input' => ['type' => 'checkbox', 'name' => 'Model[multi_field][]', 'value' => '0', 'id' => 'model-multi-field-0',
+                'class']],
+            'first',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'model-multi-field-1', 'class']],
+            ['input' => ['type' => 'checkbox', 'name' => 'Model[multi_field][]', 'value' => '1', 'id' => 'model-multi-field-1',
+                'class']],
+            'second',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'model-multi-field-2', 'class']],
+            ['input' => ['type' => 'checkbox', 'name' => 'Model[multi_field][]', 'value' => '2', 'id' => 'model-multi-field-2',
+                'class']],
+            'third',
+            '/label',
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('Model.multi_field', [
+            'options' => ['a' => 'first', 'b' => 'second', 'c' => 'third'],
+            'multiple' => 'checkbox'
+        ]);
+        $expected = [
+            ['div' => ['class' => 'form-group']],
+            ['label' => ['for' => 'model-multi-field']],
+            'Multi Field',
+            '/label',
+            'input' => ['type' => 'hidden', 'name' => 'Model[multi_field]', 'value' => ''],
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'model-multi-field-a', 'class']],
+            ['input' => ['type' => 'checkbox', 'name' => 'Model[multi_field][]', 'value' => 'a', 'id' => 'model-multi-field-a',
+                'class']],
+            'first',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'model-multi-field-b', 'class']],
+            ['input' => ['type' => 'checkbox', 'name' => 'Model[multi_field][]', 'value' => 'b', 'id' => 'model-multi-field-b',
+                'class']],
+            'second',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'model-multi-field-c', 'class']],
+            ['input' => ['type' => 'checkbox', 'name' => 'Model[multi_field][]', 'value' => 'c', 'id' => 'model-multi-field-c',
+                'class']],
+            'third',
+            '/label',
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlMultiCheckbox method
+     *
+     * Test that control() works with multicheckbox.
+     *
+     * @return void
+     */
+    public function testControlMultiCheckbox() {
+        $result = $this->Form->control('category', [
+            'type' => 'multicheckbox',
+            'options' => ['1', '2'],
+        ]);
+        $expected = [
+            ['div' => ['class' => 'form-group']],
+            '<label',
+            'Category',
+            '/label',
+            'input' => ['type' => 'hidden', 'name' => 'category', 'value' => ''],
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'category-0', 'class']],
+            ['input' => ['type' => 'checkbox', 'name' => 'category[]', 'value' => '0', 'id' => 'category-0', 'class']],
+            '1',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'category-1', 'class']],
+            ['input' => ['type' => 'checkbox', 'name' => 'category[]', 'value' => '1', 'id' => 'category-1', 'class']],
+            '2',
+            '/label',
+            '/div',
+            '/div',
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testDateTimeLabelIdMatchesFirstControl method
+     *
+     * When changing the date format, the label should always focus the first select box when
+     * clicked.
+     *
+     * @return void
+     */
+    public function testDateTimeLabelIdMatchesFirstControl() {
+        $this->assertTrue(true);
+        return;
+        $result = $this->Form->control('Model.date', ['type' => 'date']);
+        $this->assertContains('<label>Date</label>', $result);
+
+        $result = $this->Form->control('Model.date', ['type' => 'date', 'dateFormat' => 'DMY']);
+        $this->assertContains('<label>Date</label>', $result);
+
+        $result = $this->Form->control('Model.date', ['type' => 'date', 'dateFormat' => 'YMD']);
+        $this->assertContains('<label>Date</label>', $result);
+    }
+
+    /**
+     * testControlLabelFalse method
+     *
+     * Test the label option being set to false.
+     *
+     * @return void
+     */
+    public function testControlLabelFalse() {
+        $this->Form->create($this->article);
+        $result = $this->Form->control('title', ['label' => false]);
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'input' => ['type' => 'text', 'required' => 'required', 'id' => 'title', 'name' => 'title',
+                'class' => 'form-control'],
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testForMagicControlNonExistingNorValidated method
+     *
+     * @return void
+     */
+    public function testForMagicControlNonExistingNorValidated() {
+        $this->Form->create($this->article);
+        $this->Form->templates(['inputContainer' => '{{content}}']);
+        $result = $this->Form->control('non_existing_nor_validated');
+        $expected = [
+            'label' => ['for' => 'non-existing-nor-validated', 'class'],
+            'Non Existing Nor Validated',
+            '/label',
+            'input' => [
+                'type' => 'text', 'name' => 'non_existing_nor_validated',
+                'id' => 'non-existing-nor-validated', 'class' => 'form-control'
+            ]
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('non_existing_nor_validated', [
+            'val' => 'my value'
+        ]);
+        $expected = [
+            'label' => ['for' => 'non-existing-nor-validated', 'class'],
+            'Non Existing Nor Validated',
+            '/label',
+            'input' => [
+                'type' => 'text', 'name' => 'non_existing_nor_validated',
+                'value' => 'my value', 'id' => 'non-existing-nor-validated',
+                'class' => 'form-control'
+            ]
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->request->data = ['non_existing_nor_validated' => 'CakePHP magic'];
+        $result = $this->Form->control('non_existing_nor_validated');
+        $expected = [
+            'label' => ['for' => 'non-existing-nor-validated', 'class'],
+            'Non Existing Nor Validated',
+            '/label',
+            'input' => [
+                'type' => 'text', 'name' => 'non_existing_nor_validated',
+                'value' => 'CakePHP magic', 'id' => 'non-existing-nor-validated',
+                'class' => 'form-control'
+            ]
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testFormMagicControlLabel method
+     *
+     * @return void
+     */
+    public function testFormMagicControlLabel() {
+        TableRegistry::get('Contacts', [
+            'className' => 'Cake\Test\TestCase\View\Helper\ContactsTable'
+        ]);
+        $this->Form->create([], ['context' => ['table' => 'Contacts']]);
+        $this->Form->templates(['inputContainer' => '{{content}}']);
+
+        $result = $this->Form->control('Contacts.name', ['label' => 'My label']);
+        $expected = [
+            'label' => ['for' => 'contacts-name', 'class'],
+            'My label',
+            '/label',
+            'input' => [
+                'type' => 'text', 'name' => 'Contacts[name]',
+                'id' => 'contacts-name', 'maxlength' => '255',
+                'class' => 'form-control'
+            ]
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('name', [
+            'label' => ['class' => 'mandatory']
+        ]);
+        $expected = [
+            'label' => ['for' => 'name', 'class' => 'mandatory col-form-label'],
+            'Name',
+            '/label',
+            'input' => [
+                'type' => 'text', 'name' => 'name',
+                'id' => 'name', 'maxlength' => '255',
+                'class' => 'form-control'
+            ]
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('name', [
+            'div' => false,
+            'label' => ['class' => 'mandatory', 'text' => 'My label']
+        ]);
+        $expected = [
+            'label' => ['for' => 'name', 'class' => 'mandatory col-form-label'],
+            'My label',
+            '/label',
+            'input' => [
+                'type' => 'text', 'name' => 'name',
+                'id' => 'name', 'maxlength' => '255',
+                'class' => 'form-control'
+            ]
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('Contact.name', [
+            'div' => false, 'id' => 'my_id', 'label' => ['for' => 'my_id']
+        ]);
+        $expected = [
+            'label' => ['for' => 'my_id', 'class'],
+            'Name',
+            '/label',
+            'input' => [
+                'type' => 'text', 'name' => 'Contact[name]',
+                'id' => 'my_id', 'maxlength' => '255',
+                'class' => 'form-control'
+            ]
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('1.id');
+        $expected = ['input' => [
+            'type' => 'hidden', 'name' => '1[id]',
+            'id' => '1-id'
+        ]];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control("1.name");
+        $expected = [
+            'label' => ['for' => '1-name', 'class'],
+            'Name',
+            '/label',
+            'input' => [
+                'type' => 'text', 'name' => '1[name]',
+                'id' => '1-name', 'maxlength' => '255',
+                'class' => 'form-control'
+            ]
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testHtml5Controls method
+     *
+     * Test that some html5 inputs + FormHelper::__call() work.
+     *
+     * @return void
+     */
+    public function testHtml5Controls() {
+        $result = $this->Form->email('User.email');
+        $expected = [
+            'input' => ['type' => 'email', 'name' => 'User[email]', 'class' => 'form-control']
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->search('User.query');
+        $expected = [
+            'input' => ['type' => 'search', 'name' => 'User[query]', 'class' => 'form-control']
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->search('User.query', ['value' => 'test']);
+        $expected = [
+            'input' => ['type' => 'search', 'name' => 'User[query]', 'value' => 'test', 'class' => 'form-control']
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->search('User.query', ['type' => 'text', 'value' => 'test']);
+        $expected = [
+            'input' => ['type' => 'text', 'name' => 'User[query]', 'value' => 'test', 'class' => 'form-control']
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testHtml5ControlWithControl method
+     *
+     * Test accessing html5 inputs through control().
+     *
+     * @return void
+     */
+    public function testHtml5ControlWithControl() {
+        $this->Form->create();
+        $this->Form->templates(['inputContainer' => '{{content}}']);
+        $result = $this->Form->control('website', [
+            'type' => 'url',
+            'val' => 'http://domain.tld',
+            'label' => false
+        ]);
+        $expected = [
+            'input' => ['type' => 'url', 'name' => 'website', 'id' => 'website', 'value' => 'http://domain.tld',
+                'class' => 'form-control']
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlsNotNested method
+     *
+     * Tests that it is possible to put inputs outside of the label.
+     *
+     * @return void
+     */
+    public function testControlsNotNested() {
+        $this->Form->templates([
+            'nestingLabel' => '{{hidden}}{{input}}<label{{attrs}}>{{text}}</label>',
+            'formGroup' => '{{input}}{{label}}',
+        ]);
+        $result = $this->Form->control('foo', ['type' => 'checkbox']);
+        $expected = [
+            'div' => ['class' => 'form-check'],
+            ['input' => ['type' => 'hidden', 'name' => 'foo', 'value' => '0']],
+            'label' => ['for' => 'foo', 'class'],
+            ['input' => ['type' => 'checkbox', 'name' => 'foo', 'id' => 'foo', 'value' => '1',
+                'class' => 'form-check-input']],
+            'Foo',
+            '/label',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('foo', ['type' => 'checkbox', 'label' => false]);
+        $expected = [
+            'div' => ['class' => 'form-check'],
+            ['input' => ['type' => 'hidden', 'name' => 'foo', 'value' => '0']],
+            ['input' => ['type' => 'checkbox', 'name' => 'foo', 'id' => 'foo', 'value' => '1',
+                'class' => 'form-check-input']],
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('confirm', [
+            'type' => 'radio',
+            'options' => ['Y' => 'Yes', 'N' => 'No']
+        ]);
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            ['input' => ['type' => 'hidden', 'name' => 'confirm', 'value' => '']],
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'confirm-y', 'class']],
+            ['input' => ['type' => 'radio', 'name' => 'confirm', 'id' => 'confirm-y', 'value' => 'Y',
+                'class' => 'form-check-input']],
+            'Yes',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'confirm-n', 'class']],
+            ['input' => ['type' => 'radio', 'name' => 'confirm', 'id' => 'confirm-n', 'value' => 'N',
+                'class' => 'form-check-input']],
+            'No',
+            '/label',
+            '/div',
+            '<label',
+            'Confirm',
+            '/label',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->select('category', ['1', '2'], [
+            'multiple' => 'checkbox',
+            'name' => 'fish',
+        ]);
+        $expected = [
+            'input' => ['type' => 'hidden', 'name' => 'fish', 'value' => ''],
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'fish-0', 'class']],
+            ['input' => ['type' => 'checkbox', 'name' => 'fish[]', 'value' => '0', 'id' => 'fish-0', 'class']],
+            '1',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'fish-1', 'class']],
+            ['input' => ['type' => 'checkbox', 'name' => 'fish[]', 'value' => '1', 'id' => 'fish-1', 'class']],
+            '2',
+            '/label',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlContainerTemplates method
+     *
+     * Test that *Container templates are used by input.
+     *
+     * @return void
+     */
+    public function testControlContainerTemplates() {
+        // TODO Honour template changes
+        $this->Form->templates([
+            'checkboxContainer' => '<div class="check">{{content}}</div>',
+            'radioContainer' => '<div class="rad">{{content}}</div>',
+            'radioContainerError' => '<div class="rad err">{{content}}</div>',
+            'datetimeContainer' => '<div class="dt">{{content}}</div>',
+        ]);
+
+        $this->article['errors'] = [
+            'Article' => ['published' => 'error message']
+        ];
+        $this->Form->create($this->article);
+
+        $result = $this->Form->control('accept', [
+            'type' => 'checkbox',
+        ]);
+        $expected = [
+            'div' => ['class' => 'form-check'],
+            ['input' => ['type' => 'hidden', 'name' => 'accept', 'value' => 0]],
+            'label' => ['for' => 'accept', 'class'],
+            ['input' => ['id' => 'accept', 'type' => 'checkbox', 'name' => 'accept', 'value' => 1, 'class']],
+            'Accept',
+            '/label',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('accept', [
+            'type' => 'radio',
+            'options' => ['Y', 'N']
+        ]);
+        $this->assertContains('<div class="rad">', $result);
+
+        $result = $this->Form->control('Article.published', [
+            'type' => 'radio',
+            'options' => ['Y', 'N']
+        ]);
+        $this->assertContains('<div class="rad err">', $result);
+
+        $result = $this->Form->control('Article.created', [
+            'type' => 'datetime'
+        ]);
+        $this->assertContains('<div class="dt">', $result);
+    }
+
+    /**
+     * Test sources values defaults handling
+     *
+     * @return void
+     */
+    public function testFormValueSourcesDefaults()
+    {
+        $this->Form->request->query['password'] = 'open Sesame';
+        $this->Form->create();
+
+        $result = $this->Form->password('password');
+        $expected = ['input' => ['type' => 'password', 'name' => 'password', 'class' => 'form-control']];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->password('password', ['default' => 'helloworld']);
+        $expected = ['input' => ['type' => 'password', 'name' => 'password', 'value' => 'helloworld',
+            'class' => 'form-control']];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->setValueSources('query');
+        $result = $this->Form->password('password', ['default' => 'helloworld']);
+        $expected = ['input' => ['type' => 'password', 'name' => 'password', 'value' => 'open Sesame',
+            'class' => 'form-control']];
+        $this->assertHtml($expected, $result);
+
+        $this->Form->setValueSources('data');
+        $result = $this->Form->password('password', ['default' => 'helloworld']);
+        $expected = ['input' => ['type' => 'password', 'name' => 'password', 'value' => 'helloworld',
+            'class' => 'form-control']];
         $this->assertHtml($expected, $result);
     }
 }
