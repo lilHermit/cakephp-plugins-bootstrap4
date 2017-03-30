@@ -9,8 +9,8 @@ use lilHermit\Toolkit\Utility\Html;
 
 class FormHelper extends \Cake\View\Helper\FormHelper {
 
-    private $customControls = true;
-    private $html5Render = true;
+    protected $customControls = true;
+    protected $html5Render = true;
 
     protected $_bootstrapWidgets = [
         'bootstrapDateTime' => ['lilHermit/Bootstrap4.BootstrapDateTime'],
@@ -301,8 +301,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     public function multiCheckbox($fieldName, $options, array $attributes = []) {
         $attributes += [
-            'customControls' => $this->customControls,
-            'html5Render' => $this->html5Render,
+            'customControls' => $this->customControls
         ];
         $this->_defaultConfig['templates'] = $this->_templates;
         $this->setLabelClass($attributes, 'multicheckbox');
@@ -313,8 +312,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     public function select($fieldName, $options = [], array $attributes = []) {
         $attributes += [
-            'customControls' => $this->customControls,
-            'html5Render' => $this->html5Render,
+            'customControls' => $this->customControls
         ];
 
         return parent::select($fieldName, $options, $attributes);
@@ -323,7 +321,6 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     public function checkbox($fieldName, array $options = []) {
         $options += [
             'customControls' => $this->customControls,
-            'html5Render' => $this->html5Render,
             'type' => 'checkbox'
         ];
 
@@ -338,7 +335,6 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     public function radio($fieldName, $options = [], array $attributes = []) {
         $attributes += [
             'customControls' => $this->customControls,
-            'html5Render' => $this->html5Render,
             'type' => 'radio'
         ];
 
@@ -367,7 +363,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         $data = $this->_addWidgetClass($data, $name);
 
         // Clean up any elements so they don't end up as attributes
-        unset($data['customControls'], $data['templateType'], $data['skipSwitchTemplates']);
+        unset($data['customControls'], $data['templateType'], $data['skipSwitchTemplates'], $data['html5Render']);
 
         return parent::widget($name, $data);
     }
@@ -375,7 +371,6 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     public function file($fieldName, array $options = []) {
         $options += [
             'customControls' => $this->customControls,
-            'html5Render' => $this->html5Render,
             'type' => 'file'
         ];
 
@@ -896,7 +891,6 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     }
 
     public function bootstrapDate($fieldName, array $options = []) {
-        unset($options['html5Render']);
         $options['type'] = 'date';
         $options = $this->_initInputField($fieldName, $options);
         $this->formatDateTimes($options);
@@ -905,7 +899,6 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     }
 
     public function bootstrapDateTime($fieldName, array $options = []) {
-        unset($options['html5Render']);
         $options['type'] = 'datetime-local';
         $options = $this->_initInputField($fieldName, $options);
 
@@ -921,7 +914,6 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     }
 
     public function bootstrapTime($fieldName, array $options = []) {
-        unset($options['html5Render']);
         $options['type'] = 'time';
         $options = $this->_initInputField($fieldName, $options);
 

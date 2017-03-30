@@ -121,6 +121,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
 
     public function testCrumbListBootstrapStyle() {
         // NOOP
+        $this->assertTrue(true);
     }
 
     public function testCrumbListZurbStyle() {

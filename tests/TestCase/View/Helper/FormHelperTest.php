@@ -463,7 +463,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $result = $this->Form->input('something', ['type' => 'checkbox', 'customControls' => false]);
+        $result = $this->Form->input('something', ['type' => 'checkbox']);
         $expected = [
             'div' => ['class' => 'form-check'],
             [
