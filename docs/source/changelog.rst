@@ -1,8 +1,8 @@
 Changelog
 #########
 
-2.1.6.5 (TBC)
--------------
+2.1.6.5 (30-Mar-2017)
+---------------------
 .. raw:: html
 
     <span class="badge badge-primary">Supports Bootstrap 4.0.0-alpha6</span>
@@ -10,6 +10,7 @@ Changelog
 - Simplified Html5DateTime Validation with behavior
 - Unpinned from CakePHP 3.3.x (Now supports 3.4.x)
 - Added support for setting html5Render false at Form creation time
+- User defined templates are no longer overridden by the plugin
 
 2.1.6.4 (05-Mar-2017)
 ---------------------
