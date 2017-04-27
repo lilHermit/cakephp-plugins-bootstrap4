@@ -140,6 +140,27 @@ Will render like
 
     This example uses `fontawesome <http://fontawesome.io>`_ to add icons
 
+Container Attributes
+____________________
+
+You can also pass attributes to the container of the ``prefix``/``suffix`` using the ``container`` key::
+
+    echo $this->Form->control('name', [
+        'suffix' => [
+            'text' => 'Go',
+            'class' => ['bg-info', 'text-white'],
+            'container' => [ 'class' => 'bg-primary p-3' ]
+        ]
+    ]);
+
+Will render like
+
+.. raw:: html
+
+    <div class="form-group"><label class="col-form-label" for="name">Name</label><div class="bg-primary p-3 input-group"><input type="text" name="name" id="name" class="form-control"/><span class="bg-info text-white input-group-addon">Go</span></div></div>
+
+.. versionadded:: 2.1.6.6 Container attributes
+
 Multiple
 ________
 

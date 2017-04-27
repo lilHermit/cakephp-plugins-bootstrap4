@@ -1,6 +1,14 @@
 Changelog
 #########
 
+2.1.6.6 (TBC)
+-------------
+.. raw:: html
+
+    <span class="badge badge-primary">Supports Bootstrap 4.0.0-alpha6</span>
+
+- Added support for passing attributes to Prefix/Suffix containers
+
 2.1.6.5 (30-Mar-2017)
 ---------------------
 .. raw:: html

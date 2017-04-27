@@ -1383,6 +1383,82 @@ class BootstrapFormHelperTest extends TestCase {
     }
 
     /**
+     * testControlPrefixSuffixContainerAttrRendering
+     *
+     * Tests the rendering of Prefix/Suffix container attributes
+     */
+    public function testControlPrefixSuffixContainerAttrRendering() {
+
+        $result = $this->Form->control('Donation', [
+            'prefix' =>
+                [
+                    [
+                        'text' => 'text',
+                        'class' => 'my-class',
+                        'container' => ['class' => 'container-class']
+                    ],
+
+                    [
+                        'text' => 'text2',
+                        'class' => 'my-class2',
+                        'container' => ['class' => 'container-class2', 'random_attribute' => 'true']
+                    ]
+                ]
+
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'container-class input-group', 'random_attribute' => 'true']],
+            ['span' => ['class' => 'my-class input-group-addon']],
+            'text',
+            '/span',
+            ['span' => ['class' => 'my-class2 input-group-addon']],
+            'text2',
+            '/span',
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Form->control('Donation', [
+            'prefix' =>
+                [
+                    'text' => 'text',
+                    'class' => 'my-class',
+                    'container' => ['class' => 'container-class']
+                ]
+
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'container-class input-group']],
+            ['span' => ['class' => 'my-class input-group-addon']],
+            'text',
+            '/span',
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            '/div',
+            '/div'
+        ], $result);
+    }
+
+
+    /**
      * testInputPrefixSuffixSizeOptionRendering
      *
      * Tests the rendering of Prefix/Suffix with size option
