@@ -613,16 +613,38 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             $this->_userChangedTemplates = array_merge(array_keys($templates), $this->_userChangedTemplates);
         }
 
-        $this->_setTemplatesInternal($templates);
+        $this->_setTemplatesWrapper($templates);
     }
 
-    protected function _setTemplatesInternal(array $templates) {
-
+    protected function _setTemplatesWrapper(array $templates) {
         if (method_exists(get_parent_class($this), 'setTemplates')) {
             parent::setTemplates($templates);
         } else {
             parent::templates($templates);
         }
+    }
+
+    /**
+     * Set templates after removing the ones previously set by the user,
+     * this is to protect against overriding the users wishes
+     *
+     * @param array $templates Templates to set
+     *
+     * @return void
+     */
+    protected function _setTemplatesInternal(array $templates) {
+
+        if (is_array($templates)) {
+
+            foreach ($this->_userChangedTemplates as $key) {
+
+                if (array_key_exists($key, $templates)) {
+                    unset($templates[$key]);
+                }
+            }
+        }
+
+        $this->_setTemplatesWrapper($templates);
     }
 
     /**
@@ -731,17 +753,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             }
         }
 
-        // Set any templates after removing the ones previously set by the user
-        if (!empty($newTemplates)) {
-
-            foreach ($this->_userChangedTemplates as $key) {
-
-                if (array_key_exists($key, $newTemplates)) {
-                    unset($newTemplates[$key]);
-                }
-            }
-            $this->_setTemplatesInternal($newTemplates);
-        }
+        $this->_setTemplatesInternal($newTemplates);
     }
 
     private function decodeType($options, $type) {
