@@ -16,6 +16,7 @@
     '_static/css/pygments.css'] -%}
 {%- set script_files = [] -%}
 
+{%- set titlesuffix = "lilHermit CakePHP Bootstrap4 Plugin" %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +24,7 @@
     <!-- Required meta tags -->
     <meta http-equiv="Content-Type" content="text/html; charset={{ encoding }}"/>
     {{ metatags }}
-    <title>{{ title|striptags|e }}{{ titlesuffix }}</title>
+    <title>{{ title|striptags|e }} - {{ titlesuffix }}</title>
     <link href="{{ pathto('_static/favicon.png', 1) }}" type="image/png" rel="icon"/>
 
     <meta charset="utf-8">

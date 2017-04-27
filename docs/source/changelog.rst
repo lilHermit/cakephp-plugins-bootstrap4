@@ -17,6 +17,7 @@ Changelog
 .. raw:: html
 
     <span class="badge badge-primary">Supports Bootstrap 4.0.0-alpha6</span>
+
 - New documentation
 - Improved File Browser control
 - Select controls now render as bootstrap

@@ -19,8 +19,8 @@ Creating Textual Controls
 
 .. php:method:: control(string $fieldName, array $options = [])
 
-.. note:: The plugin uses the **NEW** CakePHP `control <https://book.cakephp.org/3.0/en/views/helpers/form.html#creating-form-controls>`_
-    method however if you are using CakePHP 3.3.x then this is automatically translated to ``input``
+.. note:: This plugin uses the **NEW** CakePHP 3.4.x `control <https://book.cakephp.org/3.0/en/views/helpers/form.html#creating-form-controls>`_
+    method however this is automatically translated to ``input`` if you are using an other version
 
 Many additional `$options` are now supported by the ``control()`` method which provide
 the following functionality:
