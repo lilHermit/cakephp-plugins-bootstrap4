@@ -1940,4 +1940,53 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
     }
 
+    public function testLayoutInline() {
+
+        $result = $this->Form->create(null, [
+            'layout' => ['showLabels' => false, 'type' => 'inline']
+        ]);
+        $result .= $this->Form->control('Name', [
+            'placeholder' => 'Jane Doe'
+        ]);
+
+        $this->assertHtml([
+            'form' => ['method' => 'post', 'accept-charset' => 'utf-8', 'class' => 'form-inline', 'action' => '/'],
+            ['div' => ['style' => 'display:none;']],
+            ['input' => ['type' => 'hidden', 'name' => '_method', 'value' => 'POST']],
+            '/div',
+            ['label' => ['class' => 'sr-only', 'for' => 'name']],
+            'Name',
+            '/label',
+            'input' => [
+                'type' => 'text',
+                'name' => 'Name',
+                'id' => 'name',
+                'placeholder' => 'Jane Doe',
+                'class' => 'form-control'
+            ]
+        ], $result);
+
+        $result = $this->Form->create(null, [
+            'layout' => ['showLabels' => true, 'type' => 'inline']
+        ]);
+        $result .= $this->Form->control('Name', [
+            'placeholder' => 'Jane Doe'
+        ]);
+        $this->assertHtml([
+            'form' => ['method' => 'post', 'accept-charset' => 'utf-8', 'class' => 'form-inline', 'action' => '/'],
+            ['div' => ['style' => 'display:none;']],
+            ['input' => ['type' => 'hidden', 'name' => '_method', 'value' => 'POST']],
+            '/div',
+            ['label' => ['class' => 'col-form-label', 'for' => 'name']],
+            'Name',
+            '/label',
+            'input' => [
+                'type' => 'text',
+                'name' => 'Name',
+                'id' => 'name',
+                'placeholder' => 'Jane Doe',
+                'class' => 'form-control'
+            ]
+        ], $result);
+    }
 }

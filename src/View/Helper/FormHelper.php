@@ -12,6 +12,11 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     protected $bootstrapConfigDefaults = [
         'customControls' => true,
         'html5Render' => true,
+        'layout' => [
+            'type' => 'block',
+            'showLabels' => true,
+            'labelsClass' => [],
+            'controlsClass' => []],
         'errorClass' => 'form-control-danger'
     ];
 
@@ -91,8 +96,13 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             'html5Render' => $this->getConfig('html5Render')
         ];
 
-
         $this->_parseGlobals($options);
+
+        if ($this->isLayout('inline')) {
+            $options = Html::addClass($options, 'form-inline');
+            $this->_setTemplatesInternal([
+                'inputContainer' => '{{content}}{{help}}']);
+        }
 
         return parent::create($model, $options);
     }
@@ -106,6 +116,16 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         if (isset($input['html5Render']) && is_bool($input['html5Render'])) {
             $this->setConfig('html5Render', $input['html5Render']);
             unset($input['html5Render']);
+        }
+
+        if (isset($input['layout'])) {
+
+            // Sanitise against anything other than array
+            if (!is_array($input['layout'])) {
+                $input['layout'] = $this->bootstrapConfigDefaults['layout'];
+            }
+            $this->setConfig('layout', $input['layout']);
+            unset($input['layout']);
         }
     }
 
@@ -835,7 +855,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             }
 
         } else {
-            $label = 'col-form-label';
+            $label = $this->getConfig('layout.showLabels') ? 'col-form-label' : 'sr-only';
         }
 
         $options = $this->_addLabelClass($options, $label, $index);
@@ -1071,5 +1091,9 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      */
     private function isHtml5Render($options) {
         return (!isset($options['html5Render']) || $options['html5Render']);
+    }
+
+    protected function isLayout($type) {
+        return strstr($this->getConfig('layout.type'), $type) !== false;
     }
 }
