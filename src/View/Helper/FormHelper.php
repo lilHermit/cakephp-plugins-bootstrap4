@@ -9,8 +9,11 @@ use lilHermit\Toolkit\Utility\Html;
 
 class FormHelper extends \Cake\View\Helper\FormHelper {
 
-    protected $customControls = true;
-    protected $html5Render = true;
+    protected $bootstrapConfigDefaults = [
+        'customControls' => true,
+        'html5Render' => true,
+        'errorClass' => 'form-control-danger'
+    ];
 
     protected $_userChangedTemplates = [];
 
@@ -69,8 +72,9 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     public function __construct(View $View, array $config = []) {
 
-        $this->_defaultConfig['templates'] = $this->_templates;
-        $this->_defaultConfig['errorClass'] = 'form-control-danger';
+        $this->_defaultConfig = array_merge($this->_defaultConfig, [
+            'templates' => $this->_templates,
+        ], $this->bootstrapConfigDefaults);
 
         $this->_defaultWidgets =
             array_replace_recursive($this->_defaultWidgets, $this->_bootstrapWidgets);
@@ -82,6 +86,12 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     public function create($model = null, array $options = []) {
 
+        $options += [
+            'customControls' => $this->getConfig('customControls'),
+            'html5Render' => $this->getConfig('html5Render')
+        ];
+
+
         $this->_parseGlobals($options);
 
         return parent::create($model, $options);
@@ -89,12 +99,12 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     private function _parseGlobals(&$input) {
         if (isset($input['customControls']) && is_bool($input['customControls'])) {
-            $this->customControls = $input['customControls'];
+            $this->setConfig('customControls', $input['customControls']);
             unset($input['customControls']);
         }
 
         if (isset($input['html5Render']) && is_bool($input['html5Render'])) {
-            $this->html5Render = $input['html5Render'];
+            $this->setConfig('html5Render', $input['html5Render']);
             unset($input['html5Render']);
         }
     }
@@ -130,8 +140,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      */
     public function control($fieldName, array $options = []) {
         $options += [
-            'customControls' => $this->customControls,
-            'html5Render' => $this->html5Render,
+            'customControls' => $this->getConfig('customControls'),
+            'html5Render' => $this->getConfig('html5Render'),
             'help' => false,
             'prefix' => false,
             'suffix' => false
@@ -303,7 +313,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     public function multiCheckbox($fieldName, $options, array $attributes = []) {
         $attributes += [
-            'customControls' => $this->customControls
+            'customControls' => $this->getConfig('customControls')
         ];
         $this->_defaultConfig['templates'] = $this->_templates;
         $this->setLabelClass($attributes, 'multicheckbox');
@@ -314,7 +324,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     public function select($fieldName, $options = [], array $attributes = []) {
         $attributes += [
-            'customControls' => $this->customControls
+            'customControls' => $this->getConfig('customControls')
         ];
 
         return parent::select($fieldName, $options, $attributes);
@@ -322,7 +332,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     public function checkbox($fieldName, array $options = []) {
         $options += [
-            'customControls' => $this->customControls,
+            'customControls' => $this->getConfig('customControls'),
             'type' => 'checkbox'
         ];
 
@@ -336,7 +346,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     public function radio($fieldName, $options = [], array $attributes = []) {
         $attributes += [
-            'customControls' => $this->customControls,
+            'customControls' => $this->getConfig('customControls'),
             'type' => 'radio'
         ];
 
@@ -372,7 +382,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     public function file($fieldName, array $options = []) {
         $options += [
-            'customControls' => $this->customControls,
+            'customControls' => $this->getConfig('customControls'),
             'type' => 'file'
         ];
 
