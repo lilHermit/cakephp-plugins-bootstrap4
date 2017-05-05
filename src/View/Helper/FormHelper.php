@@ -181,6 +181,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         if (method_exists(get_parent_class($this), 'control')) {
             return parent::control($fieldName, $options);
         } else {
+            /** @noinspection PhpDeprecationInspection */
             return parent::input($fieldName, $options);
         }
     }
@@ -247,6 +248,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         if (method_exists(get_parent_class($this), 'controls')) {
             return parent::controls($fields, $options);
         } else {
+            /** @noinspection PhpDeprecationInspection */
             return parent::inputs($fields, $options);
         }
     }
@@ -306,6 +308,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         if (method_exists(get_parent_class($this), 'allControls')) {
             return parent::allControls($fields, $options);
         } else {
+            /** @noinspection PhpDeprecationInspection */
             return parent::allInputs($fields, $options);
         }
     }
@@ -673,6 +676,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         if (method_exists(get_parent_class($this), 'setTemplates')) {
             parent::setTemplates($templates);
         } else {
+            /** @noinspection PhpDeprecationInspection */
             parent::templates($templates);
         }
     }
