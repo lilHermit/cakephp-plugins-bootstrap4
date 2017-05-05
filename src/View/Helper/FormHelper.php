@@ -18,7 +18,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             'classes' => [
                 'label' => [],
                 'control' => [],
-                'submitContainer' => []
+                'submitContainer' => [],
+                'grid' => []
             ]
         ],
         'errorClass' => 'form-control-danger'
@@ -50,6 +51,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'fieldset' => '<fieldset{{attrs}}>{{content}}</fieldset>',
         'formStart' => '<form{{attrs}}>',
         'formEnd' => '</form>',
+        'formGroupGrid' => '{{label}}<div{{attrs}}>{{input}}',
         'formGroup' => '{{label}}{{input}}',
         'hiddenBlock' => '<div style="display:none;">{{content}}</div>',
         'hidden' => '<input type="hidden" name="{{name}}"{{attrs}}/>',
@@ -57,6 +59,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'inputSubmit' => '<input type="{{type}}"{{attrs}}/>',
         'inputContainer' => '<div class="form-group">{{content}}{{help}}</div>',
         'inputContainerError' => '<div class="form-group has-danger">{{content}}{{error}}{{help}}</div>',
+        'inputContainerGrid' => '<div class="form-group row">{{content}}{{help}}</div></div>',
+        'inputContainerGridError' => '<div class="form-group row has-danger">{{content}}{{error}}{{help}}</div></div>',
         'label' => '<label{{attrs}}>{{text}}</label>',
         'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
         'legend' => '<legend>{{text}}</legend>',
@@ -106,6 +110,13 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             $options = Html::addClass($options, 'form-inline');
             $this->_setTemplatesInternal([
                 'inputContainer' => '{{content}}{{help}}']);
+        } else if ($this->isLayout('grid')) {
+            $options = Html::addClass($options, ['container']);
+
+            if (empty($this->getConfig('layout.classes.grid'))) {
+                $this->setConfig('layout.classes.grid', [['col-sm-2'], ['col-sm-10']]);
+            }
+
         }
 
         if (!empty($this->getConfig('layout.classes.submitContainer'))) {
@@ -127,6 +138,9 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             $this->setConfig('html5Render', $input['html5Render']);
             unset($input['html5Render']);
         }
+
+        // Reset the layout to defaults before we merge in any
+        $this->setConfig('layout', $this->bootstrapConfigDefaults['layout'], false);
 
         if (isset($input['layout'])) {
 
@@ -174,7 +188,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             'html5Render' => $this->getConfig('html5Render'),
             'help' => false,
             'prefix' => false,
-            'suffix' => false
+            'suffix' => false,
+            'gridClasses' => $this->getConfig('layout.classes.grid')
         ];
 
         $this->_defaultConfig['templates'] = $this->_templates;
@@ -408,9 +423,26 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         $data = $this->_addWidgetClass($data, $name);
 
         // Clean up any elements so they don't end up as attributes
-        unset($data['customControls'], $data['templateType'], $data['skipSwitchTemplates'], $data['html5Render']);
+        $data = $this->cleanArray($data);
 
         return parent::widget($name, $data);
+    }
+
+    protected function cleanArray($data = [], $extras = []) {
+
+        $elements = array_merge([
+            'customControls',
+            'templateType',
+            'skipSwitchTemplates',
+            'html5Render',
+            'gridClasses'
+        ], $extras);
+
+        foreach ($elements as $element) {
+            unset($data[$element]);
+        }
+
+        return $data;
     }
 
     public function file($fieldName, array $options = []) {
@@ -666,7 +698,70 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     protected function _inputContainerTemplate($options) {
         $this->formatHelp($options['options']);
-        return parent::_inputContainerTemplate($options);
+
+        $containers = [];
+        if ($this->isLayout('grid')) {
+            $containers = [
+                $options['options']['type'] . 'ContainerGrid',
+                'inputContainerGrid'
+            ];
+        }
+
+        $containers += [
+            $options['options']['type'] . 'Container',
+            'inputContainer'
+        ];
+
+        $inputContainerTemplate = "";
+        foreach ($containers as $container) {
+            $inputContainerTemplate = $container . $options['errorSuffix'];
+            if ($this->templater()->get($inputContainerTemplate)) {
+                break;
+            }
+        }
+
+        return $this->formatTemplate($inputContainerTemplate, [
+            'content' => $options['content'],
+            'error' => $options['error'],
+            'required' => $options['options']['required'] ? ' required' : '',
+            'type' => $options['options']['type'],
+            'templateVars' => isset($options['options']['templateVars']) ? $options['options']['templateVars'] : []
+        ]);
+    }
+
+    protected function _groupTemplate($options) {
+        $containers = [];
+        if ($this->isLayout('grid')) {
+            $containers += [
+                $options['options']['type'] . 'FormGroupGrid',
+                'formGroupGrid'
+            ];
+
+            $attrs = $this->templater()->formatAttributes([
+                'class' => $options['options']['gridClasses'][1]
+            ]);
+            $options['options']['templateVars']['attrs'] = $attrs;
+        }
+
+        $containers += [
+            $options['options']['type'] . 'FormGroup',
+            'formGroup'
+        ];
+
+        $groupTemplate = "";
+        foreach ($containers as $container) {
+            $groupTemplate = $container;
+            if ($this->templater()->get($groupTemplate)) {
+                break;
+            }
+        }
+
+        return $this->formatTemplate($groupTemplate, [
+            'input' => isset($options['input']) ? $options['input'] : [],
+            'label' => $options['label'],
+            'error' => $options['error'],
+            'templateVars' => isset($options['options']['templateVars']) ? $options['options']['templateVars'] : []
+        ]);
     }
 
     /**
@@ -759,10 +854,11 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                     $newTemplates = [
                         'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}<span class="custom-control-indicator"></span> <span class="custom-control-description">{{text}}</span></label>',
                         'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}> ',
-                        'checkboxContainer' => '<div class="form-group clearfix"{{attrs}}>{{content}}{{error}}{{help}}</div>',
+                        'checkboxContainer' => '<div class="form-group clearfix"{{attrs}}>{{content}}{{error}}{{help}}</div>'
                     ];
                     break;
                 case 'multicheckbox':
+                    $options = Html::addClass($options, 'custom-controls-stacked', ['useIndex' => 'gridClasses.1']);
                     $newTemplates = [
                         'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}<span class="custom-control-indicator"></span> <span class="custom-control-description">{{text}}</span></label>',
                         'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}> ',
@@ -772,10 +868,14 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                         'selectContainer' => '<div class="form-group clearfix"{{attrs}}>{{content}}{{error}}{{help}}</div>',
                         'selectContainerError' => '<div class="form-group clearfix has-danger"{{attrs}}>{{content}}{{error}}{{help}}</div>',
 
+                        'selectContainerGrid' => '<div class="form-group clearfix row"{{attrs}}>{{content}}{{error}}{{help}}</div>',
+                        'selectContainerGridError' => '<div class="form-group clearfix row has-danger"{{attrs}}>{{content}}{{error}}{{help}}</div>',
                         'selectFormGroup' => '{{label}}<div class="custom-controls-stacked"{{attrs}}>{{input}}</div>',
+                        'selectFormGroupGrid' => '{{label}}<div{{attrs}}>{{input}}</div>',
                     ];
                     break;
                 case 'radio':
+                    $options = Html::addClass($options, 'custom-controls-stacked', ['useIndex' => 'gridClasses.1']);
                     $newTemplates = [
                         'nestingLabel' => '<label{{attrs}}>{{input}}<span class="custom-control-indicator"></span> <span class="custom-control-description">{{text}}</span></label>',
                         'radio' => '<input type="radio" name="{{name}}" value="{{value}}"{{attrs}}> ',
@@ -798,7 +898,11 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
                         // Reset incase custom was previously used
                         'selectContainer' => null,
+                        'selectContainerError' => null,
+                        'selectContainerGrid' => null,
+                        'selectContainerGridError' => null,
                         'selectFormGroup' => null,
+                        'selectFormGroupGrid' => null,
                     ];
                     break;
                 case 'checkbox':
@@ -806,6 +910,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                         'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
                         'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}>',
                         'checkboxContainer' => '<div class="form-check"{{attrs}}>{{content}}{{error}}{{help}}</div>',
+                        'checkboxContainerGrid' => '<div class="form-check"{{attrs}}>{{content}}{{error}}{{help}}</div>',
                     ];
                     break;
                 case 'radio':
@@ -839,7 +944,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         $type = $this->decodeType($options, $type);
         $customControls = $options['customControls'];
 
-        $label = [];
+        $label = false;
         $index = 'label';
         if ($type === 'file') {
             if ($customControls) {
@@ -855,6 +960,10 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                         $label = ['form-check-label'];
                     }
                 }
+
+                if ($this->isLayout('grid')) {
+                    $options = $this->_addLabelClass($options, $this->getConfig('layout.classes.grid.0'), 'label');
+                }
             } else {
                 if ($type === 'radio') {
                     $label = $customControls ? ['custom-control', 'custom-radio'] : ['form-check-label'];
@@ -862,6 +971,10 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             }
 
             if ($type === 'multicheckbox') {
+
+                if ($fromInput && $this->isLayout('grid')) {
+                    $options = $this->_addLabelClass($options, $this->getConfig('layout.classes.grid.0'), 'label');
+                }
 
                 $index = $fromInput ? 'labelOptions' : 'label';
                 if ($customControls) {
@@ -873,9 +986,16 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
         } else {
             $label = $this->getConfig('layout.showLabels') ? 'col-form-label' : 'sr-only';
+
+            if ($this->isLayout('grid')) {
+                $label = Html::addClass($label, $options['gridClasses'][0], ['useIndex' => false]);
+            }
         }
 
-        $label = Html::addClass($label, $this->getConfig('layout.classes.label'), ['useIndex' => false]);
+        // If there is a label
+        if ($label !== false) {
+            $label = Html::addClass($label, $this->getConfig('layout.classes.label'), ['useIndex' => false]);
+        }
 
         $options = $this->_addLabelClass($options, $label, $index);
     }
@@ -924,6 +1044,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         $options['templateVars']['attrs'] = $this->templater()->formatAttributes([
             'class' => $this->getConfig('layout.classes.submitContainer')
         ]);;
+
+        $options = $this->cleanArray($options);
 
         return parent::submit($caption, $options);
     }

@@ -2032,4 +2032,251 @@ class BootstrapFormHelperTest extends TestCase {
             ['input' => ['type' => 'submit', 'class', 'value']],
             '/div'], $result);
     }
+
+    public function testLayoutGridSetGrid() {
+
+        $this->Form->create(null, [
+            'layout' => [
+                'type' => 'grid',
+                'classes' => [
+                    'grid' => [['col-sm-3'], ['col-sm-9']]
+                ]
+            ]
+        ]);
+
+        $result = $this->Form->control('name');
+        $this->assertHtml([
+            ['div' => ['class' => 'form-group row']],
+            'label' => ['class' => 'col-form-label col-sm-3', 'for'],
+            'Name',
+            '/label',
+            ['div' => ['class' => 'col-sm-9']],
+            ['input' => ['name', 'type', 'id', 'class' => 'form-control']],
+            '/div',
+            '/div',
+        ], $result);
+
+        $this->Form->create(null, [
+            'layout' => [
+                'type' => 'grid'
+            ]
+        ]);
+
+        $result = $this->Form->control('name');
+        $this->assertHtml([
+            ['div' => ['class' => 'form-group row']],
+            'label' => ['class' => 'col-form-label col-sm-2', 'for'],
+            'Name',
+            '/label',
+            ['div' => ['class' => 'col-sm-10']],
+            ['input' => ['name', 'type', 'id', 'class' => 'form-control']],
+            '/div',
+            '/div',
+        ], $result);
+    }
+
+    public function testLayoutGridAllControls() {
+
+        $result = $this->Form->create(null, [
+            'layout' => [
+                'type' => 'grid',
+                'classes' => [
+                    'submitContainer' => ['col-sm-10', 'offset-sm-2', 'p-1']
+                ]
+            ]
+        ]);
+
+        $result .= $this->Form->control('name', [
+
+            'placeholder' => 'Jane Doe'
+        ]);
+
+        $result .= $this->Form->control('username', [
+            'placeholder' => 'Username',
+            'prefix' => ['text' => '@',]
+        ]);
+
+        $result .= $this->Form->control('checkbox1', [
+            'label' => 'My checkboxes',
+            'default' => 2,
+            'multiple' => 'checkbox',
+            'type' => 'select',
+            'options' => [
+                ['text' => 'First Checkbox', 'value' => 1],
+                ['text' => 'Second Checkbox', 'value' => 2]
+            ],
+            'customControls' => true
+        ]);
+
+        $result .= $this->Form->control('checkbox1', [
+            'label' => 'My checkboxes',
+            'default' => 2,
+            'multiple' => 'checkbox',
+            'type' => 'select',
+            'options' => [
+                ['text' => 'First Checkbox', 'value' => 1],
+                ['text' => 'Second Checkbox', 'value' => 2]
+            ],
+            'customControls' => false
+        ]);
+
+        $result .= $this->Form->control(
+            'radio1',
+            [
+                'label' => 'My Radios',
+                'default' => 2,
+                'type' => 'radio',
+                'options' => [
+                    ['text' => 'First Radio', 'value' => 1],
+                    ['text' => 'Second Radio', 'value' => 2]
+                ],
+                'customControls' => true
+            ]
+        );
+
+        $result .= $this->Form->control(
+            'radio',
+            [
+                'label' => 'My Radios',
+                'default' => 2,
+                'type' => 'radio',
+                'options' => [
+                    ['text' => 'First Radio', 'value' => 1],
+                    ['text' => 'Second Radio', 'value' => 2]
+                ],
+                'customControls' => false
+            ]
+        );
+
+        $result .= $this->Form->submit();
+        $result .= $this->Form->end();
+
+        $this->assertHtml([
+            'form' => ['method', 'accept-charset', 'action', 'class' => 'container'],
+            ['div' => ['style']],
+            'input' => ['type' => 'hidden', 'name', 'value'],
+            '/div',
+            // Name text field
+            ['div' => ['class' => 'form-group row']],
+            'label' => ['class' => 'col-form-label col-sm-2', 'for'],
+            'Name',
+            '/label',
+            ['div' => ['class' => 'col-sm-10']],
+            ['input' => ['name', 'type', 'id', 'placeholder', 'class' => 'form-control']],
+            '/div',
+            '/div',
+            // Username suffix
+            'div' => ['class' => 'form-group row'],
+            ['label' => ['class' => 'col-form-label col-sm-2', 'for' => 'username']],
+            'Username',
+            '/label',
+            ['div' => ['class' => 'col-sm-10']],
+            ['div' => ['class' => 'input-group']],
+            ['span' => ['class' => 'input-group-addon']],
+            '@',
+            '/span',
+            ['input' => ['type', 'name', 'placeholder', 'id', 'class' => 'form-control']],
+            '/div',
+            '/div',
+            '/div',
+            // Multi-checkbox custom controls
+            ['div' => ['class' => 'form-group clearfix row']],
+            ['label' => ['for', 'class' => 'col-sm-2']],
+            'My checkboxes',
+            '/label',
+            ['div' => ['class' => 'col-sm-10 custom-controls-stacked']],
+            ['input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => '']],
+            ['label' => ['for', 'class' => 'custom-control custom-checkbox']],
+            ['input' => ['type', 'name', 'value', 'id', 'class' => 'custom-control-input']],
+            ['span' => ['class' => 'custom-control-indicator']],
+            '/span',
+            ['span' => ['class' => 'custom-control-description']],
+            'First Checkbox',
+            '/span',
+            '/label',
+            ['label' => ['for', 'class' => 'custom-control custom-checkbox selected']],
+            ['input' => ['type', 'name', 'value', 'id', 'checked', 'class' => 'custom-control-input']],
+            ['span' => ['class' => 'custom-control-indicator']],
+            '/span',
+            ['span' => ['class' => 'custom-control-description']],
+            'Second Checkbox',
+            '/span',
+            '/label',
+            '/div',
+            '/div',
+            // Multi-checkbox non custom controls
+            ['div' => ['class' => 'form-group row']],
+            ['label' => ['for', 'class' => 'col-sm-2']],
+            'My checkboxes',
+            '/label',
+            ['div' => ['class' => 'col-sm-10']],
+            ['input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => '']],
+            ['div' => ['class' => 'form-check']],
+
+            ['label' => ['for' => 'checkbox1-1', 'class' => 'form-check-label']],
+            ['input' => ['type', 'name', 'value', 'id', 'class' => 'form-check-input']],
+            'First Checkbox',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for' => 'checkbox1-2', 'class' => 'form-check-label selected']],
+            ['input' => ['type', 'name', 'value', 'checked', 'id', 'class' => 'form-check-input']],
+            'Second Checkbox',
+            '/label',
+            '/div',
+            '/div',
+            '/div',
+            // Radios custom controls
+            ['div' => ['class' => 'form-group row']],
+            ['label' => ['class' => 'col-sm-2']],
+            'My Radios',
+            '/label',
+            ['div' => ['class' => 'col-sm-10 custom-controls-stacked']],
+            ['input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => '']],
+            ['label' => ['for', 'class' => 'custom-control custom-radio']],
+            ['input' => ['type', 'name', 'value', 'id', 'class' => 'custom-control-input']],
+            ['span' => ['class' => 'custom-control-indicator']],
+            '/span',
+            ['span' => ['class' => 'custom-control-description']],
+            'First Radio',
+            '/span',
+            '/label',
+            ['label' => ['for' => 'radio1-2', 'class' => 'custom-control custom-radio selected']],
+            ['input' => ['type', 'name', 'value', 'id', 'checked', 'class' => 'custom-control-input']],
+            ['span' => ['class' => 'custom-control-indicator']],
+            '/span',
+            ['span' => ['class' => 'custom-control-description']],
+            'Second Radio',
+            '/span',
+            '/label',
+            '/div',
+            '/div',
+            // Radios non custom controls
+            ['div' => ['class' => 'form-group row']],
+            ['label' => ['class' => 'col-sm-2']],
+            'My Radios',
+            '/label',
+            ['div' => ['class' => 'col-sm-10']],
+            ['input' => ['type' => 'hidden', 'name', 'value' => ""]],
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for', 'class' => 'form-check-label']],
+            ['input' => ['type', 'name', 'value', 'id', 'class' => 'form-check-input']],
+            'First Radio',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['label' => ['for', 'class' => 'form-check-label selected']],
+            ['input' => ['type', 'name', 'value', 'checked', 'id', 'class' => 'form-check-input']],
+            'Second Radio',
+            '/label',
+            '/div',
+            '/div',
+            '/div',
+            // Submit
+            ['div' => ['class' => 'col-sm-10 offset-sm-2 p-1']],
+            ['input' => ['type' => 'submit', 'class', 'value']],
+            '/div',
+            '/form'
+        ], $result);
+    }
 }
