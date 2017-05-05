@@ -15,8 +15,12 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'layout' => [
             'type' => 'block',
             'showLabels' => true,
-            'labelsClass' => [],
-            'controlsClass' => []],
+            'classes' => [
+                'label' => [],
+                'control' => [],
+                'submitContainer' => []
+            ]
+        ],
         'errorClass' => 'form-control-danger'
     ];
 
@@ -102,6 +106,12 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             $options = Html::addClass($options, 'form-inline');
             $this->_setTemplatesInternal([
                 'inputContainer' => '{{content}}{{help}}']);
+        }
+
+        if (!empty($this->getConfig('layout.classes.submitContainer'))) {
+            $this->_setTemplatesInternal([
+                'submitContainer' => '<div{{attrs}}>{{content}}</div>',
+            ]);
         }
 
         return parent::create($model, $options);
@@ -382,7 +392,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     public function fieldset($fields = '', array $options = []) {
         if (!isset($options['fieldset']) || $options['fieldset'] !== false) {
-            $options = HTml::addClass($options, 'form-group', ['useIndex' => 'fieldset.class']);
+            $options = Html::addClass($options, 'form-group', ['useIndex' => 'fieldset.class']);
         }
 
         return parent::fieldset($fields, $options);
@@ -468,12 +478,15 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
             // Fall back for certain inputs ie didn't come from widget method
             if ($widgetType === null && !in_array($type, $skipClassFallback)) {
-                $class = 'form-control';
+                $class = ['form-control'];
             }
         } else {
-            $class = $widgetsClassMap[$type];
+            $class = [$widgetsClassMap[$type]];
         }
 
+        if ($type !== 'hidden' && $class !== null) {
+            $options = Html::addClass($options, $this->getConfig('layout.classes.control'));
+        }
         $options = Html::addClass($options, $class);
 
         return $options;
@@ -830,7 +843,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         $index = 'label';
         if ($type === 'file') {
             if ($customControls) {
-                $label = 'col-form-label d-block';
+                $label = ['col-form-label', 'd-block'];
             }
         } elseif ($type === 'radio' || $type === 'checkbox' || $type === 'multicheckbox') {
 
@@ -839,12 +852,12 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                     if ($customControls) {
                         $label = ['custom-control', 'custom-checkbox'];
                     } else {
-                        $label = 'form-check-label';
+                        $label = ['form-check-label'];
                     }
                 }
             } else {
                 if ($type === 'radio') {
-                    $label = $customControls ? ['custom-control', 'custom-radio'] : 'form-check-label';
+                    $label = $customControls ? ['custom-control', 'custom-radio'] : ['form-check-label'];
                 }
             }
 
@@ -854,13 +867,15 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                 if ($customControls) {
                     $label = ['custom-control', 'custom-checkbox'];
                 } else {
-                    $label = 'form-check-label';
+                    $label = ['form-check-label'];
                 }
             }
 
         } else {
             $label = $this->getConfig('layout.showLabels') ? 'col-form-label' : 'sr-only';
         }
+
+        $label = Html::addClass($label, $this->getConfig('layout.classes.label'), ['useIndex' => false]);
 
         $options = $this->_addLabelClass($options, $label, $index);
     }
@@ -904,6 +919,11 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         if (!preg_match('/\.(jpg|jpe|jpeg|gif|png|ico)$/', $caption)) {
             $options = $this->parseButtonClass($options);
         }
+
+        // Add the attributes for the submitContainer
+        $options['templateVars']['attrs'] = $this->templater()->formatAttributes([
+            'class' => $this->getConfig('layout.classes.submitContainer')
+        ]);;
 
         return parent::submit($caption, $options);
     }

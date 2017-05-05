@@ -1989,4 +1989,47 @@ class BootstrapFormHelperTest extends TestCase {
             ]
         ], $result);
     }
+
+    public function testLayoutClasses() {
+        $this->Form->create(null, [
+            'layout' => [
+                'classes' => [
+                    'submitContainer' => ['submit-container-class'],
+                    'control' => ['control-class'],
+                    'label' => ['label-class']
+                ]
+            ]
+        ]);
+
+        // Simple global layout classes
+        $result = $this->Form->control('name');
+        $this->assertHtml([
+            ['div' => ['class' => 'form-group']],
+            'label' => ['class' => 'col-form-label label-class', 'for'],
+            'Name',
+            '/label',
+            ['input' => ['name', 'type', 'id', 'class' => 'control-class form-control']],
+            '/div'],
+            $result);
+
+        // Now pass in classes to control
+        $result = $this->Form->control('name', [
+            'class' => 'control-class2',
+            'label' => ['class' => 'label-class2']
+        ]);
+        $this->assertHtml([
+            ['div' => ['class' => 'form-group']],
+            'label' => ['class' => 'label-class2 col-form-label label-class', 'for'],
+            'Name',
+            '/label',
+            ['input' => ['name', 'type', 'id', 'class' => 'control-class2 control-class form-control']],
+            '/div'], $result);
+
+        // Submit container
+        $result = $this->Form->submit();
+        $this->assertHtml([
+            ['div' => ['class' => 'submit-container-class']],
+            ['input' => ['type' => 'submit', 'class', 'value']],
+            '/div'], $result);
+    }
 }
