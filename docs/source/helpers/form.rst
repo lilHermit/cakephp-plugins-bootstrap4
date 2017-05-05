@@ -99,7 +99,97 @@ Will render like
 Grid Layout
 -----------
 
-*Coming soon*
+You indicate grid layout the same way as inline by setting the `layout -> type` option being set to ``grid`` when
+creating the form as below. The default column layout will be `col-sm-2` and `col-sm-10` (this can be changed as detailed below)::
+
+    echo $this->Form->create(null, [
+        'layout' => [
+            'type' => 'grid',
+            'classes' => [
+                'submitContainer' => ['col-sm-10', 'offset-sm-2', 'p-1']
+            ]
+        ]
+    ]);
+
+    echo $this->Form->control('Name', [
+        'placeholder' => 'Jane Doe'
+    ]);
+
+    echo $this->Form->control('username', [
+        'placeholder' => 'Username',
+    ]);
+
+    echo $this->Form->submit();
+    echo $this->Form->end();
+
+Will render like
+
+.. raw:: html
+
+    <div class="bootstrap-example">
+        <form method="post" accept-charset="utf-8" class="container" action="/"><div style="display:none;"><input type="hidden" name="_method" value="POST"/></div><div class="form-group row"><label class="col-form-label col-sm-2" for="name">Name</label><div class="col-sm-10"><input type="text" name="Name" placeholder="Jane Doe" id="name" class="form-control"/></div></div><div class="form-group row"><label class="col-form-label col-sm-2" for="username">Username</label><div class="col-sm-10"><input type="text" name="username" placeholder="Username" id="username" class="form-control"/></div></div><div class="col-sm-10 offset-sm-2 p-1"><input type="submit" class="btn btn-primary" value="Submit"/></div></form>
+    </div>
+
+.. note:: Notice how we are passing `'classes' => [ 'submitContainer' => ['col-sm-10', 'offset-sm-2', 'p-1']]` into the create method? This allows us to position the submit button into the second column
+
+You can change the column configuration applied to the grid using the following `grid` element::
+
+        echo $this->Form->create(null, [
+            'layout' => [
+                'type' => 'grid',
+                'classes' => [
+                    'submitContainer' => ['col-sm-9', 'offset-sm-3', 'p-1'],
+                    'grid' => [['col-sm-3'], ['col-sm-9']]
+                ]
+            ]
+        ]);
+
+        echo $this->Form->control('Name', [
+            'placeholder' => 'Jane Doe'
+        ]);
+
+        echo $this->Form->control('username', [
+            'placeholder' => 'Username',
+        ]);
+
+        echo $this->Form->submit();
+        echo $this->Form->end();
+
+Will render like
+
+.. raw:: html
+
+    <div class="bootstrap-example">
+        <form method="post" accept-charset="utf-8" class="container" action="/"><div style="display:none;"><input type="hidden" name="_method" value="POST"/></div><div class="form-group row"><label class="col-form-label col-sm-3" for="name">Name</label><div class="col-sm-9"><input type="text" name="Name" placeholder="Jane Doe" id="name" class="form-control"/></div></div><div class="form-group row"><label class="col-form-label col-sm-3" for="username">Username</label><div class="col-sm-9"><input type="text" name="username" placeholder="Username" id="username" class="form-control"/></div></div><div class="col-sm-9 offset-sm-3 p-1"><input type="submit" class="btn btn-primary" value="Submit"/></div></form>
+    </div>
+
+
+
+Layout classes
+--------------
+
+In the last example we introduced the layout classes element, this allows up to style elements of the layout as well as
+save time when setting the same classes on all labels and controls. For example the first inline example has `['mb-2', 'mx-sm-2', 'mb-sm-0']`
+on all control method calls, this can now be eliminated now with the following::
+
+        echo $this->Form->create(null, [
+            'layout' => [
+                'type' => 'inline',
+                'classes' => [
+                    'control' => ['mb-2', 'mx-sm-2', 'mb-sm-0']
+                ]
+            ]
+        ]);
+
+        echo $this->Form->control('Name', [
+            'placeholder' => 'Jane Doe'
+        ]);
+
+        echo $this->Form->control('username', [
+            'placeholder' => 'Username',
+        ]);
+
+Supported elements for ``classes`` are ``control``, ``label``, ``grid`` & ``submitContainer``
 
 Creating Textual Controls
 =========================

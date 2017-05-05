@@ -124,6 +124,7 @@ div.page-contents ul ul, aside.sidebar ul ul {
 .admonition, .deprecated, .versionadded, .versionchanged {
   margin: 20px 0;
   padding-left: 60px;
+  padding-right: 5px;
   position: relative;
   min-height: 55px;
   line-height: 55px;
