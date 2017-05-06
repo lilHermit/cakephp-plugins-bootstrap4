@@ -2279,4 +2279,30 @@ class BootstrapFormHelperTest extends TestCase {
             '/form'
         ], $result);
     }
+
+    public function testLayoutSubmitContainer() {
+        $this->Form->create(null, [
+            'layout' => [
+                'classes' => [
+                    'submitContainer' => ['col-sm-10', 'offset-sm-2', 'p-1']
+                ]
+            ]
+        ]);
+
+        $result = $this->Form->submit();
+        $this->assertHtml([
+            ['div' => ['class' => 'col-sm-10 offset-sm-2 p-1']],
+            ['input' => ['type' => 'submit', 'class', 'value']],
+            '/div'
+        ], $result);
+
+        $result = $this->Form->button('submit');
+        $this->assertHtml([
+            ['div' => ['class' => 'col-sm-10 offset-sm-2 p-1']],
+            ['button' => ['type' => 'submit', 'class']],
+            'submit',
+            '/button',
+            '/div'
+        ], $result);
+    }
 }

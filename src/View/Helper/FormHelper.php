@@ -119,12 +119,6 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
         }
 
-        if (!empty($this->getConfig('layout.classes.submitContainer'))) {
-            $this->_setTemplatesInternal([
-                'submitContainer' => '<div{{attrs}}>{{content}}</div>',
-            ]);
-        }
-
         return parent::create($model, $options);
     }
 
@@ -1018,9 +1012,36 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     public function button($title, array $options = []) {
 
+        $options += ['type' => 'submit'];
+
         $options = $this->parseButtonClass($options);
 
-        return parent::button($title, $options);
+        $options = $this->cleanArray($options);
+
+        $button = parent::button($title, $options);
+
+        if ($options['type'] === 'submit') {
+
+            if (!empty($this->getConfig('layout.classes.submitContainer'))) {
+                $this->_setTemplatesInternal([
+                    'submitContainer' => '<div{{attrs}}>{{content}}</div>',
+                ]);
+
+                // Add the attributes for the submitContainer
+                $attrs = $this->templater()->formatAttributes([
+                    'class' => $this->getConfig('layout.classes.submitContainer')
+                ]);
+
+                return $this->formatTemplate('submitContainer', [
+                    'content' => $button,
+                    'templateVars' => [
+                        'attrs' => $attrs
+                    ]
+                ]);
+            }
+        }
+
+        return $button;
     }
 
     /**
@@ -1040,10 +1061,16 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             $options = $this->parseButtonClass($options);
         }
 
-        // Add the attributes for the submitContainer
-        $options['templateVars']['attrs'] = $this->templater()->formatAttributes([
-            'class' => $this->getConfig('layout.classes.submitContainer')
-        ]);;
+        if (!empty($this->getConfig('layout.classes.submitContainer'))) {
+            $this->_setTemplatesInternal([
+                'submitContainer' => '<div{{attrs}}>{{content}}</div>',
+            ]);
+
+            // Add the attributes for the submitContainer
+            $options['templateVars']['attrs'] = $this->templater()->formatAttributes([
+                'class' => $this->getConfig('layout.classes.submitContainer')
+            ]);
+        }
 
         $options = $this->cleanArray($options);
 
