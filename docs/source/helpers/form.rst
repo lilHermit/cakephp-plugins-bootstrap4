@@ -19,6 +19,8 @@ Form Layouts
 
 The plugin supports all the form 'layout' styles that Bootstrap supports, ``block`` (default), ``inline`` and ``grid``
 
+.. _block-layout:
+
 Block Layout
 ------------
 
@@ -43,6 +45,8 @@ Will render like
             <input type="text" name="username" placeholder="Username" id="username" class="form-control"/>
         </div>
     </div>
+
+.. _inline-layout:
 
 Inline Layout
 -------------
@@ -95,6 +99,8 @@ Will render like
     <div class="bootstrap-example">
         <form method="post" accept-charset="utf-8" class="form-inline" action="/"><div style="display:none;"><input type="hidden" name="_method" value="POST"/></div><label class="sr-only" for="name">Name</label><input type="text" name="Name" class="mb-2 mx-sm-2 mb-sm-0 form-control" placeholder="Jane Doe" id="name"/><label class="sr-only" for="username">Username</label><input type="text" name="username" placeholder="Username" class="mb-2 mx-sm-2 mb-sm-0 form-control" id="username"/></form>
     </div>
+
+.. _grid-layout:
 
 Grid Layout
 -----------
@@ -163,7 +169,7 @@ Will render like
         <form method="post" accept-charset="utf-8" class="container" action="/"><div style="display:none;"><input type="hidden" name="_method" value="POST"/></div><div class="form-group row"><label class="col-form-label col-sm-3" for="name">Name</label><div class="col-sm-9"><input type="text" name="Name" placeholder="Jane Doe" id="name" class="form-control"/></div></div><div class="form-group row"><label class="col-form-label col-sm-3" for="username">Username</label><div class="col-sm-9"><input type="text" name="username" placeholder="Username" id="username" class="form-control"/></div></div><div class="col-sm-9 offset-sm-3 p-1"><input type="submit" class="btn btn-primary" value="Submit"/></div></form>
     </div>
 
-
+.. _layout-classes:
 
 Layout classes
 --------------

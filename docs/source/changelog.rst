@@ -1,12 +1,14 @@
 Changelog
 #########
 
-2.1.6.6 (TBC)
--------------
+2.1.6.6 (16-May-2017)
+---------------------
 .. raw:: html
 
     <span class="badge badge-primary">Supports Bootstrap 4.0.0-alpha6</span>
 
+- Added support for :ref:`Block <block-layout>`, :ref:`Inline <inline-layout>` and :ref:`Grid <grid-layout>` layouts.
+- Added global form control and label class setting (:ref:`Docs here <layout-classes>`)
 - Added support for passing attributes to Prefix/Suffix containers
 
 2.1.6.5 (30-Mar-2017)
