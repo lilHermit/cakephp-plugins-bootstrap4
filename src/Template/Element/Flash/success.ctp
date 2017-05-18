@@ -1,5 +1,5 @@
 <?php
-use lilHermit\Toolkit\Utility\Html;
+use LilHermit\Toolkit\Utility\Html;
 
 if (!isset($params['escape']) || $params['escape'] !== false) {
     $message = h($message);

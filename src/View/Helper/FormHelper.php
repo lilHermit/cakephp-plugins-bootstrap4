@@ -5,7 +5,7 @@ namespace LilHermit\Bootstrap4\View\Helper;
 
 use Cake\Utility\Hash;
 use Cake\View\View;
-use lilHermit\Toolkit\Utility\Html;
+use LilHermit\Toolkit\Utility\Html;
 
 class FormHelper extends \Cake\View\Helper\FormHelper {
 
