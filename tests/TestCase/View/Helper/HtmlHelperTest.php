@@ -1,10 +1,10 @@
 <?php
 
-namespace lilHermit\Bootstrap4\Test\TestCase\View\Helper;
+namespace LilHermit\Bootstrap4\Test\TestCase\View\Helper;
 
 use Cake\Network\Request;
-use lilHermit\Bootstrap4\Configure\Assets;
-use lilHermit\Bootstrap4\View\Helper\HtmlHelper;
+use LilHermit\Bootstrap4\Configure\Assets;
+use LilHermit\Bootstrap4\View\Helper\HtmlHelper;
 
 
 /**
@@ -1136,7 +1136,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
         // Latest version with own script
         $result = $this->Html->bootstrapScript(['own' => true]);
         $this->assertHtml([
-            ['script' => ['src' => 'js/lilHermit/Bootstrap4.form-manipulation.js']],
+            ['script' => ['src' => 'js/LilHermit/Bootstrap4.form-manipulation.js']],
             '/script',
             ['script' => [
                 'src' => $tetherVersion['src'],
@@ -1160,7 +1160,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
         $result = $this->Html->bootstrapScript(['version' => '4.0.0-alpha.5', 'own' => true]);
         $tetherVersion = $tetherVersions['4.0.0-alpha.5'];
         $this->assertHtml([
-            ['script' => ['src' => 'js/lilHermit/Bootstrap4.form-manipulation.js']],
+            ['script' => ['src' => 'js/LilHermit/Bootstrap4.form-manipulation.js']],
             '/script',
             ['script' => [
                 'src' => $tetherVersion['src'],
@@ -1182,7 +1182,7 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
         // Latest version with own script but without tether
         $result = $this->Html->bootstrapScript(['own' => true, 'tether' => false]);
         $this->assertHtml([
-            ['script' => ['src' => 'js/lilHermit/Bootstrap4.form-manipulation.js']],
+            ['script' => ['src' => 'js/LilHermit/Bootstrap4.form-manipulation.js']],
             '/script',
             ['script' => [
                 'src' => $latestVersion['src'],

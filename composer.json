@@ -12,7 +12,7 @@
   },
   "autoload": {
     "psr-4": {
-      "lilHermit\\Bootstrap4\\": "src/"
+      "LilHermit\\Bootstrap4\\": "src/"
     }
   },
   "autoload-dev": {

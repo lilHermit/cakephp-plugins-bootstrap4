@@ -1,5 +1,5 @@
 <?php
-namespace lilHermit\Bootstrap4\Database\Type;
+namespace LilHermit\Bootstrap4\Database\Type;
 
 
 use Cake\Database\Type\DateTimeType;

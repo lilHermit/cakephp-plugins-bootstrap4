@@ -1,6 +1,6 @@
 <?php
 
-namespace lilHermit\Bootstrap4\Configure;
+namespace LilHermit\Bootstrap4\Configure;
 
 class Assets {
 

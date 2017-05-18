@@ -1,13 +1,13 @@
 <?php
 
 
-namespace lilHermit\Bootstrap4\Test\TestCase\View\Helper;
+namespace LilHermit\Bootstrap4\Test\TestCase\View\Helper;
 
 
 use Cake\TestSuite\TestCase;
 use Cake\View\View;
-use lilHermit\Bootstrap4\View\Helper\FormHelper;
-use lilHermit\Bootstrap4\View\Helper\HtmlHelper;
+use LilHermit\Bootstrap4\View\Helper\FormHelper;
+use LilHermit\Bootstrap4\View\Helper\HtmlHelper;
 
 class BootstrapFormHelperTest extends TestCase {
 

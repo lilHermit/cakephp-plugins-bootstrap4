@@ -1,7 +1,7 @@
 Html
 ####
 
-.. php:namespace:: lilHermit\Bootstrap4\View\Helper
+.. php:namespace:: LilHermit\Bootstrap4\View\Helper
 
 .. php:class:: HtmlHelper(View $view, array $config = [])
 

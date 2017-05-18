@@ -1,1 +1,1 @@
-<?= $this->element('lilHermit/Bootstrap4.Flash/info', ['message' => $message, 'params' => $params]);
+<?= $this->element('LilHermit/Bootstrap4.Flash/info', ['message' => $message, 'params' => $params]);

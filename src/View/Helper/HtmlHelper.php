@@ -1,9 +1,9 @@
 <?php
-namespace lilHermit\Bootstrap4\View\Helper;
+namespace LilHermit\Bootstrap4\View\Helper;
 
 
 use Cake\View\View;
-use lilHermit\Bootstrap4\Configure\Assets;
+use LilHermit\Bootstrap4\Configure\Assets;
 use lilHermit\Toolkit\Utility\Html;
 
 class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
@@ -243,7 +243,7 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
 
         $return = '';
         if (filter_var($options['own'], FILTER_VALIDATE_BOOLEAN)) {
-            $return = $this->script('lilHermit/Bootstrap4.form-manipulation.js');
+            $return = $this->script('LilHermit/Bootstrap4.form-manipulation.js');
         }
         if (filter_var($options['tether'], FILTER_VALIDATE_BOOLEAN)) {
             $tetherVersions = Assets::tetherJavascript();

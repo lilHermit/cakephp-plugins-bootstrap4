@@ -13,7 +13,7 @@
  */
 namespace TestApp\View;
 
-use lilHermit\Bootstrap4\View\BootstrapView;
+use LilHermit\Bootstrap4\View\BootstrapView;
 
 /**
  * App View class

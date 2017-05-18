@@ -21,7 +21,7 @@ Load the plugin in your `bootstrap.php` before the ``Type::build`` statements ::
 
     ...
 
-    Plugin::load('lilHermit/Bootstrap4', ['bootstrap' => true]);
+    Plugin::load('LilHermit/Bootstrap4', ['bootstrap' => true]);
 
     ...
 
@@ -50,7 +50,7 @@ Make `src/View/AppView.php` extends `BootstrapView` like follows::
 
     namespace App\View;
 
-    use lilHermit\Bootstrap4\View\BootstrapView;
+    use LilHermit\Bootstrap4\View\BootstrapView;
 
     class AppView extends BootstrapView {
 
@@ -65,7 +65,7 @@ Make `src/View/AppView.php` use `BootstrapViewTrait` like follows::
     namespace App\View;
 
     use Cake\View\View;
-    use lilHermit\Bootstrap4\View\BootstrapViewTrait;
+    use LilHermit\Bootstrap4\View\BootstrapViewTrait;
 
     class AppView extends View {
 
@@ -85,4 +85,4 @@ Copy or symlink `Bootstrap4` plugin assets to your webroot
 
 .. code-block:: bash
 
-    bin/cake plugin assets symlink lilHermit/Bootstrap4
+    bin/cake plugin assets symlink LilHermit/Bootstrap4
