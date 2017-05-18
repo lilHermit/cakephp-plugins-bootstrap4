@@ -1,5 +1,5 @@
 <?php
-namespace lilHermit\Bootstrap4\Validation;
+namespace LilHermit\Bootstrap4\Validation;
 
 use Cake\I18n\Time;
 

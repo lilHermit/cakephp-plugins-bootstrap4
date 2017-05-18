@@ -1,12 +1,12 @@
 <?php
 
-namespace lilHermit\Bootstrap4\Test\TestCase\View\Helper;
+namespace LilHermit\Bootstrap4\Test\TestCase\View\Helper;
 
 use Cake\Collection\Collection;
 use Cake\Core\Configure;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
-use lilHermit\Bootstrap4\View\Helper\FormHelper;
+use LilHermit\Bootstrap4\View\Helper\FormHelper;
 use TestApp\Model\Entity\Article;
 
 class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {

@@ -1,6 +1,14 @@
 Changelog
 #########
 
+2.1.6.8 (18-May-2017)
+---------------------
+.. raw:: html
+
+    <span class="badge badge-primary">Supports Bootstrap 4.0.0-alpha6</span>
+
+- ``Breaking change``: Namespace has been changed to PascalCase to comply with CakePHP conventions. This change is to facilitate the Bake Templates coming soon.
+
 2.1.6.6 (16-May-2017)
 ---------------------
 .. raw:: html

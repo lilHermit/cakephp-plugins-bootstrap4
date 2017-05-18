@@ -1,7 +1,7 @@
 Form
 ####
 
-.. php:namespace:: lilHermit\Bootstrap4\View\Helper
+.. php:namespace:: LilHermit\Bootstrap4\View\Helper
 
 .. php:class:: FormHelper(View $view, array $config = [])
 
@@ -475,7 +475,7 @@ Therefore you need to use ``Html5DateTimeBehavior`` as follows in your ``Tables`
 
         public function initialize(array $config)
         {
-            $this->addBehavior('lilHermit/Bootstrap4.Html5DateTime');
+            $this->addBehavior('LilHermit/Bootstrap4.Html5DateTime');
         }
     }
 

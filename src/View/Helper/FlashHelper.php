@@ -1,6 +1,6 @@
 <?php
 
-namespace lilHermit\Bootstrap4\View\Helper;
+namespace LilHermit\Bootstrap4\View\Helper;
 
 class FlashHelper extends \Cake\View\Helper\FlashHelper {
 
@@ -28,7 +28,7 @@ class FlashHelper extends \Cake\View\Helper\FlashHelper {
 
             list($plugin, $element) = pluginSplit($item['element']);
             if ($plugin === null && in_array($item['element'], $pluginOverrides)) {
-                $item['element'] = 'lilHermit/Bootstrap4.' . $element;
+                $item['element'] = 'LilHermit/Bootstrap4.' . $element;
             }
         }
         $this->request->session()->write("Flash.$key", $stack);

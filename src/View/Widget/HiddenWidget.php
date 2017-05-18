@@ -1,5 +1,5 @@
 <?php
-namespace lilHermit\Bootstrap4\View\Widget;
+namespace LilHermit\Bootstrap4\View\Widget;
 
 use Cake\View\Form\ContextInterface;
 use Cake\View\Widget\WidgetInterface;

@@ -1,13 +1,13 @@
 <?php
 
 
-namespace lilHermit\Bootstrap4\Test\TestCase\View\Helper;
+namespace LilHermit\Bootstrap4\Test\TestCase\View\Helper;
 
 
 use Cake\Core\Plugin;
 use Cake\Network\Request;
-use lilHermit\Bootstrap4\View\BootstrapView;
-use lilHermit\Bootstrap4\View\Helper\FlashHelper;
+use LilHermit\Bootstrap4\View\BootstrapView;
+use LilHermit\Bootstrap4\View\Helper\FlashHelper;
 
 class FlashHelperTest extends \Cake\Test\TestCase\View\Helper\FlashHelperTest {
 
@@ -27,7 +27,7 @@ class FlashHelperTest extends \Cake\Test\TestCase\View\Helper\FlashHelperTest {
         $this->View->request = new Request(['session' => $session]);
         $this->Flash = new FlashHelper($this->View);
 
-        Plugin::load('lilHermit/Bootstrap4', ['path' => ROOT . DS]);
+        Plugin::load('LilHermit/Bootstrap4', ['path' => ROOT . DS]);
     }
 
     public function tearDown() {
@@ -35,7 +35,7 @@ class FlashHelperTest extends \Cake\Test\TestCase\View\Helper\FlashHelperTest {
 
         unset($this->View, $this->Flash);
 
-        Plugin::unload('lilHermit/Bootstrap4');
+        Plugin::unload('LilHermit/Bootstrap4');
     }
 
     /**
