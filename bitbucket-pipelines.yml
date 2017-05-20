@@ -1,16 +1,14 @@
-image: debian:jessie
+image:
+  name: lilhermit/debian:latest
+  username: lilhermit
+  password: $DOCKERHUB_PASSWORD
+  email: scott@lilhermit.co.uk
 
 pipelines:
   tags:
     '[0-9]*':
       - step:
           script:
-            # install everything we need
-            - apt-get update && apt-get -y install python ruby2.1 git rubygems make wget rsync
-            - wget https://bootstrap.pypa.io/get-pip.py && python get-pip.py && rm get-pip.py
-            - pip install sphinx sphinxcontrib-phpdomain
-            - gem install sass
-
             # Switching to sparse-checkout
             - git config core.sparseCheckout true
             - echo -e "docs\nupdate-docs.sh" > .git/info/sparse-checkout
@@ -26,12 +24,6 @@ pipelines:
     master:
       - step:
           script:
-            # install everything we need
-            - apt-get update && apt-get -y install python ruby2.1 git rubygems make wget rsync
-            - wget https://bootstrap.pypa.io/get-pip.py && python get-pip.py && rm get-pip.py
-            - pip install sphinx sphinxcontrib-phpdomain
-            - gem install sass
-
             # Switching to sparse-checkout
             - git config core.sparseCheckout true
             - echo -e "docs\nupdate-docs.sh" > .git/info/sparse-checkout
