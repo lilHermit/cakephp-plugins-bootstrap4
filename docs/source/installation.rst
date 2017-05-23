@@ -86,3 +86,15 @@ Copy or symlink `Bootstrap4` plugin assets to your webroot
 .. code-block:: bash
 
     bin/cake plugin assets symlink LilHermit/Bootstrap4
+
+Building templates with bake
+----------------------------
+
+You can use bake to build bootstrap4 templates by adding the `theme` option as follows to
+build templates for `users`
+
+.. code-block:: bash
+
+    bin/cake bake template -t LilHermit/Bootstrap4 Users
+
+.. versionadded:: 2.1.6.10 Bake templates added
