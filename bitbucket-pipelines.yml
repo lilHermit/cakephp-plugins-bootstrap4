@@ -1,5 +1,5 @@
 image:
-  name: lilhermit/debian:latest
+  name: lilhermit/sphinx-doc:latest
   username: lilhermit
   password: $DOCKERHUB_PASSWORD
   email: scott@lilhermit.co.uk
