@@ -1,7 +1,7 @@
 image:
-  name: lilhermit/sphinx-doc:latest
+  name: docker.lilhermit.co.uk:5000/lilhermit/sphinx-doc:latest
   username: lilhermit
-  password: $DOCKERHUB_PASSWORD
+  password: $DOCKER_REGISTRY_PASSWORD
   email: scott@lilhermit.co.uk
 
 pipelines:
