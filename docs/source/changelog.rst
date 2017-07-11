@@ -1,21 +1,13 @@
 Changelog
 #########
 
-2.1.6.10 (TBC)
---------------
+2.1.6.9 (11-June-2017)
+----------------------
 .. raw:: html
 
     <span class="badge badge-primary">Supports Bootstrap 4.0.0-alpha6</span>
 
 - Added support for bake templates
-
-2.1.6.9 (18-May-2017)
----------------------
-.. raw:: html
-
-    <span class="badge badge-primary">Supports Bootstrap 4.0.0-alpha6</span>
-
-- Fixed dependency error
 
 2.1.6.8 (18-May-2017)
 ---------------------
