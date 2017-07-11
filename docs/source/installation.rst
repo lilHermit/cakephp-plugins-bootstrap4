@@ -97,4 +97,4 @@ build templates for `users`
 
     bin/cake bake template -t LilHermit/Bootstrap4 Users
 
-.. versionadded:: 2.1.6.10 Bake templates added
+.. versionadded:: 2.1.6.9 Bake templates added
