@@ -4,6 +4,7 @@
 namespace LilHermit\Bootstrap4\Test\TestCase\View\Helper;
 
 
+use Cake\Chronos\Chronos;
 use Cake\TestSuite\TestCase;
 use Cake\View\View;
 use LilHermit\Bootstrap4\View\Helper\FormHelper;
@@ -2302,6 +2303,266 @@ class BootstrapFormHelperTest extends TestCase {
             ['button' => ['type' => 'submit', 'class']],
             'submit',
             '/button',
+            '/div'
+        ], $result);
+    }
+
+    /**
+     * testDateTimeFormatWithDateTime method
+     *
+     * Tests
+     *  1) With Chronos value
+     *  2) With Cake\I18n\Time value
+     *  3) With valid datetime string
+     *  4) With invalid datetime string
+     *  5) With blank value
+     *  6) With null value
+     */
+    public function testDateTimeFormatWithDateTime() {
+
+        // Test (1)
+        $this->Form->request = $this->Form->request->withData('expiry', Chronos::parse('2017-08-02 11:12:07'));
+        $this->Form->create([
+            'schema' => ['expiry' => ['type' => 'datetime']],
+        ]);
+        $result = $this->Form->control('expiry', ['label' => false]);
+        $this->assertHtml([
+            'div' => ['class'],
+            'input' => ['type' => 'datetime-local', 'name', 'class', 'id', 'value' => '2017-08-02T11:12'],
+            '/div'
+        ], $result);
+
+        // Test (2)
+        $this->Form->request = $this->Form->request->withData('expiry', \Cake\I18n\Time::parse('2017-08-02 11:12:07'));
+        $this->Form->create([
+            'schema' => ['expiry' => ['type' => 'datetime']]
+        ]);
+        $result = $this->Form->control('expiry', ['label' => false]);
+        $this->assertHtml([
+            'div' => ['class'],
+            'input' => ['type' => 'datetime-local', 'name', 'class', 'id', 'value' => '2017-08-02T11:12'],
+            '/div'
+        ], $result);
+
+        // Test (3)
+        $this->Form->request = $this->Form->request->withData('expiry', '2017-08-02 11:00:07');
+        $this->Form->create([
+            'schema' => ['expiry' => ['type' => 'datetime']]
+        ]);
+        $result = $this->Form->control('expiry', ['label' => false]);
+        $this->assertHtml([
+            'div' => ['class'],
+            'input' => ['type' => 'datetime-local', 'name', 'class', 'id', 'value' => '2017-08-02T11:00'],
+            '/div'
+        ], $result);
+
+        // Test (4)
+        $this->Form->request = $this->Form->request->withData('expiry', '2017-08-02oop14:00:07');
+        $this->Form->create([
+            'schema' => ['expiry' => ['type' => 'datetime']]
+        ]);
+        $result = $this->Form->control('expiry', ['label' => false]);
+        $this->assertHtml([
+            'div' => ['class'],
+            'input' => ['type' => 'datetime-local', 'name', 'class', 'id', 'value' => ''],
+            '/div'
+        ], $result);
+
+        // Test (5)
+        $this->Form->request = $this->Form->request->withData('expiry', '');
+        $this->Form->create([
+            'schema' => ['expiry' => ['type' => 'datetime']]
+        ]);
+        $result = $this->Form->control('expiry', ['label' => false]);
+        $this->assertHtml([
+            'div' => ['class'],
+            'input' => ['type' => 'datetime-local', 'name', 'class', 'id', 'value' => ''],
+            '/div'
+        ], $result);
+
+        // Test (6)
+        $this->Form->request = $this->Form->request->withData('expiry', null);
+        $this->Form->create([
+            'schema' => ['expiry' => ['type' => 'datetime']]
+        ]);
+        $result = $this->Form->control('expiry', ['label' => false]);
+        $this->assertHtml([
+            'div' => ['class'],
+            'input' => ['type' => 'datetime-local', 'name', 'class', 'id'],
+            '/div'
+        ], $result);
+
+    }
+
+    /**
+     * testDateTimeFormatWithDate method
+     *
+     * Tests
+     *  1) With Chronos value
+     *  2) With Cake\I18n\Time value
+     *  3) With valid date string
+     *  4) With invalid date string
+     *  5) With blank value
+     *  6) With null value
+     */
+    public function testDateTimeFormatWithDate() {
+
+        // Test (1)
+        $this->Form->request = $this->Form->request->withData('expiry', Chronos::parse('2017-08-02'));
+        $this->Form->create([
+            'schema' => ['expiry' => ['type' => 'date']],
+        ]);
+        $result = $this->Form->control('expiry', ['label' => false]);
+        $this->assertHtml([
+            'div' => ['class'],
+            'input' => ['type' => 'date', 'name', 'class', 'id', 'value' => '2017-08-02'],
+            '/div'
+        ], $result);
+
+        // Test (2)
+        $this->Form->request = $this->Form->request->withData('expiry', \Cake\I18n\Time::parse('2017-08-02 11:12:07'));
+        $this->Form->create([
+            'schema' => ['expiry' => ['type' => 'date']]
+        ]);
+        $result = $this->Form->control('expiry', ['label' => false]);
+        $this->assertHtml([
+            'div' => ['class'],
+            'input' => ['type' => 'date', 'name', 'class', 'id', 'value' => '2017-08-02'],
+            '/div'
+        ], $result);
+
+        // Test (3)
+        $this->Form->request = $this->Form->request->withData('expiry', '2017-08-02 11:00:07');
+        $this->Form->create([
+            'schema' => ['expiry' => ['type' => 'date']]
+        ]);
+        $result = $this->Form->control('expiry', ['label' => false]);
+        $this->assertHtml([
+            'div' => ['class'],
+            'input' => ['type' => 'date', 'name', 'class', 'id', 'value' => '2017-08-02'],
+            '/div'
+        ], $result);
+
+        // Test (4)
+        $this->Form->request = $this->Form->request->withData('expiry', '2017-08-02oop14:00:07');
+        $this->Form->create([
+            'schema' => ['expiry' => ['type' => 'date']]
+        ]);
+        $result = $this->Form->control('expiry', ['label' => false]);
+        $this->assertHtml([
+            'div' => ['class'],
+            'input' => ['type' => 'date', 'name', 'class', 'id', 'value' => ''],
+            '/div'
+        ], $result);
+
+        // Test (5)
+        $this->Form->request = $this->Form->request->withData('expiry', '');
+        $this->Form->create([
+            'schema' => ['expiry' => ['type' => 'date']]
+        ]);
+        $result = $this->Form->control('expiry', ['label' => false]);
+        $this->assertHtml([
+            'div' => ['class'],
+            'input' => ['type' => 'date', 'name', 'class', 'id', 'value' => ''],
+            '/div'
+        ], $result);
+
+        // Test (6)
+        $this->Form->request = $this->Form->request->withData('expiry', null);
+        $this->Form->create([
+            'schema' => ['expiry' => ['type' => 'date']]
+        ]);
+        $result = $this->Form->control('expiry', ['label' => false]);
+        $this->assertHtml([
+            'div' => ['class'],
+            'input' => ['type' => 'date', 'name', 'class', 'id'],
+            '/div'
+        ], $result);
+
+    }
+
+    /**
+     * testDateTimeFormatWithTime method
+     *
+     * Tests
+     *  1) With Chronos value
+     *  2) With Cake\I18n\Time value
+     *  3) With valid date string
+     *  4) With invalid date string
+     *  5) With blank value
+     *  6) With null value
+     */
+    public function testDateTimeFormatWithTime() {
+
+        // Test (1)
+        $this->Form->request = $this->Form->request->withData('expiry', Chronos::parse('2017-08-02 11:22:07'));
+        $this->Form->create([
+            'schema' => ['expiry' => ['type' => 'time']],
+        ]);
+        $result = $this->Form->control('expiry', ['label' => false]);
+        $this->assertHtml([
+            'div' => ['class'],
+            'input' => ['type' => 'time', 'name', 'class', 'id', 'value' => '11:22'],
+            '/div'
+        ], $result);
+
+        // Test (2)
+        $this->Form->request = $this->Form->request->withData('expiry', \Cake\I18n\Time::parse('2017-08-02 11:12:07'));
+        $this->Form->create([
+            'schema' => ['expiry' => ['type' => 'time']]
+        ]);
+        $result = $this->Form->control('expiry', ['label' => false]);
+        $this->assertHtml([
+            'div' => ['class'],
+            'input' => ['type' => 'time', 'name', 'class', 'id', 'value' => '11:12'],
+            '/div'
+        ], $result);
+
+        // Test (3)
+        $this->Form->request = $this->Form->request->withData('expiry', '2017-08-02 11:00:07');
+        $this->Form->create([
+            'schema' => ['expiry' => ['type' => 'time']]
+        ]);
+        $result = $this->Form->control('expiry', ['label' => false]);
+        $this->assertHtml([
+            'div' => ['class'],
+            'input' => ['type' => 'time', 'name', 'class', 'id', 'value' => '11:00'],
+            '/div'
+        ], $result);
+
+        // Test (4)
+        $this->Form->request = $this->Form->request->withData('expiry', '2017-08-02oop14:00:07');
+        $this->Form->create([
+            'schema' => ['expiry' => ['type' => 'time']]
+        ]);
+        $result = $this->Form->control('expiry', ['label' => false]);
+        $this->assertHtml([
+            'div' => ['class'],
+            'input' => ['type' => 'time', 'name', 'class', 'id', 'value' => ''],
+            '/div'
+        ], $result);
+
+        // Test (5)
+        $this->Form->request = $this->Form->request->withData('expiry', '');
+        $this->Form->create([
+            'schema' => ['expiry' => ['type' => 'time']]
+        ]);
+        $result = $this->Form->control('expiry', ['label' => false]);
+        $this->assertHtml([
+            'div' => ['class'],
+            'input' => ['type' => 'time', 'name', 'class', 'id', 'value' => ''],
+            '/div'
+        ], $result);
+
+        // Test (6)
+        $this->Form->request = $this->Form->request->withData('expiry', null);
+        $this->Form->create([
+            'schema' => ['expiry' => ['type' => 'time']]
+        ]);
+        $result = $this->Form->control('expiry', ['label' => false]);
+        $this->assertHtml([
+            'div' => ['class'],
+            'input' => ['type' => 'time', 'name', 'class', 'id'],
             '/div'
         ], $result);
     }

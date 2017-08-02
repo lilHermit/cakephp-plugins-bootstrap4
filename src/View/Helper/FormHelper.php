@@ -77,7 +77,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'datetimeFormGroup' => '{{label}}<div class="form-inline">{{input}}</div>',
         'dateFormGroup' => '{{label}}<div class="form-inline">{{input}}</div>',
         'timeFormGroup' => '{{label}}<div class="form-inline">{{input}}</div>',
-        'bootstrapDateTime' => '<input type="{{type}}" name="{{name}}" class="form-control"{{attrs}}/>',
+        'bootstrapDateTime' => '<input type="{{type}}" name="{{name}}"{{attrs}}/>',
         'help' => '<small{{attrs}}>{{content}}</small>',
         'prefixSuffix' => '<span{{attrs}}>{{content}}</span>',
         'prefixSuffixContainer' => '<div{{attrs}}>{{prefix}}{{input}}{{suffix}}</div>'
@@ -1134,41 +1134,60 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     private function formatDateTimes(&$options) {
 
+        if (empty($options['val'])) {
+            return;
+        }
+
+        $i18nFormatClasses = [
+            'Cake\I18n\Date',
+            'Cake\I18n\FrozenDate',
+            'Cake\I18n\Time',
+            'Cake\I18n\FrozenTime',
+            'Cake\I18n\FrozenTime'
+        ];
+
         if (is_string($options['val'])) {
-            switch ($options['type']) {
-                case 'date':
-                    $options['val'] = \Cake\I18n\Date::createFromFormat("Y-m-d", $options['val']);
-                    break;
-                case 'time':
-                    $options['val'] = \Cake\I18n\Time::createFromFormat("G:i", $options['val']);
-                    break;
-                default:
-                case 'datetime-local':
-                    $options['val'] = \Cake\I18n\Time::createFromFormat("Y-m-d\\TG:i", $options['val']);
+
+            try {
+                $options['val'] = \Cake\I18n\Time::parse($options['val']);
+            } catch (\Exception $exception) {
+                $options['val']='';
             }
         }
 
-        if (is_object($options['val']) && in_array(get_class($options['val']), [
-                'Cake\I18n\Date',
-                'Cake\I18n\FrozenDate',
-                'Cake\I18n\Time',
-                'Cake\I18n\FrozenTime',
-            ])
-        ) {
+        if (is_object($options['val'])) {
 
-            switch ($options['type']) {
-                case 'date':
-                    $format = "yyyy-MM-dd";
-                    break;
-                case 'time':
-                    $format = "HH:mm";
-                    break;
-                default:
-                case 'datetime-local':
-                    $format = "yyyy-MM-dd'T'HH:mm";
+            if (get_class($options['val']) === 'Cake\Chronos\Chronos') {
+
+                switch ($options['type']) {
+                    case 'date':
+                        $format = "Y-m-d";
+                        break;
+                    case 'time':
+                        $format = "H:i";
+                        break;
+                    default:
+                    case 'datetime-local':
+                        $format = "Y-m-d\TH:i";
+                }
+
+                $options['val'] = $options['val']->format($format);
+
+            } else if (in_array(get_class($options['val']), $i18nFormatClasses)) {
+                switch ($options['type']) {
+                    case 'date':
+                        $format = "yyyy-MM-dd";
+                        break;
+                    case 'time':
+                        $format = "HH:mm";
+                        break;
+                    default:
+                    case 'datetime-local':
+                        $format = "yyyy-MM-dd'T'HH:mm";
+                }
+
+                $options['val'] = $options['val']->i18nFormat($format);
             }
-
-            $options['val'] = $options['val']->i18nFormat($format);
         }
     }
 

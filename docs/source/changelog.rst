@@ -1,6 +1,15 @@
 Changelog
 #########
 
+2.1.6.10 (02-Aug-2017)
+----------------------
+.. raw:: html
+
+    <span class="badge badge-primary">Supports Bootstrap 4.0.0-alpha6</span>
+
+- Improvements to datetime parsing on HTML5 datetime controls
+- Fix to datetime control css class rendering
+
 2.1.6.9 (11-June-2017)
 ----------------------
 .. raw:: html
