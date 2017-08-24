@@ -38,8 +38,7 @@ class Assets {
         ];
     }
 
-    // TODO rename to popper once we know popper is staying
-    public static function tetherJavascript() {
+    public static function popperJavascript() {
         return [
             '4.0.0-alpha.5' => [
                 'src' => 'https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js',

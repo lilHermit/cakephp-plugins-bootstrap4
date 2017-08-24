@@ -1067,15 +1067,15 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
         $latestVersionNumber = key($latestVersion);
         $latestVersion = $latestVersion[$latestVersionNumber];
 
-        $tetherVersions = Assets::tetherJavascript();
-        $tetherVersion = $tetherVersions[$latestVersionNumber];
+        $popperVersions = Assets::popperJavascript();
+        $popperVersion = $popperVersions[$latestVersionNumber];
 
         // Latest version
         $result = $this->Html->bootstrapScript();
         $this->assertHtml([
             ['script' => [
-                'src' => $tetherVersion['src'],
-                'integrity' => $tetherVersion['integrity'],
+                'src' => $popperVersion['src'],
+                'integrity' => $popperVersion['integrity'],
                 'crossorigin' => 'anonymous'
 
             ]],
@@ -1091,11 +1091,11 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
 
         // Specific version
         $result = $this->Html->bootstrapScript(['version' => '4.0.0-alpha.5']);
-        $tetherVersion = $tetherVersions['4.0.0-alpha.5'];
+        $popperVersion = $popperVersions['4.0.0-alpha.5'];
         $this->assertHtml([
             ['script' => [
-                'src' => $tetherVersion['src'],
-                'integrity' => $tetherVersion['integrity'],
+                'src' => $popperVersion['src'],
+                'integrity' => $popperVersion['integrity'],
                 'crossorigin' => 'anonymous'
 
             ]],
@@ -1130,8 +1130,8 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
         $latestVersionNumber = key($latestVersion);
         $latestVersion = $latestVersion[$latestVersionNumber];
 
-        $tetherVersions = Assets::tetherJavascript();
-        $tetherVersion = $tetherVersions[$latestVersionNumber];
+        $popperVersions = Assets::popperJavascript();
+        $popperVersion = $popperVersions[$latestVersionNumber];
 
         // Latest version with own script
         $result = $this->Html->bootstrapScript(['own' => true]);
@@ -1139,8 +1139,8 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
             ['script' => ['src' => 'js/LilHermit/Bootstrap4.form-manipulation.js']],
             '/script',
             ['script' => [
-                'src' => $tetherVersion['src'],
-                'integrity' => $tetherVersion['integrity'],
+                'src' => $popperVersion['src'],
+                'integrity' => $popperVersion['integrity'],
                 'crossorigin' => 'anonymous'
 
             ]],
@@ -1158,13 +1158,13 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
 
         // Specific version with own script
         $result = $this->Html->bootstrapScript(['version' => '4.0.0-alpha.5', 'own' => true]);
-        $tetherVersion = $tetherVersions['4.0.0-alpha.5'];
+        $popperVersion = $popperVersions['4.0.0-alpha.5'];
         $this->assertHtml([
             ['script' => ['src' => 'js/LilHermit/Bootstrap4.form-manipulation.js']],
             '/script',
             ['script' => [
-                'src' => $tetherVersion['src'],
-                'integrity' => $tetherVersion['integrity'],
+                'src' => $popperVersion['src'],
+                'integrity' => $popperVersion['integrity'],
                 'crossorigin' => 'anonymous'
 
             ]],
@@ -1179,8 +1179,8 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
         // Reset the view because it won't include the plugin script multiple times
         $this->setUp();
 
-        // Latest version with own script but without tether
-        $result = $this->Html->bootstrapScript(['own' => true, 'tether' => false]);
+        // Latest version with own script but without popper
+        $result = $this->Html->bootstrapScript(['own' => true, 'popper' => false]);
         $this->assertHtml([
             ['script' => ['src' => 'js/LilHermit/Bootstrap4.form-manipulation.js']],
             '/script',

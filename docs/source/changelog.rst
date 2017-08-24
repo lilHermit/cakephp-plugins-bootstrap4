@@ -1,6 +1,16 @@
 Changelog
 #########
 
+2.2.0.0 (TBA)
+----------------------
+.. raw:: html
+
+    <span class="badge badge-primary">Supports Bootstrap 4.0.0-beta</span>
+
+- Updated css/js to Beta versions
+- Updated tether references to popper
+- Fixed tests broken by upstream changes
+
 2.1.6.10 (02-Aug-2017)
 ----------------------
 .. raw:: html

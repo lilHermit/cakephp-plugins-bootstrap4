@@ -224,7 +224,7 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
      * - `src`       The url of the non built-in version bootstrap javascript
      * - `integrity` The integrity hash for the `url` key
      * - `own`       Should we include this plugin javascript too. Default = false
-     * - `tether`    Should we include tether script tag too. Default = true
+     * - `popper`    Should we include popper script tag too. Default = true
      *
      * @return string The full script tag or blank if `own` is false and `version` doesn't exist
      */
@@ -238,18 +238,18 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
         $options += [
             'version' => $version,
             'own' => false,
-            'tether' => true
+            'popper' => true
         ];
 
         $return = '';
         if (filter_var($options['own'], FILTER_VALIDATE_BOOLEAN)) {
             $return = $this->script('LilHermit/Bootstrap4.form-manipulation.js');
         }
-        if (filter_var($options['tether'], FILTER_VALIDATE_BOOLEAN)) {
-            $tetherVersions = Assets::tetherJavascript();
-            $tetherVersion = $tetherVersions[$options['version']];
-            $return .= $this->script($tetherVersion['src'], [
-                'integrity' => $tetherVersion['integrity'],
+        if (filter_var($options['popper'], FILTER_VALIDATE_BOOLEAN)) {
+            $popperVersions = Assets::popperJavascript();
+            $popperVersion = $popperVersions[$options['version']];
+            $return .= $this->script($popperVersion['src'], [
+                'integrity' => $popperVersion['integrity'],
                 'crossorigin' => 'anonymous'
             ]);
         }

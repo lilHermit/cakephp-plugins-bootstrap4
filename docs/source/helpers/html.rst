@@ -46,7 +46,7 @@ Bootstrap Javascript
 
 The plugin provides markup for javascript from the official Bootstrap CDN
 
-For adding the latest official bootstrap and `tether <http://tether.io/>`_ javascript that the plugin is build for (|bootstrap_ver|) add the following
+For adding the latest official bootstrap and `popper <http://popper.js.org/>`_ javascript that the plugin is build for (|bootstrap_ver|) add the following
 to your layout. ::
 
     <?= $this->Html->bootstrapScript(); ?>
@@ -55,14 +55,14 @@ You will get something similar to in your view
 
 .. code-block:: html
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
-        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
-        integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+        integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
+        integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
 
-To disabled the inclusion of ``tether`` javascript then add use the following::
+To disabled the inclusion of ``popper`` javascript then add use the following::
 
-        <?= $this->Html->bootstrapScript(['tether' => false]); ?>
+        <?= $this->Html->bootstrapScript(['popper' => false]); ?>
 
 
 If you want an older javascript then pass in an array with `version` key as the first parameter. For example::
