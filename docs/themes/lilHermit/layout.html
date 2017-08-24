@@ -45,7 +45,19 @@
 <div class="container">
     <div class="row">
 
-        <div class="col-12 col-md-10 push-md-2">
+        {# TOC sidebar #}
+        <div class="col-12 col-md-2 bg-grey p-2">
+            <h3>Index</h3>
+            {%- for sidebartemplate in sidebars %}
+            <aside class="sidebar">
+                <div class="row">
+                    {%- include sidebartemplate %}
+                </div>
+            </aside>
+            {%- endfor %}
+        </div>
+
+        <div class="col-12 col-md-10">
             <div class="page-contents col-sm-4 float-right p-2 mb-2 ml-2 bg-grey">
                 <h3>{{ _('Page Contents') }}</h3>
                 {{ toc }}
@@ -56,17 +68,6 @@
             </div>
         </div>
 
-        {# TOC sidebar #}
-        <div class="col-md-2 pull-md-10 hidden-xs hidden-sm bg-grey p-2">
-            <h3>Index</h3>
-            {%- for sidebartemplate in sidebars %}
-            <aside class="sidebar">
-                <div class="row">
-                    {%- include sidebartemplate %}
-                </div>
-            </aside>
-            {%- endfor %}
-        </div>
     </div>
 </div>
 
