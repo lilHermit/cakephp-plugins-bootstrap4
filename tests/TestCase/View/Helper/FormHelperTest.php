@@ -5808,8 +5808,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      *
      * @return void
      */
-    public function testFormValueSourcesDefaults()
-    {
+    public function testFormValueSourcesDefaults() {
         $this->Form->request->query['password'] = 'open Sesame';
         $this->Form->create();
 
@@ -5832,6 +5831,102 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $result = $this->Form->password('password', ['default' => 'helloworld']);
         $expected = ['input' => ['type' => 'password', 'name' => 'password', 'value' => 'helloworld',
             'class' => 'form-control']];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * Tests correct generation of number fields for smallint
+     *
+     * @return void
+     */
+    public function testTextFieldGenerationForSmallint() {
+        $this->article['schema'] = [
+            'foo' => [
+                'type' => 'smallinteger',
+                'null' => false,
+                'default' => null,
+                'length' => 10
+            ]
+        ];
+
+        $this->Form->create($this->article);
+        $result = $this->Form->control('foo');
+        $this->assertContains('class="form-control"', $result);
+        $this->assertContains('type="number"', $result);
+    }
+
+    /**
+     * Tests correct generation of number fields for tinyint
+     *
+     * @return void
+     */
+    public function testTextFieldGenerationForTinyint() {
+        $this->article['schema'] = [
+            'foo' => [
+                'type' => 'tinyinteger',
+                'null' => false,
+                'default' => null,
+                'length' => 10
+            ]
+        ];
+
+        $this->Form->create($this->article);
+        $result = $this->Form->control('foo');
+        $this->assertContains('class="form-control"', $result);
+        $this->assertContains('type="number"', $result);
+    }
+
+    /**
+     * Test radio with complex options and empty disabled data.
+     *
+     * @return void
+     */
+    public function testRadioComplexDisabled() {
+        $options = [
+            ['value' => 'r', 'text' => 'red'],
+            ['value' => 'b', 'text' => 'blue'],
+        ];
+        $attrs = ['disabled' => []];
+        $result = $this->Form->radio('Model.field', $options, $attrs);
+
+        $expected = [
+            'input' => ['type' => 'hidden', 'name' => 'Model[field]', 'value' => ''],
+            ['div' => ['class']],
+            ['label' => ['class', 'for' => 'model-field-r']],
+            ['input' => ['type' => 'radio', 'class', 'name' => 'Model[field]', 'value' => 'r', 'id' => 'model-field-r']],
+            'red',
+            '/label',
+            '/div',
+            ['div' => ['class']],
+            ['label' => ['class', 'for' => 'model-field-b']],
+            ['input' => ['type' => 'radio', 'class', 'name' => 'Model[field]', 'value' => 'b', 'id' => 'model-field-b']],
+            'blue',
+            '/label',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $attrs = ['disabled' => ['r']];
+        $result = $this->Form->radio('Model.field', $options, $attrs);
+        $this->assertContains('disabled="disabled"', $result);
+    }
+
+    /**
+     * Test setting a hiddenField value on radio buttons.
+     *
+     * @return void
+     */
+    public function testRadioHiddenFieldValue() {
+        $result = $this->Form->radio('title', ['option A'], ['hiddenField' => 'N']);
+        $expected = [
+            ['input' => ['type' => 'hidden', 'name' => 'title', 'value' => 'N']],
+            'div' => ['class'],
+            'label' => ['for' => 'title-0', 'class'],
+            ['input' => ['type' => 'radio', 'class', 'name' => 'title', 'value' => '0', 'id' => 'title-0']],
+            'option A',
+            '/label',
+            '/div'
+        ];
         $this->assertHtml($expected, $result);
     }
 }
