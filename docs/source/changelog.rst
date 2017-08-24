@@ -7,7 +7,7 @@ Changelog
 
     <span class="badge badge-primary">Supports Bootstrap 4.0.0-beta</span>
 
-- Updated css/js to Beta versions
+- Updated to Bootstrap 4.0.0-beta
 - Updated tether references to popper
 - Fixed tests broken by upstream changes
 
