@@ -1,6 +1,14 @@
 Changelog
 #########
 
+2.2.0.1 (29-Aug-2017)
+----------------------
+.. raw:: html
+
+    <span class="badge badge-primary">Supports Bootstrap 4.0.0-beta</span>
+
+- Fixes to Form feedback (due to changes since alpha6) (using server-side methods)
+
 2.2.0.0 (24-Aug-2017)
 ----------------------
 .. raw:: html
