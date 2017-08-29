@@ -22,7 +22,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                 'grid' => []
             ]
         ],
-        'errorClass' => 'form-control-danger'
+        'errorClass' => 'is-invalid'
     ];
 
     protected $_userChangedTemplates = [];
@@ -45,7 +45,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'checkboxFormGroup' => '{{label}}',
         'checkboxWrapper' => '<div class="checkbox">{{label}}</div>',
         'dateWidget' => '{{year}} {{month}} {{day}} {{hour}} {{minute}} {{second}} {{meridian}}',
-        'error' => '<div class="form-control-feedback">{{content}}</div>',
+        'error' => '<div class="invalid-feedback">{{content}}</div>',
         'errorList' => '<ul>{{content}}</ul>',
         'errorItem' => '<li>{{text}}</li>',
         'fieldset' => '<fieldset{{attrs}}>{{content}}</fieldset>',
@@ -58,9 +58,9 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'input' => '<input type="{{type}}" name="{{name}}"{{attrs}}/>',
         'inputSubmit' => '<input type="{{type}}"{{attrs}}/>',
         'inputContainer' => '<div class="form-group">{{content}}{{help}}</div>',
-        'inputContainerError' => '<div class="form-group has-danger">{{content}}{{error}}{{help}}</div>',
+        'inputContainerError' => '<div class="form-group">{{content}}{{error}}{{help}}</div>',
         'inputContainerGrid' => '<div class="form-group row">{{content}}{{help}}</div></div>',
-        'inputContainerGridError' => '<div class="form-group row has-danger">{{content}}{{error}}{{help}}</div></div>',
+        'inputContainerGridError' => '<div class="form-group row">{{content}}{{error}}{{help}}</div></div>',
         'label' => '<label{{attrs}}>{{text}}</label>',
         'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
         'legend' => '<legend>{{text}}</legend>',
@@ -860,10 +860,10 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
                         // Select because we might be using the ['type' => 'select', 'multiple' => 'checkbox']
                         'selectContainer' => '<div class="form-group clearfix"{{attrs}}>{{content}}{{error}}{{help}}</div>',
-                        'selectContainerError' => '<div class="form-group clearfix has-danger"{{attrs}}>{{content}}{{error}}{{help}}</div>',
+                        'selectContainerError' => '<div class="form-group clearfix"{{attrs}}>{{content}}{{error}}{{help}}</div>',
 
                         'selectContainerGrid' => '<div class="form-group clearfix row"{{attrs}}>{{content}}{{error}}{{help}}</div>',
-                        'selectContainerGridError' => '<div class="form-group clearfix row has-danger"{{attrs}}>{{content}}{{error}}{{help}}</div>',
+                        'selectContainerGridError' => '<div class="form-group clearfix row"{{attrs}}>{{content}}{{error}}{{help}}</div>',
                         'selectFormGroup' => '{{label}}<div class="custom-controls-stacked"{{attrs}}>{{input}}</div>',
                         'selectFormGroupGrid' => '{{label}}<div{{attrs}}>{{input}}</div>',
                     ];

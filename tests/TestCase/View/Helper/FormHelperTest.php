@@ -320,7 +320,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $result = $this->Form->input('Article.title');
         $expected = [
-            'div' => ['class' => 'form-group has-danger'],
+            'div' => ['class' => 'form-group'],
             'label' => ['for' => 'article-title', 'class' => 'col-form-label'],
             'Title',
             '/label',
@@ -328,9 +328,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text',
                 'name' => 'Article[title]',
                 'id' => 'article-title',
-                'class' => 'form-control-danger form-control'
+                'class' => 'is-invalid form-control'
             ],
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             'error message',
             '/div',
             '/div'
@@ -352,7 +352,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text',
                 'name' => 'Article[title]',
                 'id' => 'article-title',
-                'class' => 'form-control-danger form-control'
+                'class' => 'is-invalid form-control'
             ],
             '/div'
         ];
@@ -362,7 +362,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $result = $this->Form->input('Article.content');
         $expected = [
-            'div' => ['class' => 'form-group has-danger'],
+            'div' => ['class' => 'form-group'],
             'label' => ['for' => 'article-content', 'class' => 'col-form-label'],
             'Content',
             '/label',
@@ -370,9 +370,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text',
                 'name' => 'Article[content]',
                 'id' => 'article-content',
-                'class' => 'form-control-danger form-control'
+                'class' => 'is-invalid form-control'
             ],
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             'some &lt;strong&gt;test&lt;/strong&gt; data with &lt;a href=&quot;#&quot;&gt;HTML&lt;/a&gt; chars',
             '/div',
             '/div'
@@ -381,7 +381,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $result = $this->Form->input('Article.content', ['error' => ['escape' => true]]);
         $expected = [
-            'div' => ['class' => 'form-group has-danger'],
+            'div' => ['class' => 'form-group'],
             'label' => ['for' => 'article-content', 'class' => 'col-form-label'],
             'Content',
             '/label',
@@ -389,9 +389,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text',
                 'name' => 'Article[content]',
                 'id' => 'article-content',
-                'class' => 'form-control-danger form-control'
+                'class' => 'is-invalid form-control'
             ],
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             'some &lt;strong&gt;test&lt;/strong&gt; data with &lt;a href=&quot;#&quot;&gt;HTML&lt;/a&gt; chars',
             '/div',
             '/div'
@@ -400,7 +400,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $result = $this->Form->input('Article.content', ['error' => ['escape' => false]]);
         $expected = [
-            'div' => ['class' => 'form-group has-danger'],
+            'div' => ['class' => 'form-group'],
             'label' => ['for' => 'article-content', 'class' => 'col-form-label'],
             'Content',
             '/label',
@@ -408,9 +408,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text',
                 'name' => 'Article[content]',
                 'id' => 'article-content',
-                'class' => 'form-control-danger form-control'
+                'class' => 'is-invalid form-control'
             ],
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             'some <strong>test</strong> data with <a href="#">HTML</a> chars',
             '/div',
             '/div'
@@ -433,7 +433,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $result = $this->Form->input('Article.title');
         $expected = [
-            'div' => ['class' => 'form-group has-danger'],
+            'div' => ['class' => 'form-group'],
             'label' => ['for' => 'article-title', 'class' => 'col-form-label'],
             'Title',
             '/label',
@@ -441,9 +441,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text',
                 'name' => 'Article[title]',
                 'id' => 'article-title',
-                'class' => 'form-control-danger form-control'
+                'class' => 'is-invalid form-control'
             ],
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             [],
             '/div',
             '/div'
@@ -465,7 +465,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->Form->create($entity, ['context' => ['table' => 'Articles']]);
 
         $result = $this->Form->error('nested.foo');
-        $this->assertEquals('<div class="form-control-feedback">not a valid bar</div>', $result);
+        $this->assertEquals('<div class="invalid-feedback">not a valid bar</div>', $result);
     }
 
     /**
@@ -482,7 +482,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $inner->errors('bar', ['not a valid one']);
         $this->Form->create($entity, ['context' => ['table' => 'Articles']]);
         $result = $this->Form->error('nested.foo.bar');
-        $this->assertEquals('<div class="form-control-feedback">not a valid one</div>', $result);
+        $this->assertEquals('<div class="invalid-feedback">not a valid one</div>', $result);
     }
 
     /**
@@ -507,7 +507,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $result = $this->Form->input('0.email');
         $expected = [
-            'div' => ['class' => 'form-group has-danger'],
+            'div' => ['class' => 'form-group'],
             'label' => ['for' => '0-email', 'class' => 'col-form-label'],
             'Email',
             '/label',
@@ -515,11 +515,11 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'email',
                 'name' => '0[email]',
                 'id' => '0-email',
-                'class' => 'form-control-danger form-control',
+                'class' => 'is-invalid form-control',
                 'maxlength' => 255,
                 'value' => '',
             ],
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             'invalid email',
             '/div',
             '/div'
@@ -528,7 +528,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $result = $this->Form->input('1.name');
         $expected = [
-            'div' => ['class' => 'form-group has-danger'],
+            'div' => ['class' => 'form-group'],
             'label' => ['for' => '1-name', 'class' => 'col-form-label'],
             'Name',
             '/label',
@@ -536,11 +536,11 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text',
                 'name' => '1[name]',
                 'id' => '1-name',
-                'class' => 'form-control-danger form-control',
+                'class' => 'is-invalid form-control',
                 'maxlength' => 255,
                 'value' => ''
             ],
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             'This is wrong',
             '/div',
             '/div'
@@ -887,7 +887,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'name' => 'Contact[text]',
                 'value' => 'test',
                 'id' => 'theID',
-                'class' => 'form-control-danger form-control'
+                'class' => 'is-invalid form-control'
             ]
         ];
         $this->assertHtml($expected, $result);
@@ -958,7 +958,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $result = $this->Form->error('Article.field');
         $expected = [
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             'email',
             '/div',
         ];
@@ -966,7 +966,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $result = $this->Form->error('Article.field', "<strong>Badness!</strong>");
         $expected = [
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             '&lt;strong&gt;Badness!&lt;/strong&gt;',
             '/div',
         ];
@@ -974,7 +974,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $result = $this->Form->error('Article.field', "<strong>Badness!</strong>", ['escape' => false]);
         $expected = [
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             '<strong', 'Badness!', '/strong',
             '/div',
         ];
@@ -998,7 +998,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $result = $this->Form->error('Article.field');
         $expected = [
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             'Your email was not good',
             '/div',
         ];
@@ -1006,7 +1006,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $result = $this->Form->error('Article.field', ['email' => 'Email in use']);
         $expected = [
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             'Email in use',
             '/div',
         ];
@@ -1014,7 +1014,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $result = $this->Form->error('Article.field', ['Your email was not good' => 'Email in use']);
         $expected = [
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             'Email in use',
             '/div',
         ];
@@ -1025,7 +1025,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'Your email was not good' => 'Email in use'
         ]);
         $expected = [
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             'Key is preferred',
             '/div',
         ];
@@ -1049,7 +1049,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'email' => 'No good!'
         ]);
         $expected = [
-            'div' => ['class' => 'form-control-feedback'],
+            'div' => ['class' => 'invalid-feedback'],
             'No good!',
             '/div'
         ];
@@ -1074,7 +1074,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'email' => 'No good!'
         ]);
         $expected = [
-            'div' => ['class' => 'form-control-feedback'],
+            'div' => ['class' => 'invalid-feedback'],
             'ul' => [],
             '<li', 'Cannot be empty', '/li',
             '<li', 'No good!', '/li',
@@ -1106,7 +1106,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $this->Form->request->data['Contact']['passwd'] = 'test';
         $result = $this->Form->password('Contact.passwd', ['id' => 'theID']);
-        $expected = ['input' => ['type' => 'password', 'name' => 'Contact[passwd]', 'value' => 'test', 'id' => 'theID', 'class' => 'form-control-danger form-control']];
+        $expected = ['input' => ['type' => 'password', 'name' => 'Contact[passwd]', 'value' => 'test', 'id' => 'theID', 'class' => 'is-invalid form-control']];
         $this->assertHtml($expected, $result);
     }
 
@@ -1730,7 +1730,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $result = $this->Form->input('spacecraft._ids');
 
         $expected = [
-            ['div' => ['class' => 'form-group has-danger']],
+            ['div' => ['class' => 'form-group']],
             'label' => ['for' => 'spacecraft-ids', 'class' => 'col-form-label'],
             'Spacecraft',
             '/label',
@@ -1746,7 +1746,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'Helios',
             '/option',
             '/select',
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             'Invalid',
             '/div',
             '/div'
@@ -2090,14 +2090,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $result = $this->Form->checkbox('published', ['id' => 'theID', 'value' => 'myvalue']);
         $expected = [
-            'input' => ['type' => 'hidden', 'class' => 'form-control-danger', 'name' => 'published', 'value' => '0'],
+            'input' => ['type' => 'hidden', 'class' => 'is-invalid', 'name' => 'published', 'value' => '0'],
             ['input' => [
                 'type' => 'checkbox',
                 'name' => 'published',
                 'value' => 'myvalue',
                 'id' => 'theID',
                 'checked' => 'checked',
-                'class' => 'form-control-danger form-check-input'
+                'class' => 'is-invalid form-check-input'
             ]]
         ];
         $this->assertHtml($expected, $result);
@@ -2105,8 +2105,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->Form->request->data['published'] = '';
         $result = $this->Form->checkbox('published');
         $expected = [
-            'input' => ['type' => 'hidden', 'class' => 'form-control-danger', 'name' => 'published', 'value' => '0'],
-            ['input' => ['type' => 'checkbox', 'name' => 'published', 'value' => '1', 'class' => 'form-control-danger form-check-input']]
+            'input' => ['type' => 'hidden', 'class' => 'is-invalid', 'name' => 'published', 'value' => '0'],
+            ['input' => ['type' => 'checkbox', 'name' => 'published', 'value' => '1', 'class' => 'is-invalid form-check-input']]
         ];
         $this->assertHtml($expected, $result);
     }
@@ -2292,12 +2292,12 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->Form->create($this->article);
         $result = $this->Form->hidden('field', ['id' => 'theID']);
         $expected = [
-            'input' => ['type' => 'hidden', 'class' => 'form-control-danger', 'name' => 'field', 'id' => 'theID', 'value' => 'test']];
+            'input' => ['type' => 'hidden', 'class' => 'is-invalid', 'name' => 'field', 'id' => 'theID', 'value' => 'test']];
         $this->assertHtml($expected, $result);
 
         $result = $this->Form->hidden('field', ['value' => 'my value']);
         $expected = [
-            'input' => ['type' => 'hidden', 'class' => 'form-control-danger', 'name' => 'field', 'value' => 'my value']
+            'input' => ['type' => 'hidden', 'class' => 'is-invalid', 'name' => 'field', 'value' => 'my value']
         ];
         $this->assertHtml($expected, $result);
     }
@@ -2587,19 +2587,19 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $result = $this->Form->input('0.comments.0.comment');
         //@codingStandardsIgnoreStart
         $expected = [
-            'div' => ['class' => 'form-group has-danger'],
+            'div' => ['class' => 'form-group'],
             'label' => ['for' => '0-comments-0-comment', 'class' => 'col-form-label'],
             'Comment',
             '/label',
             'textarea' => [
                 'name',
-                'class' => 'form-control-danger form-control',
+                'class' => 'is-invalid form-control',
                 'id' => '0-comments-0-comment',
                 'rows' => 5
             ],
             'Value',
             '/textarea',
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             'Not valid',
             '/div',
             '/div'
@@ -4071,15 +4071,15 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $result = $this->Form->control('Article.title', ['error' => '']);
         $expected = [
-            'div' => ['class' => 'form-group has-danger'],
+            'div' => ['class' => 'form-group'],
             'label' => ['for' => 'article-title', 'class'],
             'Title',
             '/label',
             'input' => [
                 'type' => 'text', 'name' => 'Article[title]',
-                'id' => 'article-title', 'class' => 'form-control-danger form-control'
+                'id' => 'article-title', 'class' => 'is-invalid form-control'
             ],
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             [],
             '/div',
             '/div'
@@ -4104,16 +4104,16 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'error' => 'Custom error!'
         ]);
         $expected = [
-            'div' => ['class' => 'form-group has-danger'],
+            'div' => ['class' => 'form-group'],
             'label' => ['for' => 'title', 'class'],
             'Title',
             '/label',
             'input' => [
                 'type' => 'text', 'name' => 'title',
-                'id' => 'title', 'class' => 'form-control-danger form-control',
+                'id' => 'title', 'class' => 'is-invalid form-control',
                 'required' => 'required',
             ],
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             'Custom error!',
             '/div',
             '/div'
@@ -4124,7 +4124,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'error' => ['error message' => 'Custom error!']
         ]);
         $expected = [
-            'div' => ['class' => 'form-group has-danger'],
+            'div' => ['class' => 'form-group'],
             'label' => ['for' => 'title', 'class'],
             'Title',
             '/label',
@@ -4132,10 +4132,10 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text',
                 'name' => 'title',
                 'id' => 'title',
-                'class' => 'form-control-danger form-control',
+                'class' => 'is-invalid form-control',
                 'required' => 'required'
             ],
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             'Custom error!',
             '/div',
             '/div'
@@ -4328,15 +4328,15 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->Form->create($entity, ['context' => ['table' => 'Contacts']]);
         $result = $this->Form->control('field');
         $expected = [
-            'div' => ['class' => 'form-group has-danger'],
+            'div' => ['class' => 'form-group'],
             'label' => ['for' => 'field', 'class'],
             'Field',
             '/label',
             'input' => [
                 'type' => 'text', 'name' => 'field',
-                'id' => 'field', 'class' => 'form-control-danger form-control'
+                'id' => 'field', 'class' => 'is-invalid form-control'
             ],
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             'Badness!',
             '/div',
             '/div'
@@ -4355,7 +4355,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/label',
             'input' => [
                 'type' => 'text', 'name' => 'field',
-                'id' => 'field', 'class' => 'form-control-danger form-control'
+                'id' => 'field', 'class' => 'is-invalid form-control'
             ],
             ['span' => ['class' => 'error-message']],
             'Badness!',
@@ -4371,12 +4371,12 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ]
         ]);
         $expected = [
-            'div' => ['class' => 'form-group has-danger'],
+            'div' => ['class' => 'form-group'],
             'label' => ['for' => 'field', 'class'],
             'Field',
             '/label',
-            'input' => ['type' => 'text', 'name' => 'field', 'id' => 'field', 'class' => 'form-control-danger form-control'],
-            ['div' => ['class' => 'form-control-feedback']],
+            'input' => ['type' => 'text', 'name' => 'field', 'id' => 'field', 'class' => 'is-invalid form-control'],
+            ['div' => ['class' => 'invalid-feedback']],
             'Le login doit contenir au moins 2 caractères',
             '/div',
             '/div'
@@ -4391,12 +4391,12 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ]
         ]);
         $expected = [
-            'div' => ['class' => 'form-group has-danger'],
+            'div' => ['class' => 'form-group'],
             'label' => ['for' => 'field', 'class'],
             'Field',
             '/label',
-            'input' => ['type' => 'text', 'name' => 'field', 'id' => 'field', 'class' => 'form-control-danger form-control'],
-            ['div' => ['class' => 'form-control-feedback']],
+            'input' => ['type' => 'text', 'name' => 'field', 'id' => 'field', 'class' => 'is-invalid form-control'],
+            ['div' => ['class' => 'invalid-feedback']],
             'login too large',
             '/div',
             '/div'
