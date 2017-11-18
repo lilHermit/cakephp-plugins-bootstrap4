@@ -1,6 +1,16 @@
 Changelog
 #########
 
+4.0.0.2200 (20-Nov-2017)
+----------------------
+.. raw:: html
+
+    <span class="badge badge-primary">Supports Bootstrap 4.0.0-beta2</span>
+
+- Updated to Bootstrap 4.0.0-beta2
+- Fixed some tests
+- Updated all FormHelper::input to FormHelper::control calls
+
 2.2.0.1 (29-Aug-2017)
 ----------------------
 .. raw:: html
