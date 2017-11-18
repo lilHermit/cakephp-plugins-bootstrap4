@@ -231,7 +231,7 @@ class BootstrapFormHelperTest extends TestCase {
 
     public function testMultiCheckboxViaInput() {
 
-        $result = $this->Form->input('checkbox1', [
+        $result = $this->Form->control('checkbox1', [
             'label' => 'My checkboxes',
             'default' => 2,
             'multiple' => 'checkbox',
@@ -281,7 +281,7 @@ class BootstrapFormHelperTest extends TestCase {
             '/div'
         ], $result);
 
-        $result = $this->Form->input('checkbox1', [
+        $result = $this->Form->control('checkbox1', [
             'label' => 'My checkboxes',
             'default' => 2,
             'multiple' => 'checkbox',
@@ -340,7 +340,7 @@ class BootstrapFormHelperTest extends TestCase {
     }
 
     public function testCheckboxSingleViaInput() {
-        $result = $this->Form->input('terms_agreed', [
+        $result = $this->Form->control('terms_agreed', [
             'label' => 'I agree to the terms of use',
             'type' => 'checkbox',
             'customControls' => false
@@ -363,7 +363,7 @@ class BootstrapFormHelperTest extends TestCase {
             '/div'
         ], $result);
 
-        $result = $this->Form->input('terms_agreed', [
+        $result = $this->Form->control('terms_agreed', [
             'label' => 'I agree to the terms of use',
             'type' => 'checkbox',
             'customControls' => true
@@ -395,7 +395,7 @@ class BootstrapFormHelperTest extends TestCase {
 
     public function testRadioViaInput() {
 
-        $result = $this->Form->input(
+        $result = $this->Form->control(
             'radio1',
             [
                 'label' => 'My Radios',
@@ -447,7 +447,7 @@ class BootstrapFormHelperTest extends TestCase {
             '/div'
         ], $result);
 
-        $result = $this->Form->input(
+        $result = $this->Form->control(
             'radio1',
             [
                 'label' => 'My Radios',
@@ -758,7 +758,7 @@ class BootstrapFormHelperTest extends TestCase {
      */
     public function testFileUploadViaInput() {
 
-        $result = $this->Form->input('Model.upload', ['type' => 'file', 'customControls' => false]);
+        $result = $this->Form->control('Model.upload', ['type' => 'file', 'customControls' => false]);
         $this->assertHtml([
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'model-upload'],
@@ -773,7 +773,7 @@ class BootstrapFormHelperTest extends TestCase {
             '/div'
         ], $result);
 
-        $result = $this->Form->input('Model.upload', ['type' => 'file', 'customControls' => true]);
+        $result = $this->Form->control('Model.upload', ['type' => 'file', 'customControls' => true]);
         $this->assertHtml([
             'div' => ['class' => 'form-group'],
             ['label' => ['for' => 'model-upload', 'class' => 'col-form-label d-block']],
@@ -1620,12 +1620,13 @@ class BootstrapFormHelperTest extends TestCase {
                 'customControls' => true
             ]
         );
+
         $this->assertHtml([
-            'div' => ['class' => 'form-group has-danger'],
+            'div' => ['class' => 'form-group'],
             '<label',
             'My Radios',
             '/label',
-            'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => '', 'class' => 'form-control-danger'],
+            'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => '', 'class' => 'is-invalid'],
             ['label' => ['for' => 'radio1-1', 'class' => 'custom-control custom-radio']],
             [
                 'input' => [
@@ -1633,7 +1634,7 @@ class BootstrapFormHelperTest extends TestCase {
                     'name' => 'radio1',
                     'value' => '1',
                     'id' => 'radio1-1',
-                    'class' => 'form-control-danger custom-control-input'
+                    'class' => 'is-invalid custom-control-input'
                 ]
             ],
             ['span' => ['class' => 'custom-control-indicator']],
@@ -1651,7 +1652,7 @@ class BootstrapFormHelperTest extends TestCase {
                     'value' => '2',
                     'id' => 'radio1-2',
                     'checked' => 'checked',
-                    'class' => 'form-control-danger custom-control-input'
+                    'class' => 'is-invalid custom-control-input'
                 ]
             ],
             ['span' => ['class' => 'custom-control-indicator']],
@@ -1660,7 +1661,7 @@ class BootstrapFormHelperTest extends TestCase {
             'Second Radio',
             '/span',
             '/label',
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             'something is wrong',
             '/div',
             '/div'
@@ -1678,7 +1679,7 @@ class BootstrapFormHelperTest extends TestCase {
             ]
         );
         $this->assertHtml([
-            'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => '', 'class' => 'form-control-danger'],
+            'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => '', 'class' => 'is-invalid'],
 
             ['label' => ['for' => 'radio1-1', 'class' => 'custom-control custom-radio']],
             [
@@ -1687,7 +1688,7 @@ class BootstrapFormHelperTest extends TestCase {
                     'name' => 'radio1',
                     'value' => '1',
                     'id' => 'radio1-1',
-                    'class' => 'form-control-danger custom-control-input'
+                    'class' => 'is-invalid custom-control-input'
                 ]
             ],
             ['span' => ['class' => 'custom-control-indicator']],
@@ -1705,7 +1706,7 @@ class BootstrapFormHelperTest extends TestCase {
                     'value' => '2',
                     'id' => 'radio1-2',
                     'checked' => 'checked',
-                    'class' => 'form-control-danger custom-control-input'
+                    'class' => 'is-invalid custom-control-input'
                 ]
             ],
             ['span' => ['class' => 'custom-control-indicator']],
@@ -1729,7 +1730,7 @@ class BootstrapFormHelperTest extends TestCase {
             ]);
 
         $this->assertHtml([
-            'input' => ['type' => 'hidden', 'name' => 'multicheckbox1', 'value' => '', 'class' => 'form-control-danger'],
+            'input' => ['type' => 'hidden', 'name' => 'multicheckbox1', 'value' => '', 'class' => 'is-invalid'],
 
             ['label' => ['for' => 'multicheckbox1-1', 'class' => 'custom-control custom-checkbox']],
             [
@@ -1738,7 +1739,7 @@ class BootstrapFormHelperTest extends TestCase {
                     'name' => 'multicheckbox1[]',
                     'value' => '1',
                     'id' => 'multicheckbox1-1',
-                    'class' => 'form-control-danger custom-control-input'
+                    'class' => 'is-invalid custom-control-input'
                 ]
             ],
             ['span' => ['class' => 'custom-control-indicator']],
@@ -1756,7 +1757,7 @@ class BootstrapFormHelperTest extends TestCase {
                     'value' => '2',
                     'checked' => 'checked',
                     'id' => 'multicheckbox1-2',
-                    'class' => 'form-control-danger custom-control-input'
+                    'class' => 'is-invalid custom-control-input'
                 ]
             ],
             ['span' => ['class' => 'custom-control-indicator']],
@@ -1767,7 +1768,7 @@ class BootstrapFormHelperTest extends TestCase {
             '/label'
         ], $result);
 
-        $result = $this->Form->input('multicheckbox1', [
+        $result = $this->Form->control('multicheckbox1', [
             'label' => 'My checkboxes',
             'default' => 2,
             'multiple' => 'checkbox',
@@ -1778,12 +1779,12 @@ class BootstrapFormHelperTest extends TestCase {
             ]
         ]);
         $this->assertHtml([
-            'div' => ['class' => 'form-group clearfix has-danger'],
+            'div' => ['class' => 'form-group clearfix'],
             ['label' => ['for' => 'multicheckbox1']],
             'My checkboxes',
             '/label',
             ['div' => ['class' => 'custom-controls-stacked']],
-            'input' => ['type' => 'hidden', 'name' => 'multicheckbox1', 'value' => '', 'class' => 'form-control-danger'],
+            'input' => ['type' => 'hidden', 'name' => 'multicheckbox1', 'value' => '', 'class' => 'is-invalid'],
 
             ['label' => ['for' => 'multicheckbox1-1', 'class' => 'custom-control custom-checkbox']],
             [
@@ -1792,7 +1793,7 @@ class BootstrapFormHelperTest extends TestCase {
                     'name' => 'multicheckbox1[]',
                     'value' => '1',
                     'id' => 'multicheckbox1-1',
-                    'class' => 'form-control-danger custom-control-input'
+                    'class' => 'is-invalid custom-control-input'
                 ]
             ],
             ['span' => ['class' => 'custom-control-indicator']],
@@ -1810,7 +1811,7 @@ class BootstrapFormHelperTest extends TestCase {
                     'value' => '2',
                     'checked' => 'checked',
                     'id' => 'multicheckbox1-2',
-                    'class' => 'form-control-danger custom-control-input'
+                    'class' => 'is-invalid custom-control-input'
                 ]
             ],
             ['span' => ['class' => 'custom-control-indicator']],
@@ -1820,13 +1821,13 @@ class BootstrapFormHelperTest extends TestCase {
             '/span',
             '/label',
             '/div',
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             'multicheckbox error',
             '/div',
             '/div'
         ], $result);
 
-        $result = $this->Form->input('multicheckbox1', [
+        $result = $this->Form->control('multicheckbox1', [
             'label' => 'My checkboxes',
             'default' => 2,
             'multiple' => 'checkbox',
@@ -1837,12 +1838,12 @@ class BootstrapFormHelperTest extends TestCase {
             ]
         ]);
         $this->assertHtml([
-            'div' => ['class' => 'form-group clearfix has-danger'],
+            'div' => ['class' => 'form-group clearfix'],
             ['label' => ['for' => 'multicheckbox1']],
             'My checkboxes',
             '/label',
             ['div' => ['class' => 'custom-controls-stacked']],
-            'input' => ['type' => 'hidden', 'name' => 'multicheckbox1', 'value' => '', 'class' => 'form-control-danger'],
+            'input' => ['type' => 'hidden', 'name' => 'multicheckbox1', 'value' => '', 'class' => 'is-invalid'],
 
             ['label' => ['for' => 'multicheckbox1-1', 'class' => 'custom-control custom-checkbox']],
             [
@@ -1851,7 +1852,7 @@ class BootstrapFormHelperTest extends TestCase {
                     'name' => 'multicheckbox1[]',
                     'value' => '1',
                     'id' => 'multicheckbox1-1',
-                    'class' => 'form-control-danger custom-control-input'
+                    'class' => 'is-invalid custom-control-input'
                 ]
             ],
             ['span' => ['class' => 'custom-control-indicator']],
@@ -1869,7 +1870,7 @@ class BootstrapFormHelperTest extends TestCase {
                     'value' => '2',
                     'checked' => 'checked',
                     'id' => 'multicheckbox1-2',
-                    'class' => 'form-control-danger custom-control-input'
+                    'class' => 'is-invalid custom-control-input'
                 ]
             ],
             ['span' => ['class' => 'custom-control-indicator']],
@@ -1879,7 +1880,7 @@ class BootstrapFormHelperTest extends TestCase {
             '/span',
             '/label',
             '/div',
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             'multicheckbox error',
             '/div',
             '/div'
@@ -1888,25 +1889,25 @@ class BootstrapFormHelperTest extends TestCase {
         $result = $this->Form->file('profile-image', ['customControls' => true]);
         $this->assertHtml([
             'label' => ['class' => 'custom-file'],
-            'input' => ['type' => 'file', 'name' => 'profile-image', 'class' => 'form-control-danger custom-file-input'],
+            'input' => ['type' => 'file', 'name' => 'profile-image', 'class' => 'is-invalid custom-file-input'],
             'span' => ['class' => 'custom-file-control'],
             '/span',
             '/label'
 
         ], $result);
 
-        $result = $this->Form->input('profile-image', ['type' => 'file', 'customControls' => true]);
+        $result = $this->Form->control('profile-image', ['type' => 'file', 'customControls' => true]);
         $this->assertHtml([
-            'div' => ['class' => 'form-group has-danger'],
+            'div' => ['class' => 'form-group'],
             ['label' => ['for' => 'profile-image', 'class' => 'col-form-label d-block']],
             'Profile Image',
             '/label',
             'label' => ['class' => 'custom-file'],
-            'input' => ['type' => 'file', 'name' => 'profile-image', 'class' => 'form-control-danger custom-file-input', 'id' => 'profile-image'],
+            'input' => ['type' => 'file', 'name' => 'profile-image', 'class' => 'is-invalid custom-file-input', 'id' => 'profile-image'],
             'span' => ['class' => 'custom-file-control'],
             '/span',
             '/label',
-            ['div' => ['class' => 'form-control-feedback']],
+            ['div' => ['class' => 'invalid-feedback']],
             'wrong file type',
             '/div',
             '/div'

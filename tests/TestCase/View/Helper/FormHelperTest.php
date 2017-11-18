@@ -165,7 +165,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
 
         $this->Form->create($this->article);
-        $result = $this->Form->input('foo');
+        $result = $this->Form->control('foo');
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'foo', 'class' => 'col-form-label'],
@@ -184,7 +184,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $result = $this->Form->input('foo', ['step' => 0.5]);
+        $result = $this->Form->control('foo', ['step' => 0.5]);
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'foo', 'class' => 'col-form-label'],
@@ -216,7 +216,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ]);
 
         $this->Form->create([], ['context' => ['table' => 'Contacts']]);
-        $result = $this->Form->input('age');
+        $result = $this->Form->control('age');
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'age', 'class' => 'col-form-label'],
@@ -318,7 +318,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->Form->create($this->article);
 
-        $result = $this->Form->input('Article.title');
+        $result = $this->Form->control('Article.title');
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'article-title', 'class' => 'col-form-label'],
@@ -337,7 +337,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $result = $this->Form->input('Article.title', [
+        $result = $this->Form->control('Article.title', [
             'templates' => [
                 'inputContainerError' => '<div class="input {{type}}{{required}} error">{{content}}</div>'
             ]
@@ -360,7 +360,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->assertHtml($expected, $result);
 
 
-        $result = $this->Form->input('Article.content');
+        $result = $this->Form->control('Article.content');
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'article-content', 'class' => 'col-form-label'],
@@ -379,7 +379,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $result = $this->Form->input('Article.content', ['error' => ['escape' => true]]);
+        $result = $this->Form->control('Article.content', ['error' => ['escape' => true]]);
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'article-content', 'class' => 'col-form-label'],
@@ -398,7 +398,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $result = $this->Form->input('Article.content', ['error' => ['escape' => false]]);
+        $result = $this->Form->control('Article.content', ['error' => ['escape' => false]]);
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'article-content', 'class' => 'col-form-label'],
@@ -431,7 +431,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->Form->create($this->article);
 
-        $result = $this->Form->input('Article.title');
+        $result = $this->Form->control('Article.title');
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'article-title', 'class' => 'col-form-label'],
@@ -505,7 +505,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $two->errors('name', ['This is wrong']);
         $this->Form->create([$one, $two], ['context' => ['table' => 'Contacts']]);
 
-        $result = $this->Form->input('0.email');
+        $result = $this->Form->control('0.email');
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => '0-email', 'class' => 'col-form-label'],
@@ -526,7 +526,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $result = $this->Form->input('1.name');
+        $result = $this->Form->control('1.name');
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => '1-name', 'class' => 'col-form-label'],
@@ -592,7 +592,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
     public function testCreateIdPrefix() {
         $this->Form->create(false, ['idPrefix' => 'prefix']);
 
-        $result = $this->Form->input('field');
+        $result = $this->Form->control('field');
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'prefix-field', 'class' => 'col-form-label'],
@@ -603,7 +603,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $result = $this->Form->input('field', ['id' => 'custom-id']);
+        $result = $this->Form->control('field', ['id' => 'custom-id']);
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'custom-id', 'class' => 'col-form-label'],
@@ -684,7 +684,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->assertHtml($expected, $result);
 
         $this->Form->end();
-        $result = $this->Form->input('field');
+        $result = $this->Form->control('field');
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'field', 'class' => 'col-form-label'],
@@ -1571,7 +1571,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testCheckboxZeroValue() {
-        $result = $this->Form->input('User.get_spam', [
+        $result = $this->Form->control('User.get_spam', [
             'type' => 'checkbox',
             'value' => '0',
             'hiddenField' => '1',
@@ -1615,7 +1615,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $article = new Article(['tags' => $tags]);
         $this->Form->create($article);
-        $result = $this->Form->input('tags._ids', ['options' => $options]);
+        $result = $this->Form->control('tags._ids', ['options' => $options]);
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'tags-ids', 'class' => 'col-form-label'],
@@ -1653,7 +1653,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $article = new Article(['tags' => $tags]);
         $this->Form->create($article);
-        $result = $this->Form->input('tags._ids', ['options' => $options]);
+        $result = $this->Form->control('tags._ids', ['options' => $options]);
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'tags-ids', 'class' => 'col-form-label'],
@@ -1684,7 +1684,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->View->viewVars['spacecraft'] = $spacecraft;
         $this->Form->create();
-        $result = $this->Form->input('spacecraft._ids');
+        $result = $this->Form->control('spacecraft._ids');
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'spacecraft-ids', 'class' => 'col-form-label'],
@@ -1727,7 +1727,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $article->errors('spacecraft', ['Invalid']);
 
         $this->Form->create($article);
-        $result = $this->Form->input('spacecraft._ids');
+        $result = $this->Form->control('spacecraft._ids');
 
         $expected = [
             ['div' => ['class' => 'form-group']],
@@ -2252,7 +2252,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'stuff' => ['type' => 'string', 'length' => 10],
             ]
         ]);
-        $result = $this->Form->input('other', ['type' => 'textarea']);
+        $result = $this->Form->control('other', ['type' => 'textarea']);
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'other', 'class' => 'col-form-label'],
@@ -2264,7 +2264,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $result = $this->Form->input('stuff', ['type' => 'textarea']);
+        $result = $this->Form->control('stuff', ['type' => 'textarea']);
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'stuff', 'class' => 'col-form-label'],
@@ -2545,7 +2545,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $comment = new Entity(['comment' => 'Value']);
         $article = new Article(['comments' => [$comment]]);
         $this->Form->create([$article]);
-        $result = $this->Form->input('0.comments.1.comment');
+        $result = $this->Form->control('0.comments.1.comment');
         //@codingStandardsIgnoreStart
         $expected = [
             'div' => ['class' => 'form-group'],
@@ -2564,7 +2564,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         //@codingStandardsIgnoreEnd
         $this->assertHtml($expected, $result);
 
-        $result = $this->Form->input('0.comments.0.comment');
+        $result = $this->Form->control('0.comments.0.comment');
         //@codingStandardsIgnoreStart
         $expected = [
             'div' => ['class' => 'form-group'],
@@ -2584,7 +2584,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->assertHtml($expected, $result);
 
         $comment->errors('comment', ['Not valid']);
-        $result = $this->Form->input('0.comments.0.comment');
+        $result = $this->Form->control('0.comments.0.comment');
         //@codingStandardsIgnoreStart
         $expected = [
             'div' => ['class' => 'form-group'],
@@ -2611,7 +2611,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         TableRegistry::get('Comments')
             ->validator('default')
             ->allowEmpty('comment', false);
-        $result = $this->Form->input('0.comments.1.comment');
+        $result = $this->Form->control('0.comments.1.comment');
         //@codingStandardsIgnoreStart
         $expected = [
             'div' => ['class' => 'form-group'],
@@ -2645,7 +2645,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->Form->create($this->article);
 
-        $result = $this->Form->input('title');
+        $result = $this->Form->control('title');
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'title', 'class' => 'col-form-label'],
@@ -2662,10 +2662,10 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $result = $this->Form->input('title', ['required' => false]);
+        $result = $this->Form->control('title', ['required' => false]);
         $this->assertNotContains('required', $result);
 
-        $result = $this->Form->input('body');
+        $result = $this->Form->control('body');
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'body', 'class' => 'col-form-label'],
@@ -2681,7 +2681,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $result = $this->Form->input('body', ['required' => true]);
+        $result = $this->Form->control('body', ['required' => true]);
         $this->assertContains('required', $result);
     }
 
@@ -2757,7 +2757,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testNestedLabelInput() {
-        $result = $this->Form->input('foo', ['nestedInput' => true]);
+        $result = $this->Form->control('foo', ['nestedInput' => true]);
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'foo', 'class' => 'col-form-label'],
@@ -2781,7 +2781,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      *
      */
     public function testInputLabelManipulationDisableLabels() {
-        $result = $this->Form->input('test', [
+        $result = $this->Form->control('test', [
             'type' => 'radio',
             'options' => ['A', 'B'],
             'labelOptions' => false
@@ -2803,7 +2803,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $this->assertHtml($expected, $result);
 
-        $result = $this->Form->input('checkbox1', [
+        $result = $this->Form->control('checkbox1', [
             'label' => 'My checkboxes',
             'multiple' => 'checkbox',
             'type' => 'select',
@@ -2839,7 +2839,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * Also checks to make sure any custom attributes are rendered correctly
      */
     public function testInputLabelManipulationRadios() {
-        $result = $this->Form->input('test', [
+        $result = $this->Form->control('test', [
             'type' => 'radio',
             'options' => ['A', 'B'],
             'labelOptions' => ['class' => 'custom-class']
@@ -2866,7 +2866,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $result = $this->Form->input('test', [
+        $result = $this->Form->control('test', [
             'type' => 'radio',
             'options' => ['A', 'B'],
             'value' => 1,
@@ -2894,7 +2894,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $result = $this->Form->input('test', [
+        $result = $this->Form->control('test', [
             'type' => 'radio',
             'options' => ['A', 'B'],
             'value' => 1,
@@ -2956,7 +2956,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * Also checks to make sure any custom attributes are rendered correctly
      */
     public function testInputLabelManipulationCheckboxes() {
-        $result = $this->Form->input('checkbox1', [
+        $result = $this->Form->control('checkbox1', [
             'label' => 'My checkboxes',
             'multiple' => 'checkbox',
             'type' => 'select',
@@ -3009,7 +3009,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $result = $this->Form->input('checkbox1', [
+        $result = $this->Form->control('checkbox1', [
             'label' => 'My checkboxes',
             'multiple' => 'checkbox',
             'type' => 'select',
@@ -3082,7 +3082,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ]]);
         $this->Form->create([], ['context' => ['table' => 'Contacts']]);
 
-        $result = $this->Form->input('foo');
+        $result = $this->Form->control('foo');
         $expected = [
             'div' => ['class' => 'form-group'],
             'label' => ['for' => 'foo'],
