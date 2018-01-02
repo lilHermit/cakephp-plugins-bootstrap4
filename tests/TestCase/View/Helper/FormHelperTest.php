@@ -618,7 +618,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             'input' => ['type' => 'hidden', 'name' => 'Model[field]', 'value' => ''],
             'div' => ['class' => 'form-check'],
-            'label' => ['for' => 'prefix-model-field-0', 'class' => 'form-check-label'],
             [
                 'input' => [
                     'type' => 'radio',
@@ -628,6 +627,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                     'class' => 'form-check-input'
                 ]
             ],
+            'label' => ['for' => 'prefix-model-field-0', 'class' => 'form-check-label'],
             'option A',
             '/label',
             '/div'
@@ -635,11 +635,10 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $this->assertHtml($expected, $result);
 
-        $result = $this->Form->radio('Model.field', ['option A', 'option'], ['customControls' => false]);
+        $result = $this->Form->radio('Model.field', ['option A', 'option'], ['customControls' => false, 'nestedInput' => false]);
         $expected = [
             'input' => ['type' => 'hidden', 'name' => 'Model[field]', 'value' => ''],
             'div' => ['class' => 'form-check'],
-            'label' => ['for' => 'prefix-model-field-0', 'class' => 'form-check-label'],
             [
                 'input' => [
                     'type' => 'radio',
@@ -649,6 +648,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                     'class' => 'form-check-input'
                 ]
             ],
+            'label' => ['for' => 'prefix-model-field-0', 'class' => 'form-check-label'],
             'option A',
             '/label'
         ];
@@ -666,7 +666,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'value' => ''
             ],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'prefix-model-multi-field-0', 'class' => 'form-check-label']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -676,6 +675,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                     'class' => 'form-check-input'
                 ]
             ],
+            ['label' => ['for' => 'prefix-model-multi-field-0', 'class' => 'form-check-label']],
             'first',
             '/label',
             '/div',
@@ -716,7 +716,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             'input' => ['type' => 'hidden', 'name' => 'Model[multi_field]', 'value' => ''],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-multi-field-0', 'class' => 'form-check-label selected']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -727,11 +726,11 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                     'class' => 'form-check-input'
                 ]
             ],
+            ['label' => ['for' => 'model-multi-field-0', 'class' => 'form-check-label selected']],
             'first',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-multi-field-1', 'class' => 'form-check-label selected']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -742,11 +741,11 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                     'class' => 'form-check-input'
                 ]
             ],
+            ['label' => ['for' => 'model-multi-field-1', 'class' => 'form-check-label selected']],
             'second',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-multi-field-2', 'class' => 'form-check-label']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -756,6 +755,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                     'class' => 'form-check-input'
                 ]
             ],
+            ['label' => ['for' => 'model-multi-field-2', 'class' => 'form-check-label']],
             'third',
             '/label',
             '/div',
@@ -770,7 +770,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             'input' => ['type' => 'hidden', 'name' => 'Model[multi_field]', 'value' => ''],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-multi-field-1-2', 'class' => 'form-check-label']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -780,6 +779,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                     'class' => 'form-check-input'
                 ]
             ],
+            ['label' => ['for' => 'model-multi-field-1-2', 'class' => 'form-check-label']],
             'half',
             '/label',
             '/div',
@@ -1122,8 +1122,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             'input' => ['type' => 'hidden', 'name' => 'Model[field]', 'value' => ''],
             ['div' => ['class' => 'form-check']],
-            'label' => ['for' => 'model-field-0', 'class' => 'form-check-label'],
             ['input' => ['type' => 'radio', 'name' => 'Model[field]', 'value' => '0', 'id' => 'model-field-0', 'class' => 'form-check-input']],
+            'label' => ['for' => 'model-field-0', 'class' => 'form-check-label'],
             'option A',
             '/label',
             '/div'
@@ -1137,14 +1137,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             'input' => ['type' => 'hidden', 'name' => 'Model[field]', 'value' => ''],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-field-0', 'class' => 'form-check-label']],
             ['input' => ['type' => 'radio', 'name' => 'Model[field]', 'value' => '0', 'id' => 'model-field-0', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'model-field-0', 'class' => 'form-check-label']],
             'option A',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-field-1', 'class' => 'form-check-label']],
             ['input' => ['type' => 'radio', 'name' => 'Model[field]', 'value' => '1', 'id' => 'model-field-1', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'model-field-1', 'class' => 'form-check-label']],
             'option B',
             '/label',
             '/div'
@@ -1159,16 +1159,16 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             'input' => ['type' => 'hidden', 'name' => 'Employee[gender]', 'value' => '', 'form' => 'my-form'],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'employee-gender-male', 'class' => 'form-check-label']],
             ['input' => ['type' => 'radio', 'name' => 'Employee[gender]', 'value' => 'male', 'id' => 'employee-gender-male', 'form' => 'my-form', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'employee-gender-male', 'class' => 'form-check-label']],
             'Male',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
 
 
-            ['label' => ['for' => 'employee-gender-female', 'class' => 'form-check-label']],
             ['input' => ['type' => 'radio', 'name' => 'Employee[gender]', 'value' => 'female', 'id' => 'employee-gender-female', 'form' => 'my-form', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'employee-gender-female', 'class' => 'form-check-label']],
             'Female',
             '/label',
             '/div'
@@ -1180,14 +1180,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             ['input' => ['type' => 'hidden', 'name' => 'Model[custom]', 'value' => '']],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-custom-0', 'class' => 'form-check-label']],
             ['input' => ['type' => 'radio', 'name' => 'Model[custom]', 'value' => '0', 'id' => 'model-custom-0', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'model-custom-0', 'class' => 'form-check-label']],
             'option A',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-custom-1', 'class' => 'form-check-label']],
             ['input' => ['type' => 'radio', 'name' => 'Model[custom]', 'value' => '1', 'id' => 'model-custom-1', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'model-custom-1', 'class' => 'form-check-label']],
             'option B',
             '/label',
             '/div'
@@ -1204,16 +1204,16 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             'input' => ['type' => 'hidden', 'name' => 'Employee[gender]', 'value' => ''],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'employee-gender-male', 'class' => 'form-check-label']],
             ['input' => ['type' => 'radio', 'name' => 'Employee[gender]', 'value' => 'male',
                 'id' => 'employee-gender-male', 'style' => 'width:20px', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'employee-gender-male', 'class' => 'form-check-label']],
             'Male',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'employee-gender-female', 'class' => 'form-check-label']],
             ['input' => ['type' => 'radio', 'name' => 'Employee[gender]', 'value' => 'female',
                 'id' => 'employee-gender-female', 'style' => 'width:20px', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'employee-gender-female', 'class' => 'form-check-label']],
             'Female',
             '/label',
             '/div'
@@ -1243,14 +1243,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             ['input' => ['type' => 'hidden', 'name' => 'title', 'value' => '']],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'title-0', 'class' => 'form-check-label']],
             ['input' => ['type' => 'radio', 'name' => 'title', 'value' => '0', 'id' => 'title-0', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'title-0', 'class' => 'form-check-label']],
             'option A',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'title-1', 'class' => 'form-check-label selected']],
             ['input' => ['type' => 'radio', 'name' => 'title', 'value' => '1', 'id' => 'title-1', 'checked' => 'checked', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'title-1', 'class' => 'form-check-label selected']],
             'option B',
             '/label',
             '/div'
@@ -1292,8 +1292,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'input' => ['type' => 'hidden', 'name' => 'Model[field]', 'value' => ''],
 
             ['div' => ['class' => 'form-check']],
-            'label' => ['for' => 'model-field-v', 'class' => 'form-check-label'],
             ['input' => ['type' => 'radio', 'name' => 'Model[field]', 'value' => 'v', 'id' => 'model-field-v', 'class' => 'form-check-input']],
+            'label' => ['for' => 'model-field-v', 'class' => 'form-check-label'],
             'value',
             '/label',
             '/div',
@@ -1578,7 +1578,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ]);
         $expected = [
             'div' => ['class' => 'form-check'],
-            'label' => ['for' => 'user-get-spam', 'class' => 'form-check-label'],
             ['input' => [
                 'type' => 'hidden', 'name' => 'User[get_spam]',
                 'value' => '1'
@@ -1588,6 +1587,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'value' => '0', 'id' => 'user-get-spam',
                 'class' => 'form-check-input'
             ]],
+            'label' => ['for' => 'user-get-spam', 'class' => 'form-check-label'],
             'Get Spam',
             '/label',
             '/div'
@@ -1773,29 +1773,29 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'hidden', 'name' => 'Model[multi_field]', 'value' => ''
             ],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-multi-field-0', 'class' => 'form-check-label']],
             ['input' => [
                 'type' => 'checkbox', 'name' => 'Model[multi_field][]',
                 'value' => '0', 'id' => 'model-multi-field-0', 'class' => 'form-check-input'
             ]],
+            ['label' => ['for' => 'model-multi-field-0', 'class' => 'form-check-label']],
             'first',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-multi-field-1', 'class' => 'form-check-label']],
             ['input' => [
                 'type' => 'checkbox', 'name' => 'Model[multi_field][]',
                 'value' => '1', 'id' => 'model-multi-field-1', 'class' => 'form-check-input'
             ]],
+            ['label' => ['for' => 'model-multi-field-1', 'class' => 'form-check-label']],
             'second',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-multi-field-2', 'class' => 'form-check-label']],
             ['input' => [
                 'type' => 'checkbox', 'name' => 'Model[multi_field][]',
                 'value' => '2', 'id' => 'model-multi-field-2', 'class' => 'form-check-input'
             ]],
+            ['label' => ['for' => 'model-multi-field-2', 'class' => 'form-check-label']],
             'third',
             '/label',
             '/div'
@@ -1812,29 +1812,28 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'hidden', 'name' => 'Model[multi_field]', 'value' => ''
             ],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-multi-field-a+', 'class' => 'form-check-label']],
             ['input' => [
                 'type' => 'checkbox', 'name' => 'Model[multi_field][]',
                 'value' => 'a+', 'id' => 'model-multi-field-a+', 'class' => 'form-check-input'
             ]],
-            'first',
+            ['label' => ['for' => 'model-multi-field-a+', 'class' => 'form-check-label']],            'first',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-multi-field-a++', 'class' => 'form-check-label']],
             ['input' => [
                 'type' => 'checkbox', 'name' => 'Model[multi_field][]',
                 'value' => 'a++', 'id' => 'model-multi-field-a++', 'class' => 'form-check-input'
             ]],
+            ['label' => ['for' => 'model-multi-field-a++', 'class' => 'form-check-label']],
             'second',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-multi-field-a+++', 'class' => 'form-check-label']],
             ['input' => [
                 'type' => 'checkbox', 'name' => 'Model[multi_field][]',
                 'value' => 'a+++', 'id' => 'model-multi-field-a+++', 'class' => 'form-check-input'
             ]],
+            ['label' => ['for' => 'model-multi-field-a+++', 'class' => 'form-check-label']],
             'third',
             '/label',
             '/div'
@@ -1851,32 +1850,32 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'hidden', 'name' => 'Model[multi_field]', 'value' => ''
             ],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-multi-field-a-b', 'class' => 'form-check-label']],
             ['input' => [
                 'type' => 'checkbox', 'name' => 'Model[multi_field][]',
                 'value' => 'a&gt;b', 'id' => 'model-multi-field-a-b',
                 'class' => 'form-check-input'
             ]],
+            ['label' => ['for' => 'model-multi-field-a-b', 'class' => 'form-check-label']],
             'first',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-multi-field-a-b1', 'class' => 'form-check-label']],
             ['input' => [
                 'type' => 'checkbox', 'name' => 'Model[multi_field][]',
                 'value' => 'a&lt;b', 'id' => 'model-multi-field-a-b1',
                 'class' => 'form-check-input'
             ]],
+            ['label' => ['for' => 'model-multi-field-a-b1', 'class' => 'form-check-label']],
             'second',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-multi-field-a-b2', 'class' => 'form-check-label']],
             ['input' => [
                 'type' => 'checkbox', 'name' => 'Model[multi_field][]',
                 'value' => 'a&quot;b', 'id' => 'model-multi-field-a-b2',
                 'class' => 'form-check-input'
             ]],
+            ['label' => ['for' => 'model-multi-field-a-b2', 'class' => 'form-check-label']],
             'third',
             '/label',
             '/div'
@@ -1903,23 +1902,23 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'hidden', 'name' => 'Model[tags]', 'value' => ''
             ],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-tags-1', 'class' => 'form-check-label selected']],
             ['input' => [
                 'type' => 'checkbox', 'name' => 'Model[tags][]',
                 'value' => '1', 'id' => 'model-tags-1', 'checked' => 'checked',
                 'class' => 'form-check-input'
             ]],
+            ['label' => ['for' => 'model-tags-1', 'class' => 'form-check-label selected']],
             'first',
             '/label',
             '/div',
 
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-tags-array', 'class' => 'form-check-label']],
             ['input' => [
                 'type' => 'checkbox', 'name' => 'Model[tags][]',
                 'value' => 'Array', 'id' => 'model-tags-array',
                 'class' => 'form-check-input'
             ]],
+            ['label' => ['for' => 'model-tags-array', 'class' => 'form-check-label']],
             'Array',
             '/label',
             '/div'
@@ -1942,22 +1941,22 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             'input' => ['type' => 'hidden', 'name' => 'fish', 'value' => ''],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'fish-0', 'class' => 'form-check-label']],
             ['input' => [
                 'type' => 'checkbox', 'name' => 'fish[]',
                 'value' => '0', 'id' => 'fish-0',
                 'class' => 'form-check-input'
             ]],
+            ['label' => ['for' => 'fish-0', 'class' => 'form-check-label']],
             '1',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'fish-1', 'class' => 'form-check-label']],
             ['input' => [
                 'type' => 'checkbox', 'name' => 'fish[]',
                 'value' => '1', 'id' => 'fish-1',
                 'class' => 'form-check-input'
             ]],
+            ['label' => ['for' => 'fish-1', 'class' => 'form-check-label']],
             '2',
             '/label',
             '/div'
@@ -2702,14 +2701,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             'input' => ['type' => 'hidden', 'name' => 'field', 'value' => ''],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'field-0', 'class' => 'form-check-label']],
             ['input' => ['type' => 'radio', 'name' => 'field', 'value' => '0', 'id' => 'field-0', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'field-0', 'class' => 'form-check-label']],
             'option A',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'field-1', 'class' => 'form-check-label']],
             ['input' => ['type' => 'radio', 'name' => 'field', 'value' => '1', 'id' => 'field-1', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'field-1', 'class' => 'form-check-label']],
             'option B',
             '/label',
             '/div'
@@ -2726,22 +2725,22 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'hidden', 'name' => 'multi_field', 'value' => ''
             ],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'multi-field-0', 'class' => 'form-check-label']],
             ['input' => [
                 'type' => 'checkbox', 'name' => 'multi_field[]',
                 'value' => '0', 'id' => 'multi-field-0',
                 'class' => 'form-check-input'
             ]],
+            ['label' => ['for' => 'multi-field-0', 'class' => 'form-check-label']],
             'first',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'multi-field-1', 'class' => 'form-check-label']],
             ['input' => [
                 'type' => 'checkbox', 'name' => 'multi_field[]',
                 'value' => '1', 'id' => 'multi-field-1',
                 'class' => 'form-check-input'
             ]],
+            ['label' => ['for' => 'multi-field-1', 'class' => 'form-check-label']],
             'second',
             '/label',
             '/div',
@@ -2851,14 +2850,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/label',
             ['input' => ['type' => 'hidden', 'name' => 'test', 'value' => '']],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'test-0', 'class' => 'custom-class form-check-label']],
             ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '0', 'id' => 'test-0', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'test-0', 'class' => 'custom-class form-check-label']],
             'A',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'test-1', 'class' => 'custom-class form-check-label']],
             ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '1', 'id' => 'test-1', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'test-1', 'class' => 'custom-class form-check-label']],
             'B',
             '/label',
             '/div',
@@ -2879,14 +2878,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/label',
             ['input' => ['type' => 'hidden', 'name' => 'test', 'value' => '']],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'test-0', 'class' => 'custom-class form-check-label']],
             ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '0', 'id' => 'test-0', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'test-0', 'class' => 'custom-class form-check-label']],
             'A',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'test-1', 'class' => 'custom-class form-check-label selected']],
             ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '1', 'id' => 'test-1', 'checked' => 'checked', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'test-1', 'class' => 'custom-class form-check-label selected']],
             'B',
             '/label',
             '/div',
@@ -2907,14 +2906,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/label',
             ['input' => ['type' => 'hidden', 'name' => 'test', 'value' => '']],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'test-0', 'class' => 'custom-class custom-class-array form-check-label']],
             ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '0', 'id' => 'test-0', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'test-0', 'class' => 'custom-class custom-class-array form-check-label']],
             'A',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'test-1', 'class' => 'custom-class custom-class-array form-check-label selected']],
             ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '1', 'id' => 'test-1', 'checked' => 'checked', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'test-1', 'class' => 'custom-class custom-class-array form-check-label selected']],
             'B',
             '/label',
             '/div',
@@ -2932,14 +2931,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             ['input' => ['type' => 'hidden', 'name' => 'test', 'value' => '']],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'test-0', 'class' => 'custom-class another-class form-check-label', 'data-name' => 'bob']],
             ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '0', 'id' => 'test-0', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'test-0', 'class' => 'custom-class another-class form-check-label', 'data-name' => 'bob']],
             'A',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'test-1', 'class' => 'custom-class another-class form-check-label selected', 'data-name' => 'bob']],
             ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '1', 'id' => 'test-1', 'checked' => 'checked', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'test-1', 'class' => 'custom-class another-class form-check-label selected', 'data-name' => 'bob']],
             'B',
             '/label',
             '/div',
@@ -2974,10 +2973,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/label',
             'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
             ['div' => ['class' => 'form-check']],
-            ['label' => [
-                'class' => 'custom-class form-check-label selected',
-                'for' => 'checkbox1-1'
-            ]],
             ['input' => [
                 'type' => 'checkbox',
                 'name' => 'checkbox1[]',
@@ -2987,20 +2982,24 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'class' => 'form-check-input'
 
             ]],
+            ['label' => [
+                'class' => 'custom-class form-check-label selected',
+                'for' => 'checkbox1-1'
+            ]],
             'First Checkbox',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => [
-                'class' => 'custom-class form-check-label',
-                'for' => 'checkbox1-2'
-            ]],
             ['input' => [
                 'type' => 'checkbox',
                 'name' => 'checkbox1[]',
                 'value' => '2',
                 'id' => 'checkbox1-2',
                 'class' => 'form-check-input'
+            ]],
+            ['label' => [
+                'class' => 'custom-class form-check-label',
+                'for' => 'checkbox1-2'
             ]],
             'Second Checkbox',
             '/label',
@@ -3028,11 +3027,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/label',
             'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
             ['div' => ['class' => 'form-check']],
-            ['label' => [
-                'class' => 'custom-class another-class form-check-label selected',
-                'data-name' => 'bob',
-                'for' => 'checkbox1-1'
-            ]],
             ['input' => [
                 'type' => 'checkbox',
                 'name' => 'checkbox1[]',
@@ -3041,21 +3035,26 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'checked' => 'checked',
                 'class' => 'form-check-input'
             ]],
+            ['label' => [
+                'class' => 'custom-class another-class form-check-label selected',
+                'data-name' => 'bob',
+                'for' => 'checkbox1-1'
+            ]],
             'First Checkbox',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => [
-                'class' => 'custom-class another-class form-check-label',
-                'data-name' => 'bob',
-                'for' => 'checkbox1-2'
-            ]],
             ['input' => [
                 'type' => 'checkbox',
                 'name' => 'checkbox1[]',
                 'value' => '2',
                 'id' => 'checkbox1-2',
                 'class' => 'form-check-input'
+            ]],
+            ['label' => [
+                'class' => 'custom-class another-class form-check-label',
+                'data-name' => 'bob',
+                'for' => 'checkbox1-2'
             ]],
             'Second Checkbox',
             '/label',
@@ -4000,7 +3999,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'name' => 'something',
                 'value' => '0'
             ]],
-            'label' => ['for' => 'something', 'class'],
             ['input' => [
                 'type' => 'checkbox',
                 'name' => 'something',
@@ -4008,6 +4006,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'id' => 'something',
                 'class'
             ]],
+            'label' => ['for' => 'something', 'class'],
             'Something',
             '/label',
             '/div'
@@ -4509,6 +4508,20 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
+        // Test standard checkbox via control with label (shouldn't be nested)
+        $result = $this->Form->control('User.active', ['checked' => '1']);
+        $expected = [
+            'div' => ['class' => 'form-check'],
+            'input' => ['type' => 'hidden', 'name' => 'User[active]', 'value' => '0'],
+            ['input' => ['type' => 'checkbox', 'name' => 'User[active]', 'value' => '1', 'id' => 'user-active', 'checked' => 'checked', 'class']],
+            'label' => ['for' => 'user-active', 'class' => 'form-check-label'],
+            'Active',
+            '/label',
+            '/div'
+        ];
+
+        $this->assertHtml($expected, $result);
+
         $result = $this->Form->control('User.disabled', [
             'label' => 'Disabled',
             'type' => 'checkbox',
@@ -4517,15 +4530,16 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             'div' => ['class' => 'form-check'],
             'input' => ['type' => 'hidden', 'name' => 'User[disabled]', 'value' => '0'],
-            'label' => ['for' => 'user-disabled', 'class'],
             ['input' => [
                 'type' => 'checkbox',
                 'name' => 'User[disabled]',
                 'value' => '1',
                 'id' => 'user-disabled',
                 'data-foo' => 'disabled',
+
                 'class'
             ]],
+            'label' => ['for' => 'user-disabled', 'class'],
             'Disabled',
             '/label',
             '/div'
@@ -4540,7 +4554,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             'div' => ['class' => 'form-check'],
             'input' => ['type' => 'hidden', 'name' => 'User[confirm]', 'value' => '0'],
-            'label' => ['for' => 'user-confirm', 'class'],
+
             ['input' => [
                 'type' => 'checkbox',
                 'name' => 'User[confirm]',
@@ -4548,6 +4562,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'id' => 'user-confirm',
                 'class'
             ]],
+            'label' => ['for' => 'user-confirm', 'class'],
             'Confirm <b>me</b>!',
             '/label',
             '/div'
@@ -4576,20 +4591,20 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/label',
             ['input' => ['type' => 'hidden', 'name' => "Contact[multiple]", 'disabled' => 'disabled', 'value' => '']],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => "contact-multiple-1", 'class']],
             ['input' => ['type' => 'checkbox', 'name' => "Contact[multiple][]", 'value' => 1, 'disabled' => 'disabled', 'id' => "contact-multiple-1", 'class']],
+            ['label' => ['for' => "contact-multiple-1", 'class']],
             'One',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => "contact-multiple-2", 'class']],
             ['input' => ['type' => 'checkbox', 'name' => "Contact[multiple][]", 'value' => 2, 'disabled' => 'disabled', 'id' => "contact-multiple-2", 'class']],
+            ['label' => ['for' => "contact-multiple-2", 'class']],
             'Two',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => "contact-multiple-3", 'class']],
             ['input' => ['type' => 'checkbox', 'name' => "Contact[multiple][]", 'value' => 3, 'disabled' => 'disabled', 'id' => "contact-multiple-3", 'class']],
+            ['label' => ['for' => "contact-multiple-3", 'class']],
             'Three',
             '/label',
             '/div',
@@ -4608,14 +4623,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/label',
             ['input' => ['type' => 'hidden', 'name' => "Contact[multiple]", 'value' => '']],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => "contact-multiple-50", 'class']],
             ['input' => ['type' => 'checkbox', 'name' => "Contact[multiple][]", 'value' => 50, 'disabled' => 'disabled', 'id' => "contact-multiple-50", 'class']],
+            ['label' => ['for' => "contact-multiple-50", 'class']],
             'Fifty',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => "contact-multiple-50f5c0cf", 'class']],
             ['input' => ['type' => 'checkbox', 'name' => "Contact[multiple][]", 'value' => '50f5c0cf', 'id' => "contact-multiple-50f5c0cf", 'class']],
+            ['label' => ['for' => "contact-multiple-50f5c0cf", 'class']],
             'Stringy',
             '/label',
             '/div',
@@ -4786,14 +4801,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/label',
             'input' => ['type' => 'hidden', 'name' => 'Publisher[id]', 'value' => ''],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'publisher-id-value-1', 'class']],
             ['input' => ['type' => 'checkbox', 'name' => 'Publisher[id][]', 'value' => 'Value 1', 'id' => 'publisher-id-value-1', 'class']],
+            ['label' => ['for' => 'publisher-id-value-1', 'class']],
             'Label 1',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'publisher-id-value-2', 'class']],
             ['input' => ['type' => 'checkbox', 'name' => 'Publisher[id][]', 'value' => 'Value 2', 'id' => 'publisher-id-value-2', 'class']],
+            ['label' => ['for' => 'publisher-id-value-2', 'class']],
             'Label 2',
             '/label',
             '/div',
@@ -4852,7 +4867,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'name' => 'Model[user]',
                 'value' => 0,
             ]],
-            'label' => ['for' => 'model-user', 'class'],
             ['input' => [
                 'name' => 'Model[user]',
                 'type' => 'checkbox',
@@ -4860,6 +4874,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'value' => 1,
                 'class'
             ]],
+            'label' => ['for' => 'model-user', 'class'],
             'User',
             '/label',
             '/div'
@@ -4880,23 +4895,23 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'input' => ['type' => 'hidden', 'name' => 'tags[_ids]', 'value' => ''],
 
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'tags-ids-1', 'class']],
             ['input' => [
                 'id' => 'tags-ids-1', 'type' => 'checkbox',
                 'value' => '1', 'name' => 'tags[_ids][]',
                 'class'
             ]],
+            ['label' => ['for' => 'tags-ids-1', 'class']],
             'blue',
             '/label',
             '/div',
 
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'tags-ids-2', 'class']],
             ['input' => [
                 'id' => 'tags-ids-2', 'type' => 'checkbox',
                 'value' => '2', 'name' => 'tags[_ids][]',
                 'class'
             ]],
+            ['label' => ['for' => 'tags-ids-2', 'class']],
             'red',
             '/label',
             '/div',
@@ -5180,14 +5195,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/label',
             ['input' => ['type' => 'hidden', 'name' => 'test', 'value' => '']],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'test-0', 'class']],
             ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '0', 'id' => 'test-0', 'class']],
+            ['label' => ['for' => 'test-0', 'class']],
             'A',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'test-1', 'class']],
             ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '1', 'id' => 'test-1', 'class']],
+            ['label' => ['for' => 'test-1', 'class']],
             'B',
             '/label',
             '/div',
@@ -5207,15 +5222,15 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/label',
             ['input' => ['type' => 'hidden', 'name' => 'test', 'value' => '']],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'test-0', 'class']],
             ['input' => ['type' => 'radio', 'checked' => 'checked', 'name' => 'test', 'value' => '0', 'id' => 'test-0',
                 'class']],
+            ['label' => ['for' => 'test-0', 'class']],
             'A',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'test-1', 'class']],
             ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '1', 'id' => 'test-1', 'class']],
+            ['label' => ['for' => 'test-1', 'class']],
             'B',
             '/label',
             '/div',
@@ -5232,14 +5247,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['div' => ['class' => 'form-group']],
             ['input' => ['type' => 'hidden', 'name' => 'test', 'value' => '']],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'test-0', 'class']],
             ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '0', 'id' => 'test-0', 'class']],
+            ['label' => ['for' => 'test-0', 'class']],
             'A',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'test-1', 'class']],
             ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '1', 'id' => 'test-1', 'class']],
+            ['label' => ['for' => 'test-1', 'class']],
             'B',
             '/label',
             '/div',
@@ -5269,7 +5284,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'name' => 'Model[field]',
                 'value' => ''
             ]],
-            ['label' => ['for' => 'model-field-0', 'class']],
             ['input' => [
                 'type' => 'radio',
                 'name' => 'Model[field]',
@@ -5277,9 +5291,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'id' => 'model-field-0',
                 'class'
             ]],
+            ['label' => ['for' => 'model-field-0', 'class']],
             'option A',
             '/label',
-            ['label' => ['for' => 'model-field-1', 'class']],
             ['input' => [
                 'type' => 'radio',
                 'name' => 'Model[field]',
@@ -5287,6 +5301,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'id' => 'model-field-1',
                 'class'
             ]],
+            ['label' => ['for' => 'model-field-1', 'class']],
             'option B',
             '/label'
         ];
@@ -5305,8 +5320,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $result = $this->Form->radio('Model.1.field', ['option A'], ['hiddenField' => false]);
         $expected = [
             ['div' => ['class' => 'form-check']],
-            'label' => ['for' => 'model-1-field-0', 'class'],
             'input' => ['type' => 'radio', 'name' => 'Model[1][field]', 'value' => '0', 'id' => 'model-1-field-0', 'class'],
+            'label' => ['for' => 'model-1-field-0', 'class'],
             'option A',
             '/label',
             '/div'
@@ -5334,23 +5349,23 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/label',
             'input' => ['type' => 'hidden', 'name' => 'Model[multi_field]', 'value' => ''],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-multi-field-0', 'class']],
             ['input' => ['type' => 'checkbox', 'name' => 'Model[multi_field][]', 'value' => '0', 'id' => 'model-multi-field-0',
                 'class']],
+            ['label' => ['for' => 'model-multi-field-0', 'class']],
             'first',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-multi-field-1', 'class']],
             ['input' => ['type' => 'checkbox', 'name' => 'Model[multi_field][]', 'value' => '1', 'id' => 'model-multi-field-1',
                 'class']],
+            ['label' => ['for' => 'model-multi-field-1', 'class']],
             'second',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-multi-field-2', 'class']],
             ['input' => ['type' => 'checkbox', 'name' => 'Model[multi_field][]', 'value' => '2', 'id' => 'model-multi-field-2',
                 'class']],
+            ['label' => ['for' => 'model-multi-field-2', 'class']],
             'third',
             '/label',
             '/div',
@@ -5369,23 +5384,23 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/label',
             'input' => ['type' => 'hidden', 'name' => 'Model[multi_field]', 'value' => ''],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-multi-field-a', 'class']],
             ['input' => ['type' => 'checkbox', 'name' => 'Model[multi_field][]', 'value' => 'a', 'id' => 'model-multi-field-a',
                 'class']],
+            ['label' => ['for' => 'model-multi-field-a', 'class']],
             'first',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-multi-field-b', 'class']],
             ['input' => ['type' => 'checkbox', 'name' => 'Model[multi_field][]', 'value' => 'b', 'id' => 'model-multi-field-b',
                 'class']],
+            ['label' => ['for' => 'model-multi-field-b', 'class']],
             'second',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'model-multi-field-c', 'class']],
             ['input' => ['type' => 'checkbox', 'name' => 'Model[multi_field][]', 'value' => 'c', 'id' => 'model-multi-field-c',
                 'class']],
+            ['label' => ['for' => 'model-multi-field-c', 'class']],
             'third',
             '/label',
             '/div',
@@ -5413,14 +5428,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/label',
             'input' => ['type' => 'hidden', 'name' => 'category', 'value' => ''],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'category-0', 'class']],
             ['input' => ['type' => 'checkbox', 'name' => 'category[]', 'value' => '0', 'id' => 'category-0', 'class']],
+            ['label' => ['for' => 'category-0', 'class']],
             '1',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'category-1', 'class']],
             ['input' => ['type' => 'checkbox', 'name' => 'category[]', 'value' => '1', 'id' => 'category-1', 'class']],
+            ['label' => ['for' => 'category-1', 'class']],
             '2',
             '/label',
             '/div',
@@ -5777,8 +5792,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             'div' => ['class' => 'check'],
             ['input' => ['type' => 'hidden', 'name' => 'accept', 'value' => 0]],
-            'label' => ['for' => 'accept', 'class'],
             ['input' => ['id' => 'accept', 'type' => 'checkbox', 'name' => 'accept', 'value' => 1, 'class']],
+            'label' => ['for' => 'accept', 'class'],
             'Accept',
             '/label',
             '/div'
@@ -5892,14 +5907,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             'input' => ['type' => 'hidden', 'name' => 'Model[field]', 'value' => ''],
             ['div' => ['class']],
-            ['label' => ['class', 'for' => 'model-field-r']],
             ['input' => ['type' => 'radio', 'class', 'name' => 'Model[field]', 'value' => 'r', 'id' => 'model-field-r']],
+            ['label' => ['class', 'for' => 'model-field-r']],
             'red',
             '/label',
             '/div',
             ['div' => ['class']],
-            ['label' => ['class', 'for' => 'model-field-b']],
             ['input' => ['type' => 'radio', 'class', 'name' => 'Model[field]', 'value' => 'b', 'id' => 'model-field-b']],
+            ['label' => ['class', 'for' => 'model-field-b']],
             'blue',
             '/label',
             '/div'
@@ -5921,8 +5936,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             ['input' => ['type' => 'hidden', 'name' => 'title', 'value' => 'N']],
             'div' => ['class'],
-            'label' => ['for' => 'title-0', 'class'],
             ['input' => ['type' => 'radio', 'class', 'name' => 'title', 'value' => '0', 'id' => 'title-0']],
+            'label' => ['for' => 'title-0', 'class'],
             'option A',
             '/label',
             '/div'

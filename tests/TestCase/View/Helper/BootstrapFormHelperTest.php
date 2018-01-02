@@ -51,7 +51,6 @@ class BootstrapFormHelperTest extends TestCase {
             'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
             ['div' => ['class' => 'form-check']],
 
-            ['label' => ['for' => 'checkbox1-1', 'class' => 'form-check-label']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -61,11 +60,11 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'form-check-input'
                 ]
             ],
+            ['label' => ['for' => 'checkbox1-1', 'class' => 'form-check-label']],
             'First Checkbox',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'checkbox1-2', 'class' => 'form-check-label selected']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -76,6 +75,7 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'form-check-input'
                 ]
             ],
+            ['label' => ['for' => 'checkbox1-2', 'class' => 'form-check-label selected']],
             'Second Checkbox',
             '/label',
             '/div',
@@ -90,10 +90,11 @@ class BootstrapFormHelperTest extends TestCase {
                 'default' => 2,
                 'customControls' => true
             ]);
+
         $this->assertHtml([
             'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
 
-            ['label' => ['for' => 'checkbox1-1', 'class' => 'custom-control custom-checkbox']],
+            ['div' => ['class' => 'custom-control custom-checkbox']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -103,14 +104,12 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for' => 'checkbox1-1', 'class' => 'custom-control-label']],
             'First Checkbox',
-            '/span',
             '/label',
+            '/div',
 
-            ['label' => ['for' => 'checkbox1-2', 'class' => 'custom-control custom-checkbox selected']],
+            ['div' => ['class' => 'custom-control custom-checkbox']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -121,12 +120,10 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for' => 'checkbox1-2', 'class' => 'custom-control-label selected']],
             'Second Checkbox',
-            '/span',
             '/label',
+            '/div'
         ], $result);
     }
 
@@ -146,8 +143,6 @@ class BootstrapFormHelperTest extends TestCase {
         $this->assertHtml([
             'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
             ['div' => ['class' => 'form-check']],
-
-            ['label' => ['for' => 'checkbox1-1', 'class' => 'form-check-label']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -157,11 +152,11 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'form-check-input'
                 ]
             ],
+            ['label' => ['for' => 'checkbox1-1', 'class' => 'form-check-label']],
             'First Checkbox',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'checkbox1-2', 'class' => 'form-check-label selected']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -172,6 +167,7 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'form-check-input'
                 ]
             ],
+            ['label' => ['for' => 'checkbox1-2', 'class' => 'form-check-label selected']],
             'Second Checkbox',
             '/label',
             '/div',
@@ -192,7 +188,8 @@ class BootstrapFormHelperTest extends TestCase {
 
         $this->assertHtml([
             'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
-            ['label' => ['for' => 'checkbox1-1', 'class' => 'custom-control custom-checkbox']],
+
+            ['div' => ['class' => 'custom-control custom-checkbox']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -202,14 +199,12 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for' => 'checkbox1-1', 'class' => 'custom-control-label']],
             'First Checkbox',
-            '/span',
             '/label',
+            '/div',
+            ['div' => ['class' => 'custom-control custom-checkbox']],
 
-            ['label' => ['for' => 'checkbox1-2', 'class' => 'custom-control custom-checkbox selected']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -220,12 +215,10 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for' => 'checkbox1-2', 'class' => 'custom-control-label selected']],
             'Second Checkbox',
-            '/span',
             '/label',
+            '/div'
         ], $result);
     }
 
@@ -249,8 +242,6 @@ class BootstrapFormHelperTest extends TestCase {
             '/label',
             'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
             ['div' => ['class' => 'form-check']],
-
-            ['label' => ['for' => 'checkbox1-1', 'class' => 'form-check-label']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -260,11 +251,11 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'form-check-input'
                 ]
             ],
+            ['label' => ['for' => 'checkbox1-1', 'class' => 'form-check-label']],
             'First Checkbox',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'checkbox1-2', 'class' => 'form-check-label selected']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -275,6 +266,7 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'form-check-input'
                 ]
             ],
+            ['label' => ['for' => 'checkbox1-2', 'class' => 'form-check-label selected']],
             'Second Checkbox',
             '/label',
             '/div',
@@ -291,15 +283,16 @@ class BootstrapFormHelperTest extends TestCase {
                 ['text' => 'Second Checkbox', 'value' => 2]
             ]
         ]);
+
         $this->assertHtml([
             'div' => ['class' => 'form-group clearfix'],
             ['label' => ['for' => 'checkbox1']],
             'My checkboxes',
             '/label',
-            ['div' => ['class' => 'custom-controls-stacked']],
+
             'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
 
-            ['label' => ['for' => 'checkbox1-1', 'class' => 'custom-control custom-checkbox']],
+            ['div' => ['class' => 'custom-control custom-checkbox']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -309,14 +302,12 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for' => 'checkbox1-1', 'class' => 'custom-control-label']],
             'First Checkbox',
-            '/span',
             '/label',
+            '/div',
 
-            ['label' => ['for' => 'checkbox1-2', 'class' => 'custom-control custom-checkbox selected']],
+            ['div' => ['class' => 'custom-control custom-checkbox']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -327,11 +318,8 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for' => 'checkbox1-2', 'class' => 'custom-control-label selected']],
             'Second Checkbox',
-            '/span',
             '/label',
             '/div',
             '/div'
@@ -348,7 +336,6 @@ class BootstrapFormHelperTest extends TestCase {
         $this->assertHtml([
             'div' => ['class' => 'form-check'],
             'input' => ['type' => 'hidden', 'name' => 'terms_agreed', 'value' => '0'],
-            'label' => ['for' => 'terms-agreed', 'class' => 'form-check-label'],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -358,6 +345,7 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'form-check-input'
                 ]
             ],
+            'label' => ['for' => 'terms-agreed', 'class' => 'form-check-label'],
             'I agree to the terms of use',
             '/label',
             '/div'
@@ -370,9 +358,8 @@ class BootstrapFormHelperTest extends TestCase {
         ]);
 
         $this->assertHtml([
-            'div' => ['class' => 'form-group clearfix'],
+            'div' => ['class' => 'custom-control custom-checkbox'],
             'input' => ['type' => 'hidden', 'name' => 'terms_agreed', 'value' => '0'],
-            'label' => ['for' => 'terms-agreed', 'class' => 'custom-control custom-checkbox'],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -382,11 +369,8 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            'label' => ['for' => 'terms-agreed', 'class' => 'custom-control-label'],
             'I agree to the terms of use',
-            '/span',
             '/label',
             '/div'
         ], $result);
@@ -415,8 +399,6 @@ class BootstrapFormHelperTest extends TestCase {
             '/label',
             'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => ''],
             ['div' => ['class' => 'form-check']],
-
-            ['label' => ['for' => 'radio1-1', 'class' => 'form-check-label']],
             [
                 'input' => [
                     'type' => 'radio',
@@ -426,11 +408,11 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'form-check-input'
                 ]
             ],
+            ['label' => ['for' => 'radio1-1', 'class' => 'form-check-label']],
             'First Radio',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'radio1-2', 'class' => 'form-check-label selected']],
             [
                 'input' => [
                     'type' => 'radio',
@@ -441,6 +423,7 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'form-check-input'
                 ]
             ],
+            ['label' => ['for' => 'radio1-2', 'class' => 'form-check-label selected']],
             'Second Radio',
             '/label',
             '/div',
@@ -460,13 +443,15 @@ class BootstrapFormHelperTest extends TestCase {
                 'customControls' => true
             ]
         );
+
         $this->assertHtml([
             'div' => ['class' => 'form-group'],
             '<label',
             'My Radios',
             '/label',
+
             'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => ''],
-            ['label' => ['for' => 'radio1-1', 'class' => 'custom-control custom-radio']],
+            ['div' => ['class' => 'custom-control custom-radio']],
             [
                 'input' => [
                     'type' => 'radio',
@@ -476,14 +461,12 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for' => 'radio1-1', 'class' => 'custom-control-label']],
             'First Radio',
-            '/span',
             '/label',
+            '/div',
 
-            ['label' => ['for' => 'radio1-2', 'class' => 'custom-control custom-radio selected']],
+            ['div' => ['class' => 'custom-control custom-radio']],
             [
                 'input' => [
                     'type' => 'radio',
@@ -494,12 +477,12 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+
+            ['label' => ['for' => 'radio1-2', 'class' => 'custom-control-label selected']],
             'Second Radio',
-            '/span',
             '/label',
+
+            '/div',
             '/div'
         ], $result);
     }
@@ -521,7 +504,6 @@ class BootstrapFormHelperTest extends TestCase {
             'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => ''],
             ['div' => ['class' => 'form-check']],
 
-            ['label' => ['for' => 'radio1-1', 'class' => 'form-check-label']],
             [
                 'input' => [
                     'type' => 'radio',
@@ -531,11 +513,11 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'form-check-input'
                 ]
             ],
+            ['label' => ['for' => 'radio1-1', 'class' => 'form-check-label']],
             'First Radio',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'radio1-2', 'class' => 'form-check-label selected']],
             [
                 'input' => [
                     'type' => 'radio',
@@ -546,6 +528,7 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'form-check-input'
                 ]
             ],
+            ['label' => ['for' => 'radio1-2', 'class' => 'form-check-label selected']],
             'Second Radio',
             '/label',
             '/div',
@@ -565,7 +548,7 @@ class BootstrapFormHelperTest extends TestCase {
         $this->assertHtml([
             'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => ''],
 
-            ['label' => ['for' => 'radio1-1', 'class' => 'custom-control custom-radio']],
+            ['div' => ['class' => 'custom-control custom-radio']],
             [
                 'input' => [
                     'type' => 'radio',
@@ -575,14 +558,12 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for' => 'radio1-1', 'class' => 'custom-control-label']],
             'First Radio',
-            '/span',
             '/label',
+            '/div',
 
-            ['label' => ['for' => 'radio1-2', 'class' => 'custom-control custom-radio selected']],
+            ['div' => ['class' => 'custom-control custom-radio']],
             [
                 'input' => [
                     'type' => 'radio',
@@ -593,13 +574,10 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for' => 'radio1-2', 'class' => 'custom-control-label selected']],
             'Second Radio',
-            '/span',
             '/label',
-
+            '/div'
 
         ], $result);
     }
@@ -1627,7 +1605,8 @@ class BootstrapFormHelperTest extends TestCase {
             'My Radios',
             '/label',
             'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => '', 'class' => 'is-invalid'],
-            ['label' => ['for' => 'radio1-1', 'class' => 'custom-control custom-radio']],
+
+            ['div' => ['class' => 'custom-control custom-radio']],
             [
                 'input' => [
                     'type' => 'radio',
@@ -1637,14 +1616,12 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'is-invalid custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for' => 'radio1-1', 'class' => 'custom-control-label']],
             'First Radio',
-            '/span',
             '/label',
+            '/div',
 
-            ['label' => ['for' => 'radio1-2', 'class' => 'custom-control custom-radio selected']],
+            ['div' => ['class' => 'custom-control custom-radio']],
             [
                 'input' => [
                     'type' => 'radio',
@@ -1655,12 +1632,10 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'is-invalid custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for' => 'radio1-2', 'class' => 'custom-control-label selected']],
             'Second Radio',
-            '/span',
             '/label',
+            '/div',
             ['div' => ['class' => 'invalid-feedback']],
             'something is wrong',
             '/div',
@@ -1681,7 +1656,7 @@ class BootstrapFormHelperTest extends TestCase {
         $this->assertHtml([
             'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => '', 'class' => 'is-invalid'],
 
-            ['label' => ['for' => 'radio1-1', 'class' => 'custom-control custom-radio']],
+            ['div' => ['class' => 'custom-control custom-radio']],
             [
                 'input' => [
                     'type' => 'radio',
@@ -1691,14 +1666,13 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'is-invalid custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
-            'First Radio',
-            '/span',
-            '/label',
 
-            ['label' => ['for' => 'radio1-2', 'class' => 'custom-control custom-radio selected']],
+            ['label' => ['for' => 'radio1-1', 'class' => 'custom-control-label']],
+            'First Radio',
+            '/label',
+            '/div',
+
+            ['div' => ['class' => 'custom-control custom-radio']],
             [
                 'input' => [
                     'type' => 'radio',
@@ -1709,14 +1683,10 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'is-invalid custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for' => 'radio1-2', 'class' => 'custom-control-label selected']],
             'Second Radio',
-            '/span',
             '/label',
-
-
+            '/div'
         ], $result);
 
         $result = $this->Form->multiCheckbox('multicheckbox1',
@@ -1732,7 +1702,7 @@ class BootstrapFormHelperTest extends TestCase {
         $this->assertHtml([
             'input' => ['type' => 'hidden', 'name' => 'multicheckbox1', 'value' => '', 'class' => 'is-invalid'],
 
-            ['label' => ['for' => 'multicheckbox1-1', 'class' => 'custom-control custom-checkbox']],
+            ['div' => ['class' => 'custom-control custom-checkbox']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -1742,14 +1712,12 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'is-invalid custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for' => 'multicheckbox1-1', 'class' => 'custom-control-label']],
             'First Checkbox',
-            '/span',
             '/label',
+            '/div',
 
-            ['label' => ['for' => 'multicheckbox1-2', 'class' => 'custom-control custom-checkbox selected']],
+            ['div' => ['class' => 'custom-control custom-checkbox']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -1760,12 +1728,10 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'is-invalid custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for' => 'multicheckbox1-2', 'class' => 'custom-control-label selected']],
             'Second Checkbox',
-            '/span',
-            '/label'
+            '/label',
+            '/div'
         ], $result);
 
         $result = $this->Form->control('multicheckbox1', [
@@ -1783,10 +1749,9 @@ class BootstrapFormHelperTest extends TestCase {
             ['label' => ['for' => 'multicheckbox1']],
             'My checkboxes',
             '/label',
-            ['div' => ['class' => 'custom-controls-stacked']],
-            'input' => ['type' => 'hidden', 'name' => 'multicheckbox1', 'value' => '', 'class' => 'is-invalid'],
 
-            ['label' => ['for' => 'multicheckbox1-1', 'class' => 'custom-control custom-checkbox']],
+            'input' => ['type' => 'hidden', 'name' => 'multicheckbox1', 'value' => '', 'class' => 'is-invalid'],
+            ['div' => ['class' => 'custom-control custom-checkbox']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -1796,14 +1761,12 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'is-invalid custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for' => 'multicheckbox1-1', 'class' => 'custom-control-label']],
             'First Checkbox',
-            '/span',
             '/label',
+            '/div',
 
-            ['label' => ['for' => 'multicheckbox1-2', 'class' => 'custom-control custom-checkbox selected']],
+            ['div' => ['class' => 'custom-control custom-checkbox']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -1814,13 +1777,11 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'is-invalid custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for' => 'multicheckbox1-2', 'class' => 'custom-control-label selected']],
             'Second Checkbox',
-            '/span',
             '/label',
             '/div',
+
             ['div' => ['class' => 'invalid-feedback']],
             'multicheckbox error',
             '/div',
@@ -1842,10 +1803,10 @@ class BootstrapFormHelperTest extends TestCase {
             ['label' => ['for' => 'multicheckbox1']],
             'My checkboxes',
             '/label',
-            ['div' => ['class' => 'custom-controls-stacked']],
+
             'input' => ['type' => 'hidden', 'name' => 'multicheckbox1', 'value' => '', 'class' => 'is-invalid'],
 
-            ['label' => ['for' => 'multicheckbox1-1', 'class' => 'custom-control custom-checkbox']],
+            ['div' => ['class' => 'custom-control custom-checkbox']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -1855,14 +1816,12 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'is-invalid custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for' => 'multicheckbox1-1', 'class' => 'custom-control-label']],
             'First Checkbox',
-            '/span',
             '/label',
+            '/div',
 
-            ['label' => ['for' => 'multicheckbox1-2', 'class' => 'custom-control custom-checkbox selected']],
+            ['div' => ['class' => 'custom-control custom-checkbox']],
             [
                 'input' => [
                     'type' => 'checkbox',
@@ -1873,13 +1832,12 @@ class BootstrapFormHelperTest extends TestCase {
                     'class' => 'is-invalid custom-control-input'
                 ]
             ],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+
+            ['label' => ['for' => 'multicheckbox1-2', 'class' => 'custom-control-label selected']],
             'Second Checkbox',
-            '/span',
             '/label',
             '/div',
+
             ['div' => ['class' => 'invalid-feedback']],
             'multicheckbox error',
             '/div',
@@ -1928,7 +1886,6 @@ class BootstrapFormHelperTest extends TestCase {
                 'name' => 'agree_terms',
                 'value' => '0'
             ],
-            ['label' => ['class' => 'form-check-label', 'for' => 'agree-terms']],
             ['input' => [
                 'type' => 'checkbox',
                 'name' => 'agree_terms',
@@ -1936,6 +1893,7 @@ class BootstrapFormHelperTest extends TestCase {
                 'value' => '1',
                 'class' => 'form-check-input'
             ]],
+            ['label' => ['class' => 'form-check-label', 'for' => 'agree-terms']],
             'Agree Terms',
             '/label',
             '/div'
@@ -2186,26 +2144,25 @@ class BootstrapFormHelperTest extends TestCase {
             ['label' => ['for', 'class' => 'col-sm-2']],
             'My checkboxes',
             '/label',
-            ['div' => ['class' => 'col-sm-10 custom-controls-stacked']],
+            ['div' => ['class' => 'col-sm-10']],
             ['input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => '']],
-            ['label' => ['for', 'class' => 'custom-control custom-checkbox']],
+
+            ['div' => ['class' => 'custom-control custom-checkbox']],
             ['input' => ['type', 'name', 'value', 'id', 'class' => 'custom-control-input']],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for', 'class' => 'custom-control-label']],
             'First Checkbox',
-            '/span',
             '/label',
-            ['label' => ['for', 'class' => 'custom-control custom-checkbox selected']],
+            '/div',
+
+            ['div' => ['class' => 'custom-control custom-checkbox']],
             ['input' => ['type', 'name', 'value', 'id', 'checked', 'class' => 'custom-control-input']],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for', 'class' => 'custom-control-label selected']],
             'Second Checkbox',
-            '/span',
             '/label',
             '/div',
             '/div',
+            '/div',
+
             // Multi-checkbox non custom controls
             ['div' => ['class' => 'form-group row']],
             ['label' => ['for', 'class' => 'col-sm-2']],
@@ -2215,14 +2172,15 @@ class BootstrapFormHelperTest extends TestCase {
             ['input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => '']],
             ['div' => ['class' => 'form-check']],
 
-            ['label' => ['for' => 'checkbox1-1', 'class' => 'form-check-label']],
             ['input' => ['type', 'name', 'value', 'id', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'checkbox1-1', 'class' => 'form-check-label']],
             'First Checkbox',
             '/label',
             '/div',
+
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for' => 'checkbox1-2', 'class' => 'form-check-label selected']],
             ['input' => ['type', 'name', 'value', 'checked', 'id', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'checkbox1-2', 'class' => 'form-check-label selected']],
             'Second Checkbox',
             '/label',
             '/div',
@@ -2233,24 +2191,23 @@ class BootstrapFormHelperTest extends TestCase {
             ['label' => ['class' => 'col-sm-2']],
             'My Radios',
             '/label',
-            ['div' => ['class' => 'col-sm-10 custom-controls-stacked']],
+            ['div' => ['class' => 'col-sm-10']],
             ['input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => '']],
-            ['label' => ['for', 'class' => 'custom-control custom-radio']],
+
+            ['div' => ['class' => 'custom-control custom-radio']],
             ['input' => ['type', 'name', 'value', 'id', 'class' => 'custom-control-input']],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for', 'class' => 'custom-control-label']],
             'First Radio',
-            '/span',
             '/label',
-            ['label' => ['for' => 'radio1-2', 'class' => 'custom-control custom-radio selected']],
+            '/div',
+
+            ['div' => ['class' => 'custom-control custom-radio']],
+
             ['input' => ['type', 'name', 'value', 'id', 'checked', 'class' => 'custom-control-input']],
-            ['span' => ['class' => 'custom-control-indicator']],
-            '/span',
-            ['span' => ['class' => 'custom-control-description']],
+            ['label' => ['for' => 'radio1-2', 'class' => 'custom-control-label selected']],
             'Second Radio',
-            '/span',
             '/label',
+            '/div',
             '/div',
             '/div',
             // Radios non custom controls
@@ -2261,14 +2218,14 @@ class BootstrapFormHelperTest extends TestCase {
             ['div' => ['class' => 'col-sm-10']],
             ['input' => ['type' => 'hidden', 'name', 'value' => ""]],
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for', 'class' => 'form-check-label']],
             ['input' => ['type', 'name', 'value', 'id', 'class' => 'form-check-input']],
+            ['label' => ['for', 'class' => 'form-check-label']],
             'First Radio',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
-            ['label' => ['for', 'class' => 'form-check-label selected']],
             ['input' => ['type', 'name', 'value', 'checked', 'id', 'class' => 'form-check-input']],
+            ['label' => ['for', 'class' => 'form-check-label selected']],
             'Second Radio',
             '/label',
             '/div',
@@ -2566,5 +2523,30 @@ class BootstrapFormHelperTest extends TestCase {
             'input' => ['type' => 'time', 'name', 'class', 'id'],
             '/div'
         ], $result);
+    }
+
+    /**
+     * testControlCheckboxNesting method
+     *
+     * Test control() with checkbox creation.
+     *
+     * @return void
+     */
+    public function testControlCheckboxNesting() {
+        $result = $this->Form->control('User.active', [
+            'checked' => true,
+            'customControls' => false,
+            'nestedInput' => true
+        ]);
+        $expected = [
+            'div' => ['class' => 'form-check'],
+            'input' => ['type' => 'hidden', 'name' => 'User[active]', 'value' => '0'],
+            'label' => ['for' => 'user-active', 'class' => 'form-check-label'],
+            ['input' => ['type' => 'checkbox', 'name' => 'User[active]', 'value' => '1', 'id' => 'user-active', 'checked' => 'checked', 'class']],
+            'Active',
+            '/label',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
     }
 }

@@ -42,7 +42,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'button' => '<button{{attrs}}>{{text}}</button>',
 
         'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}>',
-        'checkboxFormGroup' => '{{label}}',
+        'checkboxFormGroup' => '{{input}}{{label}}',
         'checkboxWrapper' => '<div class="checkbox">{{label}}</div>',
         'dateWidget' => '{{year}} {{month}} {{day}} {{hour}} {{minute}} {{second}} {{meridian}}',
         'error' => '<div class="invalid-feedback">{{content}}</div>',
@@ -69,7 +69,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'option' => '<option value="{{value}}"{{attrs}}>{{text}}</option>',
         'optgroup' => '<optgroup label="{{label}}"{{attrs}}>{{content}}</optgroup>',
         'radio' => '<input type="radio" name="{{name}}" value="{{value}}"{{attrs}}>',
-        'radioWrapper' => '{{label}}',
+        'radioWrapper' => '{input}{{label}}',
         'select' => '<select name="{{name}}"{{attrs}}>{{content}}</select>',
         'selectMultiple' => '<select name="{{name}}[]" multiple="multiple"{{attrs}}>{{content}}</select>',
         'textarea' => '<textarea name="{{name}}"{{attrs}}>{{value}}</textarea>',
@@ -290,6 +290,23 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      */
     public function inputs(array $fields, array $options = []) {
         return $this->controls($fields, $options);
+    }
+
+    protected function _getLabel($fieldName, $options) {
+        if ($options['type'] === 'hidden') {
+            return false;
+        }
+
+        $label = null;
+        if (isset($options['label'])) {
+            $label = $options['label'];
+        }
+
+        if ($label === false) {
+            return false;
+        }
+
+        return $this->_inputLabel($fieldName, $label, $options);
     }
 
     /**
@@ -833,8 +850,17 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
         $type = $this->decodeType($options, $type);
 
+        if (!isset($options['nestedInput']) && ($type === 'checkbox' || $type === 'multicheckbox' || $type === 'radio')) {
+            $options['nestedInput'] = false;
+        }
+
         $skipSwitchTemplates = isset($options['skipSwitchTemplates']) && $options['skipSwitchTemplates'] === true;
         $skipNonRelevantWidget = !in_array($type, ['checkbox', 'radio', 'multicheckbox', 'file']);
+
+        // Helps maintain the nestedInput template
+        if (isset($options['nestedInput']) && $options['nestedInput'] === true) {
+            $options['skipSwitchTemplates'] = true;
+        }
 
         if ($skipSwitchTemplates || $skipNonRelevantWidget) {
             return;
@@ -846,34 +872,25 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             switch ($type) {
                 case 'checkbox':
                     $newTemplates = [
-                        'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}<span class="custom-control-indicator"></span> <span class="custom-control-description">{{text}}</span></label>',
-                        'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}> ',
-                        'checkboxContainer' => '<div class="form-group clearfix"{{attrs}}>{{content}}{{error}}{{help}}</div>'
+                        'checkboxContainer' => '<div class="custom-control custom-checkbox"{{attrs}}>{{content}}{{error}}{{help}}</div>'
                     ];
                     break;
                 case 'multicheckbox':
-                    $options = Html::addClass($options, 'custom-controls-stacked', ['useIndex' => 'gridClasses.1']);
                     $newTemplates = [
-                        'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}<span class="custom-control-indicator"></span> <span class="custom-control-description">{{text}}</span></label>',
-                        'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}> ',
-                        'checkboxWrapper' => '{{label}}',
+                        'checkboxWrapper' => '<div class="custom-control custom-checkbox">{{label}}</div>',
 
                         // Select because we might be using the ['type' => 'select', 'multiple' => 'checkbox']
-                        'selectContainer' => '<div class="form-group clearfix"{{attrs}}>{{content}}{{error}}{{help}}</div>',
+                        'selectContainer' => '<div class="form-group clearfix"{{attrs}}>{{content}}{{help}}</div>',
                         'selectContainerError' => '<div class="form-group clearfix"{{attrs}}>{{content}}{{error}}{{help}}</div>',
 
-                        'selectContainerGrid' => '<div class="form-group clearfix row"{{attrs}}>{{content}}{{error}}{{help}}</div>',
+                        'selectContainerGrid' => '<div class="form-group clearfix row"{{attrs}}>{{content}}{{help}}</div>',
                         'selectContainerGridError' => '<div class="form-group clearfix row"{{attrs}}>{{content}}{{error}}{{help}}</div>',
-                        'selectFormGroup' => '{{label}}<div class="custom-controls-stacked"{{attrs}}>{{input}}</div>',
                         'selectFormGroupGrid' => '{{label}}<div{{attrs}}>{{input}}</div>',
                     ];
                     break;
                 case 'radio':
-                    $options = Html::addClass($options, 'custom-controls-stacked', ['useIndex' => 'gridClasses.1']);
                     $newTemplates = [
-                        'nestingLabel' => '<label{{attrs}}>{{input}}<span class="custom-control-indicator"></span> <span class="custom-control-description">{{text}}</span></label>',
-                        'radio' => '<input type="radio" name="{{name}}" value="{{value}}"{{attrs}}> ',
-                        'radioWrapper' => '{{label}}'
+                        'radioWrapper' => '<div class="custom-control custom-radio">{{label}}</div>'
                     ];
                     break;
                 case 'file':
@@ -886,8 +903,6 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             switch ($type) {
                 case 'multicheckbox':
                     $newTemplates = [
-                        'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
-                        'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}>',
                         'checkboxWrapper' => '<div class="form-check">{{label}}</div>',
 
                         // Reset incase custom was previously used
@@ -895,14 +910,11 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                         'selectContainerError' => null,
                         'selectContainerGrid' => null,
                         'selectContainerGridError' => null,
-                        'selectFormGroup' => null,
                         'selectFormGroupGrid' => null,
                     ];
                     break;
                 case 'checkbox':
                     $newTemplates = [
-                        'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
-                        'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}>',
                         'checkboxContainer' => '<div class="form-check"{{attrs}}>{{content}}{{error}}{{help}}</div>',
                         'checkboxContainerGrid' => '<div class="form-check"{{attrs}}>{{content}}{{error}}{{help}}</div>',
                     ];
@@ -910,8 +922,6 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                 case 'radio':
                     $newTemplates = [
                         'radioWrapper' => '<div class="form-check">{{label}}</div>',
-                        'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
-                        'radio' => '<input type="radio" name="{{name}}" value="{{value}}"{{attrs}}>',
                     ];
                     break;
                 case 'file':
@@ -920,6 +930,16 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                     ];
                     break;
             }
+        }
+
+        if (isset($options['nestedInput']) && $options['nestedInput'] === true) {
+            $newTemplates += [
+                'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>'
+            ];
+        } else {
+            $newTemplates += [
+                'nestingLabel' => '{{hidden}}{{input}}<label{{attrs}}>{{text}}</label>'
+            ];
         }
 
         $this->_setTemplatesInternal($newTemplates);
@@ -949,7 +969,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             if ($fromInput) {
                 if ($type === 'checkbox') {
                     if ($customControls) {
-                        $label = ['custom-control', 'custom-checkbox'];
+                        $label = ['custom-control-label'];
                     } else {
                         $label = ['form-check-label'];
                     }
@@ -960,7 +980,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                 }
             } else {
                 if ($type === 'radio') {
-                    $label = $customControls ? ['custom-control', 'custom-radio'] : ['form-check-label'];
+                    $label = $customControls ? ['custom-control-label'] : ['form-check-label'];
                 }
             }
 
@@ -972,7 +992,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
                 $index = $fromInput ? 'labelOptions' : 'label';
                 if ($customControls) {
-                    $label = ['custom-control', 'custom-checkbox'];
+                    $label = ['custom-control-label'];
                 } else {
                     $label = ['form-check-label'];
                 }
@@ -1151,7 +1171,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             try {
                 $options['val'] = \Cake\I18n\Time::parse($options['val']);
             } catch (\Exception $exception) {
-                $options['val']='';
+                $options['val'] = '';
             }
         }
 
