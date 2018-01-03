@@ -913,7 +913,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                     break;
                 case 'file':
                     $newTemplates = [
-                        'file' => '<label class="custom-file"><input type="file" name="{{name}}"{{attrs}}><span class="custom-file-control"></span></label>',
+                        'file' => '<div class="custom-file"><input type="file" name="{{name}}"{{attrs}}><label class="custom-file-label">Choose file</label></div>',
                     ];
                     break;
             }

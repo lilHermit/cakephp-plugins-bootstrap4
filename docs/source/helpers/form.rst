@@ -620,7 +620,7 @@ Will render like
 Creating Custom File Browser
 ----------------------------
 
-Custom File Browser control is a vast improvement on the standard HTML control as below
+Custom File Browser control is a vast improvement on the standard HTML control below
 
 .. raw:: html
 
@@ -634,27 +634,17 @@ Custom File Browser control is a vast improvement on the standard HTML control a
 
 To render a custom File Browser control create a file as you normally would::
 
-    echo $this->Html->tag('div', null, ['class' => 'form-group clearfix']);
-    echo $this->Form->label('ProfileImage', 'Profile Image', [
-        'class' => 'col-form-label d-block'
-    ]);
     echo $this->Form->control('ProfileImage', [
         'help' => 'Your profile image will be visible on forum posts',
         'type' => 'file'
     ]);
-    echo $this->Html->tag('/div');
+
+Will render like
 
 .. raw:: html
 
     <div class="bootstrap-example">
-        <div class="form-group clearfix">
-            <label class="col-form-label d-block" for="profileimage">Profile Image</label>
-            <label class="custom-file" for="profileimage">
-                <input type="file" name="ProfileImage" id="profileimage" class="custom-file-input">
-                <span class="custom-file-control"></span>
-            </label>
-            <small class="form-text text-muted">Your profile image will be visible on forum posts</small>
-        </div>
+        <div class="form-group"><label class="col-form-label d-block" for="profileimage">Profile Image</label><div class="custom-file"><input type="file" name="ProfileImage" id="profileimage" class="custom-file-input"><label class="custom-file-label">Choose file</label></div><small class="form-text text-muted">Your profile image will be visible on forum posts</small></div>
     </div>
 
 

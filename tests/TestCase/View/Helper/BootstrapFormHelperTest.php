@@ -647,11 +647,12 @@ class BootstrapFormHelperTest extends TestCase {
             ['label' => ['for' => 'profileimage', 'class' => 'col-form-label d-block']],
             'Profile Image',
             '/label',
-            'label' => ['class' => 'custom-file'],
+            ['div' => ['class' => 'custom-file']],
             'input' => ['type' => 'file', 'name' => 'profileImage', 'class' => 'custom-file-input', 'id' => 'profileimage'],
-            'span' => ['class' => 'custom-file-control'],
-            '/span',
+            'label' => ['class' => 'custom-file-label'],
+            'Choose file',
             '/label',
+            '/div',
             'small' => ['class' => 'form-text text-muted'],
             'Upload a profile image for the forum',
             '/small',
@@ -718,11 +719,12 @@ class BootstrapFormHelperTest extends TestCase {
 
         $result = $this->Form->file('Model.upload', ['customControls' => true]);
         $this->assertHtml([
-            'label' => ['class' => 'custom-file'],
+            'div' => ['class' => 'custom-file'],
             'input' => ['type' => 'file', 'name' => 'Model[upload]', 'class' => 'custom-file-input'],
-            'span' => ['class' => 'custom-file-control'],
-            '/span',
-            '/label'
+            'label' => ['class' => 'custom-file-label'],
+            'Choose file',
+            '/label',
+            '/div'
 
         ], $result);
     }
@@ -751,17 +753,22 @@ class BootstrapFormHelperTest extends TestCase {
             '/div'
         ], $result);
 
-        $result = $this->Form->control('Model.upload', ['type' => 'file', 'customControls' => true]);
+        $result = $this->Form->control('Model.upload', [
+            'type' => 'file',
+            'customControls' => true,
+
+        ]);
         $this->assertHtml([
             'div' => ['class' => 'form-group'],
             ['label' => ['for' => 'model-upload', 'class' => 'col-form-label d-block']],
             'Upload',
             '/label',
-            'label' => ['class' => 'custom-file'],
+            ['div' => ['class' => 'custom-file']],
             'input' => ['type' => 'file', 'name' => 'Model[upload]', 'class' => 'custom-file-input', 'id' => 'model-upload'],
-            'span' => ['class' => 'custom-file-control'],
-            '/span',
+            'label' => ['class' => 'custom-file-label'],
+            'Choose file',
             '/label',
+            '/div',
             '/div'
         ], $result);
     }
@@ -1979,11 +1986,12 @@ class BootstrapFormHelperTest extends TestCase {
 
         $result = $this->Form->file('profile-image', ['customControls' => true]);
         $this->assertHtml([
-            'label' => ['class' => 'custom-file'],
+            'div' => ['class' => 'custom-file'],
             'input' => ['type' => 'file', 'name' => 'profile-image', 'class' => 'is-invalid custom-file-input'],
-            'span' => ['class' => 'custom-file-control'],
-            '/span',
-            '/label'
+            'label' => ['class' => 'custom-file-label'],
+            'Choose file',
+            '/label',
+            '/div'
 
         ], $result);
 
@@ -1993,11 +2001,12 @@ class BootstrapFormHelperTest extends TestCase {
             ['label' => ['for' => 'profile-image', 'class' => 'col-form-label d-block']],
             'Profile Image',
             '/label',
-            'label' => ['class' => 'custom-file'],
+            ['div' => ['class' => 'custom-file']],
             'input' => ['type' => 'file', 'name' => 'profile-image', 'class' => 'is-invalid custom-file-input', 'id' => 'profile-image'],
-            'span' => ['class' => 'custom-file-control'],
-            '/span',
+            'label' => ['class' => 'custom-file-label'],
+            'Choose file',
             '/label',
+            '/div',
             ['div' => ['class' => 'invalid-feedback']],
             'wrong file type',
             '/div',
