@@ -531,9 +531,9 @@ Here is an example of custom `checkbox` and `radio`:
 .. raw:: html
 
     <div class="bootstrap-example">
-        <div class="form-group clearfix"><input type="hidden" name="terms_agreed" value="0"/><label class="custom-control custom-checkbox" for="terms-agreed"><input type="checkbox" name="terms_agreed" checked="checked" value="1" id="terms-agreed" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">I agree to the terms of use</span></label></div>
+        <div class="custom-control custom-checkbox"><input type="hidden" name="terms_agreed" value="0"/><input type="checkbox" name="terms_agreed" value="1" id="terms-agreed" checked="checked" class="custom-control-input"><label class="custom-control-label" for="terms-agreed">I agree to the terms of use</label></div>
 
-        <div class="form-group clearfix"><label for="gender">Gender</label><div class="custom-controls-stacked"><input type="hidden" name="gender" value=""/><label class="custom-control custom-radio selected" for="gender-1"><input type="radio" name="gender" value="1" id="gender-1" checked="checked" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">Male</span></label><label class="custom-control custom-radio" for="gender-2"><input type="radio" name="gender" value="2" id="gender-2" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">Female</span></label></div></div>
+        <div class="form-group mt-3"><label for="gender" class="col-form-label">Gender</label><input type="hidden" name="gender" value=""/><div class="custom-control custom-radio"><input type="radio" name="gender" value="male" id="gender-male" checked="checked" class="custom-control-input"><label class="custom-control-label selected" for="gender-male">Male</label></div><div class="custom-control custom-radio"><input type="radio" name="gender" value="female" id="gender-female" class="custom-control-input"><label class="custom-control-label" for="gender-female">Female</label></div></div>
     </div>
 
 Disabling Custom Controls
@@ -575,9 +575,9 @@ Will output
 .. raw:: html
 
     <div class="bootstrap-example">
-        <div class="form-group clearfix"><input type="hidden" name="communications_opt_in" value="0"/><label class="custom-control custom-checkbox" for="communications-opt-in"><input type="checkbox" name="communications_opt_in" value="1" id="communications-opt-in" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">Please send me promotional emails</span></label></div>
+        <div class="custom-control custom-checkbox"><input type="hidden" name="communications_opt_in" value="0"/><input type="checkbox" name="communications_opt_in" value="1" id="communications-opt-in" class="custom-control-input"><label class="custom-control-label" for="communications-opt-in">Please send me promotional emails</label></div>
 
-        <div class="form-group clearfix"><input type="hidden" name="terms_agreed" value="0"/><label class="custom-control custom-checkbox" for="terms_agreed1"><input type="checkbox" name="terms_agreed" value="1" id="terms_agreed1" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">I agree to the terms of use</span></label></div>
+        <div class="custom-control custom-checkbox"><input type="hidden" name="terms_agreed2" value="0"/><input type="checkbox" name="terms_agreed2" value="1" id="terms-agreed2" class="custom-control-input"><label class="custom-control-label" for="terms-agreed2">I agree to the terms of use</label></div>
     </div>
 
 Multiple
@@ -598,9 +598,8 @@ You can create multiple checkboxes via the ``control`` method::
 
 Or via the ``multiCheckbox`` method which just creates the checkboxes so you need to add your container and labels separately::
 
-    echo $this->Html->tag('div', null, ['class' => 'form-group clearfix']);
+    echo $this->Html->tag('div', null, ['class' => 'form-group']);
     echo $this->Form->label('My checkboxes');
-    echo $this->Html->tag('div', null, ['class' => 'custom-controls-stacked']);
 
     echo $this->Form->multiCheckbox('checkbox2', [
         ['text' => 'First Checkbox', 'value' => 1],
@@ -609,14 +608,13 @@ Or via the ``multiCheckbox`` method which just creates the checkboxes so you nee
             'default' => 2
         ]);
     echo $this->Html->tag('/div');
-    echo $this->Html->tag('/div');
 
 Will render like
 
 .. raw:: html
 
     <div class="bootstrap-example">
-        <div class="form-group clearfix"><label for="checkbox1">My checkboxes</label><div class="custom-controls-stacked"><input type="hidden" name="checkbox1" value=""/><label for="checkbox1-1" class="custom-control custom-checkbox"><input type="checkbox" name="checkbox1[]" value="1" id="checkbox1-1" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">First Checkbox</span></label><label for="checkbox1-2" class="custom-control custom-checkbox selected"><input type="checkbox" name="checkbox1[]" value="2" checked="checked" id="checkbox1-2" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">Second Checkbox</span></label></div></div>
+        <div class="form-group"><label for="checkbox1">My checkboxes</label><input type="hidden" name="checkbox1" value=""/><div class="custom-control custom-checkbox"><input type="checkbox" name="checkbox1[]" value="1" id="checkbox1-1" class="custom-control-input"><label for="checkbox1-1" class="custom-control-label">First Checkbox</label></div><div class="custom-control custom-checkbox"><input type="checkbox" name="checkbox1[]" value="2" checked="checked" id="checkbox1-2" class="custom-control-input"><label for="checkbox1-2" class="custom-control-label selected">Second Checkbox</label></div></div>
     </div>
 
 Creating Custom Radios
@@ -625,9 +623,8 @@ Creating Custom Radios
 You can create radio controls via the ``control`` method as you would normally do, however just like ``multiCheckbox``
 you need to add container and label::
 
-    echo $this->Html->tag('div', null, ['class' => 'form-group clearfix']);
+    echo $this->Html->tag('div', null, ['class' => 'form-group']);
     echo $this->Form->label('Favourite colour');
-    echo $this->Html->tag('div', null, ['class' => 'custom-controls-stacked']);
 
     echo $this->Form->radio('favourite_colour', [
         ['text' => 'Red', 'value' => 'red'],
@@ -637,14 +634,13 @@ you need to add container and label::
         ['text' => 'Purple', 'value' => 'purple']],
         ['default' => 'blue']);
     echo $this->Html->tag('/div');
-    echo $this->Html->tag('/div');
 
 Will render like
 
 .. raw:: html
 
     <div class="bootstrap-example">
-        <div class="form-group clearfix"><label for="favourite-colour">Favourite Colour</label><div class="custom-controls-stacked"><input type="hidden" name="favourite_colour" value=""/><label class="custom-control custom-radio" for="favourite-colour-red"><input type="radio" name="favourite_colour" value="red" id="favourite-colour-red" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">Red</span></label><label class="custom-control custom-radio selected" for="favourite-colour-blue"><input type="radio" name="favourite_colour" value="blue" id="favourite-colour-blue" checked="checked" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">Blue</span></label><label class="custom-control custom-radio" for="favourite-colour-green"><input type="radio" name="favourite_colour" value="green" id="favourite-colour-green" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">Green</span></label><label class="custom-control custom-radio" for="favourite-colour-orange"><input type="radio" name="favourite_colour" value="orange" id="favourite-colour-orange" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">Orange</span></label><label class="custom-control custom-radio" for="favourite-colour-purple"><input type="radio" name="favourite_colour" value="purple" id="favourite-colour-purple" class="custom-control-input"> <span class="custom-control-indicator"></span> <span class="custom-control-description">Purple</span></label></div></div>
+        <div class="form-group"><label for="favourite-colour">Favourite Colour</label><input type="hidden" name="favourite_colour" value=""/><div class="custom-control custom-radio"><input type="radio" name="favourite_colour" value="red" id="favourite-colour-red" class="custom-control-input"><label class="custom-control-label" for="favourite-colour-red">Red</label></div><div class="custom-control custom-radio"><input type="radio" name="favourite_colour" value="blue" id="favourite-colour-blue" checked="checked" class="custom-control-input"><label class="custom-control-label selected" for="favourite-colour-blue">Blue</label></div><div class="custom-control custom-radio"><input type="radio" name="favourite_colour" value="green" id="favourite-colour-green" class="custom-control-input"><label class="custom-control-label" for="favourite-colour-green">Green</label></div><div class="custom-control custom-radio"><input type="radio" name="favourite_colour" value="orange" id="favourite-colour-orange" class="custom-control-input"><label class="custom-control-label" for="favourite-colour-orange">Orange</label></div><div class="custom-control custom-radio"><input type="radio" name="favourite_colour" value="purple" id="favourite-colour-purple" class="custom-control-input"><label class="custom-control-label" for="favourite-colour-purple">Purple</label></div></div>
     </div>
 
 Creating Custom File Browser
