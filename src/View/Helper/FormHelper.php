@@ -79,7 +79,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'timeFormGroup' => '{{label}}<div class="form-inline">{{input}}</div>',
         'bootstrapDateTime' => '<input type="{{type}}" name="{{name}}"{{attrs}}/>',
         'help' => '<small{{attrs}}>{{content}}</small>',
-        'prefixSuffix' => '<span{{attrs}}>{{content}}</span>',
+        'prefixSuffixText' => '<span{{attrs}}>{{content}}</span>',
+        'prefixSuffixWrapper' => '<div{{attrs}}>{{content}}</div>',
         'prefixSuffixContainer' => '<div{{attrs}}>{{prefix}}{{input}}{{suffix}}</div>'
     ];
 
@@ -559,21 +560,21 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         }
     }
 
-    private function _parseAndRenderPrefixSuffix($data) {
+    private function _parseAndRenderPrefixSuffix($data, $append = false) {
         $out = '';
         if ($data) {
             if (is_string($data)) {
-                $out = $this->_renderPrefixSuffix(h($data), ['class' => 'input-group-addon']);
+                $out = $this->_renderPrefixSuffixText(h($data), ['class' => 'input-group-text']);
             } else {
                 if (is_array($data)) {
 
                     foreach ($data as $key => $item) {
 
                         if (is_string($item)) {
-                            $out .= $this->_renderPrefixSuffix(h($item), ['class' => 'input-group-addon']);
+                            $out .= $this->_renderPrefixSuffixText(h($item), ['class' => 'input-group-text']);
                         } else if (is_array($item)) {
                             if (isset($item['text'])) {
-                                $item += ['type' => 'addon', 'escape' => true];
+                                $item += ['type' => 'text', 'escape' => true];
                                 if ($item['escape']) {
                                     $item['text'] = h($item['text']);
                                 }
@@ -581,18 +582,25 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                                 switch ($item['type']) {
                                     case 'button':
                                     case 'btn':
-                                        $item = Html::addClass($item, 'input-group-btn');
+                                        $out .= $item['text'];
                                         break;
                                     default:
-                                        $item = Html::addClass($item, 'input-group-addon');
+                                        $item = Html::addClass($item, 'input-group-text');
+                                        $out .= $this->_renderPrefixSuffixText($item['text'], $item);
                                         break;
                                 }
-                                $out .= $this->_renderPrefixSuffix($item['text'], $item);
                             }
                         }
                     }
                 }
             }
+            $attrs = $this->templater()->formatAttributes([
+                'class' => $append ? 'input-group-append' : 'input-group-prepend'
+            ]);
+            return $this->templater()->format('prefixSuffixWrapper', [
+                'attrs' => $attrs,
+                'content' => $out
+            ]);
         }
         return $out;
     }
@@ -632,9 +640,9 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return $containerAttrs;
     }
 
-    private function _renderPrefixSuffix($content, $attrs) {
+    private function _renderPrefixSuffixText($content, $attrs) {
         $attrs = $this->templater()->formatAttributes($attrs, ['text', 'type', 'size', 'container']);
-        return $this->templater()->format('prefixSuffix', compact('content', 'attrs'));
+        return $this->templater()->format('prefixSuffixText', compact('content', 'attrs'));
     }
 
     private function renderPrefixSuffix($input, $options) {
@@ -665,7 +673,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         $attrs = $this->templater()->formatAttributes($attrs);
 
         $prefix = $this->_parseAndRenderPrefixSuffix($prefixOptions);
-        $suffix = $this->_parseAndRenderPrefixSuffix($suffixOptions);
+        $suffix = $this->_parseAndRenderPrefixSuffix($suffixOptions, true);
 
         return $this->templater()->format('prefixSuffixContainer', compact('prefix', 'input', 'suffix', 'attrs'));
     }
