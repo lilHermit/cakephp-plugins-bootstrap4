@@ -767,14 +767,14 @@ class BootstrapFormHelperTest extends TestCase {
     }
 
     /**
-     * testInputPrefixOnlyRendering
+     * testInputPrependOnlyRendering
      *
-     * Tests the rendering of Prefix only
+     * Tests the rendering of Prepend only
      */
-    public function testInputPrefixOnlyRendering() {
+    public function testInputPrependOnlyRendering() {
 
         $result = $this->Form->control('Donation', [
-            'prefix' => '£'
+            'prepend' => '£'
         ]);
         $this->assertHtml([
             'div' => ['class' => 'form-group'],
@@ -799,14 +799,14 @@ class BootstrapFormHelperTest extends TestCase {
     }
 
     /**
-     * testInputSuffixOnlyRendering
+     * testInputAppendOnlyRendering
      *
-     * Tests the rendering of Suffix only
+     * Tests the rendering of Append only
      */
-    public function testInputSuffixOnlyRendering() {
+    public function testInputAppendOnlyRendering() {
 
         $result = $this->Form->control('Donation', [
-            'suffix' => '.00'
+            'append' => '.00'
         ]);
         $this->assertHtml([
             'div' => ['class' => 'form-group'],
@@ -831,15 +831,15 @@ class BootstrapFormHelperTest extends TestCase {
     }
 
     /**
-     * testInputPrefixSuffixRendering
+     * testInputPrependAppendRendering
      *
-     * Tests the rendering of Prefix and Suffix
+     * Tests the rendering of Prepend and Append
      */
-    public function testInputPrefixSuffixRendering() {
+    public function testInputPrependAppendRendering() {
 
         $result = $this->Form->control('Donation', [
-            'prefix' => '£',
-            'suffix' => '.00'
+            'prepend' => '£',
+            'append' => '.00'
         ]);
         $this->assertHtml([
             'div' => ['class' => 'form-group'],
@@ -870,11 +870,11 @@ class BootstrapFormHelperTest extends TestCase {
     }
 
     /**
-     * testInputPrefixSuffixTypeRendering
+     * testInputPrependAppendTypeRendering
      *
-     * Tests the rendering of Prefix/Suffix Type setting
+     * Tests the rendering of Prepend/Append Type setting
      */
-    public function testInputPrefixSuffixTypeRendering() {
+    public function testInputPrependAppendTypeRendering() {
 
         $htmlHelper = new HtmlHelper(new View());
 
@@ -886,7 +886,7 @@ class BootstrapFormHelperTest extends TestCase {
         ]);
 
         $result = $this->Form->control('Password', [
-            'suffix' => [[
+            'append' => [[
                 'text' => $button,
                 'escape' => false,
                 'type' => 'button'
@@ -915,7 +915,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         $result = $this->Form->control('Password', [
-            'suffix' => [[
+            'append' => [[
                 'text' => $button,
                 'escape' => false,
                 'type' => 'btn']
@@ -944,7 +944,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         $result = $this->Form->control('Password', [
-            'suffix' => [[
+            'append' => [[
                 'text' => $button,
                 'escape' => false,
                 'type' => 'text']
@@ -975,7 +975,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         $result = $this->Form->control('Password', [
-            'suffix' => [[
+            'append' => [[
                 'text' => $button,
                 'escape' => false,
                 'type' => 'unknown']
@@ -1007,14 +1007,14 @@ class BootstrapFormHelperTest extends TestCase {
     }
 
     /**
-     * testInputPrefixMultipleRendering
+     * testInputPrependMultipleRendering
      *
-     * Tests the rendering of multiple Prefix
+     * Tests the rendering of multiple Prepend
      */
-    public function testInputPrefixMultipleRendering() {
+    public function testInputPrependMultipleRendering() {
 
         $result = $this->Form->control('Donation', [
-            'prefix' => ['£', '$']
+            'prepend' => ['£', '$']
         ]);
         $this->assertHtml([
             'div' => ['class' => 'form-group'],
@@ -1042,7 +1042,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         $result = $this->Form->control('Donation', [
-            'prefix' => [['text' => '£'], ['text' => '$']]
+            'prepend' => [['text' => '£'], ['text' => '$']]
         ]);
 
         $this->assertHtml([
@@ -1071,7 +1071,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         $result = $this->Form->control('Donation', [
-            'prefix' => [['text' => '£', 'class' => 'custom', 'id' => 'donation1'], ['text' => '$']]
+            'prepend' => [['text' => '£', 'class' => 'custom', 'id' => 'donation1'], ['text' => '$']]
         ]);
         $this->assertHtml([
             'div' => ['class' => 'form-group'],
@@ -1100,14 +1100,14 @@ class BootstrapFormHelperTest extends TestCase {
     }
 
     /**
-     * testInputSuffixMultipleRendering
+     * testInputAppendMultipleRendering
      *
      * Tests the rendering of multiple suffix
      */
-    public function testInputSuffixMultipleRendering() {
+    public function testInputAppendMultipleRendering() {
 
         $result = $this->Form->control('Donation', [
-            'suffix' => ['.00', 'Go']
+            'append' => ['.00', 'Go']
         ]);
         $this->assertHtml([
             'div' => ['class' => 'form-group'],
@@ -1134,7 +1134,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         $result = $this->Form->control('Donation', [
-            'suffix' => [['text' => '.00'], ['text' => 'Go']]
+            'append' => [['text' => '.00'], ['text' => 'Go']]
         ]);
 
         $this->assertHtml([
@@ -1162,7 +1162,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         $result = $this->Form->control('Donation', [
-            'suffix' => [['text' => '.00', 'class' => 'custom', 'id' => 'donation1'], ['text' => 'Go']]
+            'append' => [['text' => '.00', 'class' => 'custom', 'id' => 'donation1'], ['text' => 'Go']]
         ]);
         $this->assertHtml([
             'div' => ['class' => 'form-group'],
@@ -1190,15 +1190,15 @@ class BootstrapFormHelperTest extends TestCase {
     }
 
     /**
-     * testInputPrefixSuffixMultipleRendering
+     * testInputPrependAppendMultipleRendering
      *
      * Tests the rendering of multiple prefix and suffix
      */
-    public function testInputPrefixSuffixMultipleRendering() {
+    public function testInputPrependAppendMultipleRendering() {
 
         $result = $this->Form->control('Donation', [
-            'prefix' => ['£', '$'],
-            'suffix' => ['.00', 'Go']
+            'prepend' => ['£', '$'],
+            'append' => ['.00', 'Go']
         ]);
         $this->assertHtml([
             'div' => ['class' => 'form-group'],
@@ -1233,8 +1233,8 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         $result = $this->Form->control('Donation', [
-            'prefix' => [['text' => '£'], ['text' => '$']],
-            'suffix' => [['text' => '.00'], ['text' => 'Go']]
+            'prepend' => [['text' => '£'], ['text' => '$']],
+            'append' => [['text' => '.00'], ['text' => 'Go']]
         ]);
         $this->assertHtml([
             'div' => ['class' => 'form-group'],
@@ -1269,8 +1269,8 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         $result = $this->Form->control('Donation', [
-            'prefix' => [['text' => '£', 'class' => 'custom', 'id' => 'donation1'], ['text' => '$']],
-            'suffix' => [['text' => '.00', 'class' => 'custom', 'id' => 'donation1'], ['text' => 'Go']]
+            'prepend' => [['text' => '£', 'class' => 'custom', 'id' => 'donation1'], ['text' => '$']],
+            'append' => [['text' => '.00', 'class' => 'custom', 'id' => 'donation1'], ['text' => 'Go']]
         ]);
         $this->assertHtml([
             'div' => ['class' => 'form-group'],
@@ -1306,14 +1306,14 @@ class BootstrapFormHelperTest extends TestCase {
     }
 
     /**
-     * testInputPrefixSuffixEscapingRendering
+     * testInputPrependAppendEscapingRendering
      *
-     * Tests the rendering of Prefix/Suffix escaping
+     * Tests the rendering of Prepend/Append escaping
      */
-    public function testInputPrefixSuffixEscapingRendering() {
+    public function testInputPrependAppendEscapingRendering() {
 
         $result = $this->Form->control('Donation', [
-            'prefix' => ['text' => '<b>text</b>', 'escape' => true]
+            'prepend' => ['text' => '<b>text</b>', 'escape' => true]
         ]);
         $this->assertHtml([
             'div' => ['class' => 'form-group'],
@@ -1337,7 +1337,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         $result = $this->Form->control('Donation', [
-            'prefix' => ['text' => '<b>text</b>']
+            'prepend' => ['text' => '<b>text</b>']
         ]);
         $this->assertHtml([
             'div' => ['class' => 'form-group'],
@@ -1363,14 +1363,14 @@ class BootstrapFormHelperTest extends TestCase {
     }
 
     /**
-     * testInputPrefixSuffixSingleItemArrayRendering
+     * testInputPrependAppendSingleItemArrayRendering
      *
-     * Tests the rendering of Prefix/Suffix with single array item
+     * Tests the rendering of Prepend/Append with single array item
      */
-    public function testInputPrefixSuffixSingleItemArrayRendering() {
+    public function testInputPrependAppendSingleItemArrayRendering() {
 
         $result = $this->Form->control('Donation', [
-            'prefix' =>
+            'prepend' =>
                 [
                     'text' => 'text',
                     'class' => 'my-class'
@@ -1399,14 +1399,14 @@ class BootstrapFormHelperTest extends TestCase {
     }
 
     /**
-     * testControlPrefixSuffixContainerAttrRendering
+     * testControlPrependAppendContainerAttrRendering
      *
-     * Tests the rendering of Prefix/Suffix container attributes
+     * Tests the rendering of Prepend/Append container attributes
      */
-    public function testControlPrefixSuffixContainerAttrRendering() {
+    public function testControlPrependAppendContainerAttrRendering() {
 
         $result = $this->Form->control('Donation', [
-            'prefix' =>
+            'prepend' =>
                 [
                     [
                         'text' => 'text',
@@ -1447,7 +1447,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         $result = $this->Form->control('Donation', [
-            'prefix' =>
+            'prepend' =>
                 [
                     'text' => 'text',
                     'class' => 'my-class',
@@ -1479,19 +1479,19 @@ class BootstrapFormHelperTest extends TestCase {
 
 
     /**
-     * testInputPrefixSuffixSizeOptionRendering
+     * testInputPrependAppendSizeOptionRendering
      *
-     * Tests the rendering of Prefix/Suffix with size option
+     * Tests the rendering of Prepend/Append with size option
      */
-    public function testInputPrefixSuffixSizeOptionRendering() {
+    public function testInputPrependAppendSizeOptionRendering() {
 
         $result = $this->Form->control('Donation', [
-            'suffix' => [
-                'text' => 'suffix',
+            'append' => [
+                'text' => 'append',
                 'size' => 'lg'
             ],
-            'prefix' => [
-                'text' => 'prefix',
+            'prepend' => [
+                'text' => 'prepend',
                 'size' => 'normal'
             ]
         ]);
@@ -1503,7 +1503,7 @@ class BootstrapFormHelperTest extends TestCase {
             ['div' => ['class' => 'input-group input-group-lg']],
             ['div' => ['class' => 'input-group-prepend']],
             ['span' => ['class' => 'input-group-text']],
-            'prefix',
+            'prepend',
             '/span',
             '/div',
             'input' => [
@@ -1514,7 +1514,7 @@ class BootstrapFormHelperTest extends TestCase {
             ],
             ['div' => ['class' => 'input-group-append']],
             ['span' => ['class' => 'input-group-text']],
-            'suffix',
+            'append',
             '/span',
             '/div',
             '/div',
@@ -1522,12 +1522,12 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         $result = $this->Form->control('Donation', [
-            'suffix' => [
-                'text' => 'suffix',
+            'append' => [
+                'text' => 'append',
                 'size' => 'large'
             ],
-            'prefix' => [
-                'text' => 'prefix',
+            'prepend' => [
+                'text' => 'prepend',
                 'size' => 'normal'
             ]
         ]);
@@ -1539,7 +1539,7 @@ class BootstrapFormHelperTest extends TestCase {
             ['div' => ['class' => 'input-group input-group-lg']],
             ['div' => ['class' => 'input-group-prepend']],
             ['span' => ['class' => 'input-group-text']],
-            'prefix',
+            'prepend',
             '/span',
             '/div',
             'input' => [
@@ -1550,7 +1550,7 @@ class BootstrapFormHelperTest extends TestCase {
             ],
             ['div' => ['class' => 'input-group-append']],
             ['span' => ['class' => 'input-group-text']],
-            'suffix',
+            'append',
             '/span',
             '/div',
             '/div',
@@ -1558,12 +1558,12 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         $result = $this->Form->control('Donation', [
-            'suffix' => [
-                'text' => 'suffix',
+            'append' => [
+                'text' => 'append',
                 'size' => 'normal'
             ],
-            'prefix' => [
-                'text' => 'prefix',
+            'prepend' => [
+                'text' => 'prepend',
                 'size' => 'large'
             ]
         ]);
@@ -1575,7 +1575,7 @@ class BootstrapFormHelperTest extends TestCase {
             ['div' => ['class' => 'input-group input-group-lg']],
             ['div' => ['class' => 'input-group-prepend']],
             ['span' => ['class' => 'input-group-text']],
-            'prefix',
+            'prepend',
             '/span',
             '/div',
             'input' => [
@@ -1586,7 +1586,7 @@ class BootstrapFormHelperTest extends TestCase {
             ],
             ['div' => ['class' => 'input-group-append']],
             ['span' => ['class' => 'input-group-text']],
-            'suffix',
+            'append',
             '/span',
             '/div',
             '/div',
@@ -1594,12 +1594,12 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         $result = $this->Form->control('Donation', [
-            'suffix' => [
-                'text' => 'suffix',
+            'append' => [
+                'text' => 'append',
                 'size' => 'unknown'
             ],
-            'prefix' => [
-                'text' => 'prefix',
+            'prepend' => [
+                'text' => 'prepend',
                 'size' => 'normal'
             ]
         ]);
@@ -1611,7 +1611,7 @@ class BootstrapFormHelperTest extends TestCase {
             ['div' => ['class' => 'input-group']],
             ['div' => ['class' => 'input-group-prepend']],
             ['span' => ['class' => 'input-group-text']],
-            'prefix',
+            'prepend',
             '/span',
             '/div',
             'input' => [
@@ -1622,7 +1622,7 @@ class BootstrapFormHelperTest extends TestCase {
             ],
             ['div' => ['class' => 'input-group-append']],
             ['span' => ['class' => 'input-group-text']],
-            'suffix',
+            'append',
             '/span',
             '/div',
             '/div',
@@ -2110,7 +2110,7 @@ class BootstrapFormHelperTest extends TestCase {
 
         $result .= $this->Form->control('username', [
             'placeholder' => 'Username',
-            'prefix' => ['text' => '@',]
+            'prepend' => ['text' => '@',]
         ]);
 
         $result .= $this->Form->control('checkbox1', [

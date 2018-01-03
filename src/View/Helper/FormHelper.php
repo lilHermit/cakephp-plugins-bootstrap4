@@ -79,9 +79,9 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'timeFormGroup' => '{{label}}<div class="form-inline">{{input}}</div>',
         'bootstrapDateTime' => '<input type="{{type}}" name="{{name}}"{{attrs}}/>',
         'help' => '<small{{attrs}}>{{content}}</small>',
-        'prefixSuffixText' => '<span{{attrs}}>{{content}}</span>',
-        'prefixSuffixWrapper' => '<div{{attrs}}>{{content}}</div>',
-        'prefixSuffixContainer' => '<div{{attrs}}>{{prefix}}{{input}}{{suffix}}</div>'
+        'prependAppendText' => '<span{{attrs}}>{{content}}</span>',
+        'prependAppendWrapper' => '<div{{attrs}}>{{content}}</div>',
+        'prependAppendContainer' => '<div{{attrs}}>{{prepend}}{{input}}{{append}}</div>'
     ];
 
     public function __construct(View $View, array $config = []) {
@@ -182,8 +182,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             'customControls' => $this->getConfig('customControls'),
             'html5Render' => $this->getConfig('html5Render'),
             'help' => false,
-            'prefix' => false,
-            'suffix' => false,
+            'prepend' => false,
+            'append' => false,
             'gridClasses' => $this->getConfig('layout.classes.grid')
         ];
 
@@ -196,7 +196,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         $this->switchTemplates($options);
 
         // Move certain options to templateVars
-        $this->_parseTemplateVar($options, ['help', 'prefix', 'suffix']);
+        $this->_parseTemplateVar($options, ['help', 'prepend', 'append']);
 
         if (method_exists(get_parent_class($this), 'control')) {
             return parent::control($fieldName, $options);
@@ -560,18 +560,18 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         }
     }
 
-    private function _parseAndRenderPrefixSuffix($data, $append = false) {
+    private function _parseAndRenderPrependAppend($data, $append = false) {
         $out = '';
         if ($data) {
             if (is_string($data)) {
-                $out = $this->_renderPrefixSuffixText(h($data), ['class' => 'input-group-text']);
+                $out = $this->_renderPrependAppendText(h($data), ['class' => 'input-group-text']);
             } else {
                 if (is_array($data)) {
 
                     foreach ($data as $key => $item) {
 
                         if (is_string($item)) {
-                            $out .= $this->_renderPrefixSuffixText(h($item), ['class' => 'input-group-text']);
+                            $out .= $this->_renderPrependAppendText(h($item), ['class' => 'input-group-text']);
                         } else if (is_array($item)) {
                             if (isset($item['text'])) {
                                 $item += ['type' => 'text', 'escape' => true];
@@ -586,7 +586,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                                         break;
                                     default:
                                         $item = Html::addClass($item, 'input-group-text');
-                                        $out .= $this->_renderPrefixSuffixText($item['text'], $item);
+                                        $out .= $this->_renderPrependAppendText($item['text'], $item);
                                         break;
                                 }
                             }
@@ -597,7 +597,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             $attrs = $this->templater()->formatAttributes([
                 'class' => $append ? 'input-group-append' : 'input-group-prepend'
             ]);
-            return $this->templater()->format('prefixSuffixWrapper', [
+            return $this->templater()->format('prependAppendWrapper', [
                 'attrs' => $attrs,
                 'content' => $out
             ]);
@@ -605,9 +605,9 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return $out;
     }
 
-    private function _parsePrefixSuffixSize($prefix, $suffix) {
+    private function _parsePrependAppendSize($prepend, $append) {
         $sizeScores = ['large' => 1, 'lg' => 1, 'normal' => 0, 'standard' => 0, 'small' => 0];
-        $data = [$prefix, $suffix];
+        $data = [$prepend, $append];
 
         // Add a normal so it defaults to that if not found
         $foundSizes = [0];
@@ -627,9 +627,9 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return array_search($foundSizes[0], $sizeScores);
     }
 
-    private function _parsePrefixSuffixContainerAttrs($prefix, $suffix) {
+    private function _parsePrependAppendContainerAttrs($prepend, $append) {
 
-        $data = array_merge((array)$prefix, (array)$suffix);
+        $data = array_merge((array)$prepend, (array)$append);
         $containerAttrs = [];
         foreach ($data as $key => $item) {
             if (is_array($item) && isset($item['container'])) {
@@ -640,31 +640,31 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return $containerAttrs;
     }
 
-    private function _renderPrefixSuffixText($content, $attrs) {
+    private function _renderPrependAppendText($content, $attrs) {
         $attrs = $this->templater()->formatAttributes($attrs, ['text', 'type', 'size', 'container']);
-        return $this->templater()->format('prefixSuffixText', compact('content', 'attrs'));
+        return $this->templater()->format('prependAppendText', compact('content', 'attrs'));
     }
 
-    private function renderPrefixSuffix($input, $options) {
+    private function renderPrependAppend($input, $options) {
 
-        if (!$options['templateVars']['prefix'] && !$options['templateVars']['suffix']) {
+        if (!$options['templateVars']['prepend'] && !$options['templateVars']['append']) {
             return $input;
         }
 
-        $prefixOptions = $options['templateVars']['prefix'];
-        $suffixOptions = $options['templateVars']['suffix'];
+        $prependOptions = $options['templateVars']['prepend'];
+        $appendOptions = $options['templateVars']['append'];
 
         // Handle single array instance
-        if (isset($prefixOptions['text'])) {
-            $prefixOptions = [$prefixOptions];
+        if (isset($prependOptions['text'])) {
+            $prependOptions = [$prependOptions];
         }
-        if (isset($suffixOptions['text'])) {
-            $suffixOptions = [$suffixOptions];
+        if (isset($appendOptions['text'])) {
+            $appendOptions = [$appendOptions];
         }
 
-        $size = $this->_parsePrefixSuffixSize($prefixOptions, $suffixOptions);
+        $size = $this->_parsePrependAppendSize($prependOptions, $appendOptions);
 
-        $attrs = $this->_parsePrefixSuffixContainerAttrs($prefixOptions, $suffixOptions);
+        $attrs = $this->_parsePrependAppendContainerAttrs($prependOptions, $appendOptions);
 
         $attrs = Html::addClass($attrs, 'input-group');
         if ($size === 'large') {
@@ -672,10 +672,10 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         }
         $attrs = $this->templater()->formatAttributes($attrs);
 
-        $prefix = $this->_parseAndRenderPrefixSuffix($prefixOptions);
-        $suffix = $this->_parseAndRenderPrefixSuffix($suffixOptions, true);
+        $prepend = $this->_parseAndRenderPrependAppend($prependOptions);
+        $append = $this->_parseAndRenderPrependAppend($appendOptions, true);
 
-        return $this->templater()->format('prefixSuffixContainer', compact('prefix', 'input', 'suffix', 'attrs'));
+        return $this->templater()->format('prependAppendContainer', compact('prepend', 'input', 'append', 'attrs'));
     }
 
     private function formatHelp(&$options) {
@@ -711,8 +711,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     protected function _getInput($fieldName, $options) {
         $input = parent::_getInput($fieldName, $options);
 
-        // now process the prefix and suffix
-        return $this->renderPrefixSuffix($input, $options);
+        // now process the prepend and append
+        return $this->renderPrependAppend($input, $options);
     }
 
     protected function _inputContainerTemplate($options) {
