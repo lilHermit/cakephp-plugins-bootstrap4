@@ -255,14 +255,7 @@ Will render like
 .. raw:: html
 
     <div class="bootstrap-example">
-    <div class="form-group">
-        <label class="col-form-label" for="donation">Donation</label>
-        <div class="input-group">
-            <span class="input-group-addon">£</span>
-            <input type="text" name="Donation" id="donation" class="form-control"/>
-            <span class="input-group-addon">.00</span>
-        </div>
-    </div>
+        <div class="form-group"><label class="col-form-label" for="donation">Donation</label><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">£</span></div><input type="text" name="donation" id="donation" class="form-control"/><div class="input-group-append"><span class="input-group-text">.00</span></div></div></div>
     </div>
 
 Buttons
@@ -292,14 +285,7 @@ Will render like
 .. raw:: html
 
     <div class="bootstrap-example">
-        <div class="form-group">
-            <div class="input-group">
-                <input type="text" name="search" placeholder="Search for..." id="search" class="form-control"/>
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-primary">Go</button>
-                </span>
-            </div>
-        </div>
+        <div class="form-group"><div class="input-group"><input type="text" name="search" placeholder="Search for..." id="search" class="form-control"/><div class="input-group-append"><button type="button" class="btn btn-primary">Go</button></div></div></div>
     </div>
 
 .. note::
@@ -324,7 +310,7 @@ Will render like
 .. raw:: html
 
     <div class="bootstrap-example">
-        <div class="form-group"><label class="col-form-label" for="name">Name</label><div class="input-group"><input type="text" name="name" id="name" class="form-control"/><span class="bg-danger text-white input-group-addon"><i class="fa fa-exclamation-triangle fa-lg" aria-hidden="true"></i></span></div></div>
+        <div class="form-group"><label class="col-form-label" for="name">Name</label><div class="input-group"><input type="text" name="name" id="name" class="form-control"/><div class="input-group-append"><span class="bg-danger text-white input-group-text"><i class="fa fa-exclamation-triangle fa-lg" aria-hidden="true"></i></span></div></div></div>
     </div>
 
 .. note::
@@ -349,7 +335,7 @@ Will render like
 .. raw:: html
 
     <div class="bootstrap-example">
-        <div class="form-group"><label class="col-form-label" for="name">Name</label><div class="bg-primary p-3 input-group"><input type="text" name="name" id="name" class="form-control"/><span class="bg-info text-white input-group-addon">Go</span></div></div>
+        <div class="form-group"><label class="col-form-label" for="name">Name</label><div class="bg-primary p-3 input-group"><input type="text" name="name" id="name" class="form-control"/><div class="input-group-append"><span class="bg-info text-white input-group-text">Go</span></div></div></div>
     </div>
 
 .. versionadded:: 2.1.6.6 Container attributes
@@ -377,16 +363,7 @@ Will render like
 .. raw:: html
 
     <div class="bootstrap-example">
-        <div class="form-group">
-            <label class="col-form-label" for="donation">Donation</label>
-            <div class="input-group">
-                <span class="input-group-addon">£</span>
-                <span class="input-group-addon">$</span>
-                <input type="text" name="Donation" id="donation" class="form-control"/>
-                <span class="input-group-addon">.00</span>
-                <span class="bg-info input-group-addon">Go</span>
-            </div>
-        </div>
+        <div class="form-group"><label class="col-form-label" for="donation">Donation</label><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">£</span><span class="input-group-text">$</span></div><input type="text" name="Donation" id="donation" class="form-control"/><div class="input-group-append"><span class="input-group-text">.00</span><span class="bg-info input-group-text">Go</span></div></div></div>
     </div>
 
 Sizing
@@ -395,11 +372,10 @@ ______
 You also have a choice of size larger size by passing ``'size' => 'large'``::
 
     echo $this->Form->control('Donation', [
-        'prefix' => [ 'text' => '£', 'size' => 'normal'],
+        'prefix' => ['text' => '£', 'size' => 'normal'],
 
         // Also 'size' => 'lg` is supported
-        'suffix' => [ 'text' => 'Go', 'size' => 'large']
-        ]
+        'suffix' => ['text' => 'Go', 'size' => 'large']
     ]);
 
 Will render like
@@ -407,14 +383,7 @@ Will render like
 .. raw:: html
 
     <div class="bootstrap-example">
-        <div class="form-group">
-            <label class="col-form-label" for="donation">Donation</label>
-            <div class="input-group input-group-lg">
-                <span class="input-group-addon">£</span>
-                <input type="text" name="Donation" id="donation" class="form-control"/>
-                <span class="input-group-addon">Go</span>
-            </div>
-        </div>
+        <div class="form-group"><label class="col-form-label" for="donation">Donation</label><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text">£</span></div><input type="text" name="Donation" id="donation" class="form-control"/><div class="input-group-append"><span class="input-group-text">Go</span></div></div></div>
     </div>
 
 .. note::
