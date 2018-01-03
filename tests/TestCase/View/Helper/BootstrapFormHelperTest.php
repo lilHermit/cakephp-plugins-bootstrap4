@@ -1482,6 +1482,10 @@ class BootstrapFormHelperTest extends TestCase {
      * testInputPrependAppendSizeOptionRendering
      *
      * Tests the rendering of Prepend/Append with size option
+     *
+     * - Tests large/lg
+     * - Tests small/sm
+     * - Tests to make sure the largest size is used
      */
     public function testInputPrependAppendSizeOptionRendering() {
 
@@ -1595,8 +1599,35 @@ class BootstrapFormHelperTest extends TestCase {
 
         $result = $this->Form->control('Donation', [
             'append' => [
+                'text' => 'small',
+                'size' => 'small'
+            ]
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group input-group-sm']],
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            ['div' => ['class' => 'input-group-append']],
+            ['span' => ['class' => 'input-group-text']],
+            'small',
+            '/span',
+            '/div',
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Form->control('Donation', [
+            'append' => [
                 'text' => 'append',
-                'size' => 'unknown'
+                'size' => 'small'
             ],
             'prepend' => [
                 'text' => 'prepend',
@@ -1623,6 +1654,51 @@ class BootstrapFormHelperTest extends TestCase {
             ['div' => ['class' => 'input-group-append']],
             ['span' => ['class' => 'input-group-text']],
             'append',
+            '/span',
+            '/div',
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Form->control('Donation', [
+            'append' => [
+                'text' => 'small',
+                'size' => 'small'
+            ],
+            'prepend' => [
+                [
+                    'text' => 'normal',
+                    'size' => 'normal'
+                ],
+                [
+                    'text' => 'large',
+                    'size' => 'large'
+                ]
+            ]
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group'],
+            ['label' => ['class' => 'col-form-label', 'for' => 'donation']],
+            'Donation',
+            '/label',
+            ['div' => ['class' => 'input-group input-group-lg']],
+            ['div' => ['class' => 'input-group-prepend']],
+            ['span' => ['class' => 'input-group-text']],
+            'normal',
+            '/span',
+            ['span' => ['class' => 'input-group-text']],
+            'large',
+            '/span',
+            '/div',
+            'input' => [
+                'type' => 'text',
+                'name' => 'Donation',
+                'id' => 'donation',
+                'class' => 'form-control'
+            ],
+            ['div' => ['class' => 'input-group-append']],
+            ['span' => ['class' => 'input-group-text']],
+            'small',
             '/span',
             '/div',
             '/div',

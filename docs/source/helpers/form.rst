@@ -236,12 +236,14 @@ Will render like
     </div>
 
 Prepend/Append
--------------
+--------------
 
 The prepend/append functionality utilises Bootstrap `input-groups` to add text/buttons either side
 of a textual `input`.
 
-Standard (static)
+.. versionadded:: 4.0.0.2300 prior Prepend/Append was called Prefix/suffix
+
+Standard (text)
 _________________
 ::
 
@@ -369,12 +371,13 @@ Will render like
 Sizing
 ______
 
-You also have a choice of size larger size by passing ``'size' => 'large'``::
+You also have a choice of small or large size by passing ``'size' => 'large'`` or ``'size' => 'small'``
+
+Supported values are ``large``, ``lg``, ``small`` and ``sm``. You can also use size ``normal`` or ``standard`` however these are default::
 
     echo $this->Form->control('Donation', [
         'prepend' => ['text' => '£', 'size' => 'normal'],
 
-        // Also 'size' => 'lg` is supported
         'append' => ['text' => 'Go', 'size' => 'large']
     ]);
 
@@ -389,6 +392,8 @@ Will render like
 .. note::
 
     The largest size takes precedence over 'normal' `prepend` here
+
+.. versionadded:: 4.0.0.2300 Small size was added
 
 Datetime elements
 =================

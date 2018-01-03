@@ -606,12 +606,10 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     }
 
     private function _parsePrependAppendSize($prepend, $append) {
-        $sizeScores = ['large' => 1, 'lg' => 1, 'normal' => 0, 'standard' => 0, 'small' => 0];
+        $sizeScores = ['large' => 2, 'lg' => 2, 'normal' => 1, 'standard' => 1, 'small' => 0, 'sm' => 0];
         $data = [$prepend, $append];
 
-        // Add a normal so it defaults to that if not found
-        $foundSizes = [0];
-
+        $foundSizes = [];
         foreach ($data as $item) {
             if (is_array($item)) {
                 $flattened = Hash::flatten($item);
@@ -622,9 +620,12 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                 }
             }
         }
-
-        rsort($foundSizes);
-        return array_search($foundSizes[0], $sizeScores);
+        if (empty($foundSizes)) {
+            return 'normal';
+        } else {
+            rsort($foundSizes);
+            return array_search($foundSizes[0], $sizeScores);
+        }
     }
 
     private function _parsePrependAppendContainerAttrs($prepend, $append) {
@@ -667,9 +668,18 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         $attrs = $this->_parsePrependAppendContainerAttrs($prependOptions, $appendOptions);
 
         $attrs = Html::addClass($attrs, 'input-group');
-        if ($size === 'large') {
-            $attrs = Html::addClass($attrs, 'input-group-lg');
+
+        switch ($size) {
+            case 'large':
+            case 'lg':
+                $attrs = Html::addClass($attrs, 'input-group-lg');
+                break;
+            case 'small':
+            case 'sm':
+                $attrs = Html::addClass($attrs, 'input-group-sm');
+                break;
         }
+
         $attrs = $this->templater()->formatAttributes($attrs);
 
         $prepend = $this->_parseAndRenderPrependAppend($prependOptions);
