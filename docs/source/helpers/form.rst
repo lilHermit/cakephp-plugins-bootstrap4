@@ -235,10 +235,10 @@ Will render like
     </div>
     </div>
 
-Prefix/Suffix
+Prepend/Append
 -------------
 
-The prefix/suffix functionality utilises Bootstrap `input-groups` to add text/buttons either side
+The prepend/append functionality utilises Bootstrap `input-groups` to add text/buttons either side
 of a textual `input`.
 
 Standard (static)
@@ -246,8 +246,8 @@ _________________
 ::
 
     echo $this->Form->control('donation', [
-        'prefix' => '£',
-        'suffix' => '.00',
+        'prepend' => '£',
+        'append' => '.00',
     ]);
 
 Will render like
@@ -262,7 +262,7 @@ Buttons
 _______
 
 As standard you will get `static` text elements but you can enhance the output by passing an array
-for ``prefix``/``suffix`` and use the ``type`` option to specify a button::
+for ``prepend``/``append`` and use the ``type`` option to specify a button::
 
         $button = $this->Html->button('Go', null, [
             'type' => 'button'
@@ -271,7 +271,7 @@ for ``prefix``/``suffix`` and use the ``type`` option to specify a button::
         echo $this->Form->control('search', [
             'placeholder' => 'Search for...',
             'label' => false,
-            'suffix' => [
+            'append' => [
                 'text' => $button,
                 'escape' => false,
 
@@ -295,10 +295,10 @@ Will render like
 Attributes
 __________
 
-You can also pass attributes to the ``prefix``/``suffix`` using the array described above such as ``class``::
+You can also pass attributes to the ``prepend``/``append`` using the array described above such as ``class``::
 
     echo $this->Form->control('name', [
-        'suffix' => [
+        'append' => [
             'text' => '<i class="fa fa-exclamation-triangle fa-lg" aria-hidden="true"></i>',
             'class' => ['bg-danger', 'text-white'],
             'escape' => false
@@ -320,10 +320,10 @@ Will render like
 Container Attributes
 ____________________
 
-You can also pass attributes to the container of the ``prefix``/``suffix`` using the ``container`` key::
+You can also pass attributes to the container of the ``prepend``/``append`` using the ``container`` key::
 
     echo $this->Form->control('name', [
-        'suffix' => [
+        'append' => [
             'text' => 'Go',
             'class' => ['bg-info', 'text-white'],
             'container' => [ 'class' => 'bg-primary p-3' ]
@@ -348,11 +348,11 @@ You can have a combination of multiple ``Prefix``/``Suffix`` by using a nested a
     echo $this->Form->control('Donation', [
 
         // Array of strings
-        'prefix' => ['£', '$'],
+        'prepend' => ['£', '$'],
 
         // Array of arrays allowing for 'class' being passed and ofcourse 'type'
         // if required
-        'suffix' => [
+        'append' => [
             [ 'text' => '.00'],
             [ 'text' => 'Go', 'class' => 'bg-info']
         ]
@@ -372,10 +372,10 @@ ______
 You also have a choice of size larger size by passing ``'size' => 'large'``::
 
     echo $this->Form->control('Donation', [
-        'prefix' => ['text' => '£', 'size' => 'normal'],
+        'prepend' => ['text' => '£', 'size' => 'normal'],
 
         // Also 'size' => 'lg` is supported
-        'suffix' => ['text' => 'Go', 'size' => 'large']
+        'append' => ['text' => 'Go', 'size' => 'large']
     ]);
 
 Will render like
@@ -388,7 +388,7 @@ Will render like
 
 .. note::
 
-    The largest size takes precedence over 'normal' `prefix` here
+    The largest size takes precedence over 'normal' `prepend` here
 
 Datetime elements
 =================
