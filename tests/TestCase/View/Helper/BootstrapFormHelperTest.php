@@ -782,9 +782,11 @@ class BootstrapFormHelperTest extends TestCase {
             'Donation',
             '/label',
             ['div' => ['class' => 'input-group']],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-prepend']],
+            ['span' => ['class' => 'input-group-text']],
             '£',
             '/span',
+            '/div',
             'input' => [
                 'type' => 'text',
                 'name' => 'Donation',
@@ -818,9 +820,11 @@ class BootstrapFormHelperTest extends TestCase {
                 'id' => 'donation',
                 'class' => 'form-control'
             ],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-append']],
+            ['span' => ['class' => 'input-group-text']],
             '.00',
             '/span',
+            '/div',
             '/div',
             '/div'
         ], $result);
@@ -843,18 +847,22 @@ class BootstrapFormHelperTest extends TestCase {
             'Donation',
             '/label',
             ['div' => ['class' => 'input-group']],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-prepend']],
+            ['span' => ['class' => 'input-group-text']],
             '£',
             '/span',
+            '/div',
             'input' => [
                 'type' => 'text',
                 'name' => 'Donation',
                 'id' => 'donation',
                 'class' => 'form-control'
             ],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-append']],
+            ['span' => ['class' => 'input-group-text']],
             '.00',
             '/span',
+            '/div',
             '/div',
 
             '/div'
@@ -896,12 +904,12 @@ class BootstrapFormHelperTest extends TestCase {
                 'id' => 'password',
                 'class' => 'form-control'
             ],
-            ['span' => ['class' => 'input-group-btn']],
+            ['div' => ['class' => 'input-group-append']],
             'button' => ['class' => 'btn btn-secondary', 'id' => 'show-password', 'data-toggle' => 'button', 'type' => 'button'],
             'i' => ['class' => 'fa fa-eye fa-lg', 'aria-hidden' => 'true'],
             '/i',
             '/button',
-            '/span',
+            '/div',
             '/div',
             '/div'
         ], $result);
@@ -925,12 +933,12 @@ class BootstrapFormHelperTest extends TestCase {
                 'id' => 'password',
                 'class' => 'form-control'
             ],
-            ['span' => ['class' => 'input-group-btn']],
+            ['div' => ['class' => 'input-group-append']],
             'button' => ['class' => 'btn btn-secondary', 'id' => 'show-password', 'data-toggle' => 'button', 'type' => 'button'],
             'i' => ['class' => 'fa fa-eye fa-lg', 'aria-hidden' => 'true'],
             '/i',
             '/button',
-            '/span',
+            '/div',
             '/div',
             '/div'
         ], $result);
@@ -939,7 +947,7 @@ class BootstrapFormHelperTest extends TestCase {
             'suffix' => [[
                 'text' => $button,
                 'escape' => false,
-                'type' => 'addon']
+                'type' => 'text']
             ]
         ]);
         $this->assertHtml([
@@ -954,12 +962,14 @@ class BootstrapFormHelperTest extends TestCase {
                 'id' => 'password',
                 'class' => 'form-control'
             ],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-append']],
+            ['span' => ['class' => 'input-group-text']],
             'button' => ['class' => 'btn btn-secondary', 'id' => 'show-password', 'data-toggle' => 'button', 'type' => 'button'],
             'i' => ['class' => 'fa fa-eye fa-lg', 'aria-hidden' => 'true'],
             '/i',
             '/button',
             '/span',
+            '/div',
             '/div',
             '/div'
         ], $result);
@@ -983,12 +993,14 @@ class BootstrapFormHelperTest extends TestCase {
                 'id' => 'password',
                 'class' => 'form-control'
             ],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-append']],
+            ['span' => ['class' => 'input-group-text']],
             'button' => ['class' => 'btn btn-secondary', 'id' => 'show-password', 'data-toggle' => 'button', 'type' => 'button'],
             'i' => ['class' => 'fa fa-eye fa-lg', 'aria-hidden' => 'true'],
             '/i',
             '/button',
             '/span',
+            '/div',
             '/div',
             '/div'
         ], $result);
@@ -1010,12 +1022,14 @@ class BootstrapFormHelperTest extends TestCase {
             'Donation',
             '/label',
             ['div' => ['class' => 'input-group']],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-prepend']],
+            ['span' => ['class' => 'input-group-text']],
             '£',
             '/span',
-            ['span' => ['class' => 'input-group-addon']],
+            ['span' => ['class' => 'input-group-text']],
             '$',
             '/span',
+            '/div',
             'input' => [
                 'type' => 'text',
                 'name' => 'Donation',
@@ -1037,12 +1051,14 @@ class BootstrapFormHelperTest extends TestCase {
             'Donation',
             '/label',
             ['div' => ['class' => 'input-group']],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-prepend']],
+            ['span' => ['class' => 'input-group-text']],
             '£',
             '/span',
-            ['span' => ['class' => 'input-group-addon']],
+            ['span' => ['class' => 'input-group-text']],
             '$',
             '/span',
+            '/div',
             'input' => [
                 'type' => 'text',
                 'name' => 'Donation',
@@ -1063,12 +1079,14 @@ class BootstrapFormHelperTest extends TestCase {
             'Donation',
             '/label',
             ['div' => ['class' => 'input-group']],
-            ['span' => ['class' => 'custom input-group-addon', 'id' => 'donation1']],
+            ['div' => ['class' => 'input-group-prepend']],
+            ['span' => ['class' => 'custom input-group-text', 'id' => 'donation1']],
             '£',
             '/span',
-            ['span' => ['class' => 'input-group-addon']],
+            ['span' => ['class' => 'input-group-text']],
             '$',
             '/span',
+            '/div',
             'input' => [
                 'type' => 'text',
                 'name' => 'Donation',
@@ -1103,15 +1121,15 @@ class BootstrapFormHelperTest extends TestCase {
                 'id' => 'donation',
                 'class' => 'form-control'
             ],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-append']],
+            ['span' => ['class' => 'input-group-text']],
             '.00',
             '/span',
-            ['span' => ['class' => 'input-group-addon']],
+            ['span' => ['class' => 'input-group-text']],
             'Go',
             '/span',
-
             '/div',
-
+            '/div',
             '/div'
         ], $result);
 
@@ -1131,15 +1149,15 @@ class BootstrapFormHelperTest extends TestCase {
                 'id' => 'donation',
                 'class' => 'form-control'
             ],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-append']],
+            ['span' => ['class' => 'input-group-text']],
             '.00',
             '/span',
-            ['span' => ['class' => 'input-group-addon']],
+            ['span' => ['class' => 'input-group-text']],
             'Go',
             '/span',
-
             '/div',
-
+            '/div',
             '/div'
         ], $result);
 
@@ -1158,14 +1176,15 @@ class BootstrapFormHelperTest extends TestCase {
                 'id' => 'donation',
                 'class' => 'form-control'
             ],
-            ['span' => ['class' => 'custom input-group-addon', 'id' => 'donation1']],
+            ['div' => ['class' => 'input-group-append']],
+            ['span' => ['class' => 'custom input-group-text', 'id' => 'donation1']],
             '.00',
             '/span',
-            ['span' => ['class' => 'input-group-addon']],
+            ['span' => ['class' => 'input-group-text']],
             'Go',
             '/span',
             '/div',
-
+            '/div',
             '/div'
         ], $result);
     }
@@ -1187,24 +1206,28 @@ class BootstrapFormHelperTest extends TestCase {
             'Donation',
             '/label',
             ['div' => ['class' => 'input-group']],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-prepend']],
+            ['span' => ['class' => 'input-group-text']],
             '£',
             '/span',
-            ['span' => ['class' => 'input-group-addon']],
+            ['span' => ['class' => 'input-group-text']],
             '$',
             '/span',
+            '/div',
             'input' => [
                 'type' => 'text',
                 'name' => 'Donation',
                 'id' => 'donation',
                 'class' => 'form-control'
             ],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-append']],
+            ['span' => ['class' => 'input-group-text']],
             '.00',
             '/span',
-            ['span' => ['class' => 'input-group-addon']],
+            ['span' => ['class' => 'input-group-text']],
             'Go',
             '/span',
+            '/div',
             '/div',
             '/div'
         ], $result);
@@ -1219,24 +1242,28 @@ class BootstrapFormHelperTest extends TestCase {
             'Donation',
             '/label',
             ['div' => ['class' => 'input-group']],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-prepend']],
+            ['span' => ['class' => 'input-group-text']],
             '£',
             '/span',
-            ['span' => ['class' => 'input-group-addon']],
+            ['span' => ['class' => 'input-group-text']],
             '$',
             '/span',
+            '/div',
             'input' => [
                 'type' => 'text',
                 'name' => 'Donation',
                 'id' => 'donation',
                 'class' => 'form-control'
             ],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-append']],
+            ['span' => ['class' => 'input-group-text']],
             '.00',
             '/span',
-            ['span' => ['class' => 'input-group-addon']],
+            ['span' => ['class' => 'input-group-text']],
             'Go',
             '/span',
+            '/div',
             '/div',
             '/div'
         ], $result);
@@ -1251,24 +1278,28 @@ class BootstrapFormHelperTest extends TestCase {
             'Donation',
             '/label',
             ['div' => ['class' => 'input-group']],
-            ['span' => ['class' => 'custom input-group-addon', 'id' => 'donation1']],
+            ['div' => ['class' => 'input-group-prepend']],
+            ['span' => ['class' => 'custom input-group-text', 'id' => 'donation1']],
             '£',
             '/span',
-            ['span' => ['class' => 'input-group-addon']],
+            ['span' => ['class' => 'input-group-text']],
             '$',
             '/span',
+            '/div',
             'input' => [
                 'type' => 'text',
                 'name' => 'Donation',
                 'id' => 'donation',
                 'class' => 'form-control'
             ],
-            ['span' => ['class' => 'custom input-group-addon', 'id' => 'donation1']],
+            ['div' => ['class' => 'input-group-append']],
+            ['span' => ['class' => 'custom input-group-text', 'id' => 'donation1']],
             '.00',
             '/span',
-            ['span' => ['class' => 'input-group-addon']],
+            ['span' => ['class' => 'input-group-text']],
             'Go',
             '/span',
+            '/div',
             '/div',
             '/div'
         ], $result);
@@ -1290,9 +1321,11 @@ class BootstrapFormHelperTest extends TestCase {
             'Donation',
             '/label',
             ['div' => ['class' => 'input-group']],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-prepend']],
+            ['span' => ['class' => 'input-group-text']],
             '&lt;b&gt;text&lt;/b&gt;',
             '/span',
+            '/div',
             'input' => [
                 'type' => 'text',
                 'name' => 'Donation',
@@ -1312,9 +1345,11 @@ class BootstrapFormHelperTest extends TestCase {
             'Donation',
             '/label',
             ['div' => ['class' => 'input-group']],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-prepend']],
+            ['span' => ['class' => 'input-group-text']],
             '&lt;b&gt;text&lt;/b&gt;',
             '/span',
+            '/div',
             'input' => [
                 'type' => 'text',
                 'name' => 'Donation',
@@ -1347,9 +1382,11 @@ class BootstrapFormHelperTest extends TestCase {
             'Donation',
             '/label',
             ['div' => ['class' => 'input-group']],
-            ['span' => ['class' => 'my-class input-group-addon']],
+            ['div' => ['class' => 'input-group-prepend']],
+            ['span' => ['class' => 'my-class input-group-text']],
             'text',
             '/span',
+            '/div',
             'input' => [
                 'type' => 'text',
                 'name' => 'Donation',
@@ -1391,12 +1428,14 @@ class BootstrapFormHelperTest extends TestCase {
             'Donation',
             '/label',
             ['div' => ['class' => 'container-class input-group', 'random_attribute' => 'true']],
-            ['span' => ['class' => 'my-class input-group-addon']],
+            ['div' => ['class' => 'input-group-prepend']],
+            ['span' => ['class' => 'my-class input-group-text']],
             'text',
             '/span',
-            ['span' => ['class' => 'my-class2 input-group-addon']],
+            ['span' => ['class' => 'my-class2 input-group-text']],
             'text2',
             '/span',
+            '/div',
             'input' => [
                 'type' => 'text',
                 'name' => 'Donation',
@@ -1422,9 +1461,11 @@ class BootstrapFormHelperTest extends TestCase {
             'Donation',
             '/label',
             ['div' => ['class' => 'container-class input-group']],
-            ['span' => ['class' => 'my-class input-group-addon']],
+            ['div' => ['class' => 'input-group-prepend']],
+            ['span' => ['class' => 'my-class input-group-text']],
             'text',
             '/span',
+            '/div',
             'input' => [
                 'type' => 'text',
                 'name' => 'Donation',
@@ -1460,18 +1501,22 @@ class BootstrapFormHelperTest extends TestCase {
             'Donation',
             '/label',
             ['div' => ['class' => 'input-group input-group-lg']],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-prepend']],
+            ['span' => ['class' => 'input-group-text']],
             'prefix',
             '/span',
+            '/div',
             'input' => [
                 'type' => 'text',
                 'name' => 'Donation',
                 'id' => 'donation',
                 'class' => 'form-control'
             ],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-append']],
+            ['span' => ['class' => 'input-group-text']],
             'suffix',
             '/span',
+            '/div',
             '/div',
             '/div'
         ], $result);
@@ -1492,18 +1537,22 @@ class BootstrapFormHelperTest extends TestCase {
             'Donation',
             '/label',
             ['div' => ['class' => 'input-group input-group-lg']],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-prepend']],
+            ['span' => ['class' => 'input-group-text']],
             'prefix',
             '/span',
+            '/div',
             'input' => [
                 'type' => 'text',
                 'name' => 'Donation',
                 'id' => 'donation',
                 'class' => 'form-control'
             ],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-append']],
+            ['span' => ['class' => 'input-group-text']],
             'suffix',
             '/span',
+            '/div',
             '/div',
             '/div'
         ], $result);
@@ -1524,18 +1573,22 @@ class BootstrapFormHelperTest extends TestCase {
             'Donation',
             '/label',
             ['div' => ['class' => 'input-group input-group-lg']],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-prepend']],
+            ['span' => ['class' => 'input-group-text']],
             'prefix',
             '/span',
+            '/div',
             'input' => [
                 'type' => 'text',
                 'name' => 'Donation',
                 'id' => 'donation',
                 'class' => 'form-control'
             ],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-append']],
+            ['span' => ['class' => 'input-group-text']],
             'suffix',
             '/span',
+            '/div',
             '/div',
             '/div'
         ], $result);
@@ -1556,18 +1609,22 @@ class BootstrapFormHelperTest extends TestCase {
             'Donation',
             '/label',
             ['div' => ['class' => 'input-group']],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-prepend']],
+            ['span' => ['class' => 'input-group-text']],
             'prefix',
             '/span',
+            '/div',
             'input' => [
                 'type' => 'text',
                 'name' => 'Donation',
                 'id' => 'donation',
                 'class' => 'form-control'
             ],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-append']],
+            ['span' => ['class' => 'input-group-text']],
             'suffix',
             '/span',
+            '/div',
             '/div',
             '/div'
         ], $result);
@@ -2132,9 +2189,11 @@ class BootstrapFormHelperTest extends TestCase {
             '/label',
             ['div' => ['class' => 'col-sm-10']],
             ['div' => ['class' => 'input-group']],
-            ['span' => ['class' => 'input-group-addon']],
+            ['div' => ['class' => 'input-group-prepend']],
+            ['span' => ['class' => 'input-group-text']],
             '@',
             '/span',
+            '/div',
             ['input' => ['type', 'name', 'placeholder', 'id', 'class' => 'form-control']],
             '/div',
             '/div',
