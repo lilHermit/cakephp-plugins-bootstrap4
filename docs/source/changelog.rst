@@ -1,6 +1,20 @@
 Changelog
 #########
 
+4.0.0.2300 (03-January-2018)
+----------------------
+.. raw:: html
+
+    <span class="badge badge-primary">Supports Bootstrap 4.0.0-beta3</span>
+
+- Updated to Bootstrap 4.0.0-beta3
+    - Updates to custom checkbox/radio/multi-checkbox control
+    - Updates to custom file control
+    - Updates to prefix/suffix
+- **Breaking changes:** prefix/suffix renamed to prepend/append to keep inline with Bootstrap terminology
+- Added small size to prepend/append
+
+
 4.0.0.2200 (20-Nov-2017)
 ----------------------
 .. raw:: html

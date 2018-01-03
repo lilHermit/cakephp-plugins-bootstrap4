@@ -177,6 +177,6 @@ lexers['phpinline'] = PhpLexer(startinline=True)
 lexers['php-annotations'] = PhpLexer(startinline=True)
 
 rst_epilog = """
-.. |bootstrap_ver| replace:: 4.0.0-beta2
+.. |bootstrap_ver| replace:: 4.0.0-beta3
 .. |cakephp_min| replace:: 3.3.15
 """
