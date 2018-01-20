@@ -1,6 +1,14 @@
 Changelog
 #########
 
+4.0.0.4000 (20-January-2018)
+----------------------
+.. raw:: html
+
+    <span class="badge badge-primary">Supports Bootstrap 4.0.0</span>
+
+- Updated to Bootstrap 4.0.0 (Release)
+
 4.0.0.2300 (03-January-2018)
 ----------------------
 .. raw:: html

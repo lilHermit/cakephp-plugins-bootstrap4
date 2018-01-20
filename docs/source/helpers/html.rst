@@ -24,15 +24,15 @@ Something similar to the following html will be rendered to your view
 
 .. code-block:: html
 
-    '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
-        integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 If you want an older css version then pass in a string as the first parameter. For example::
 
-    <?= $this->Html->bootstrapCss('4.0.0-alpha.5'); ?>
+    <?= $this->Html->bootstrapCss('4.0.0-beta3'); ?>
 
 If you want to use a version unknown to the plugin you can pass in an array, for example
-to use ``bootstrap4.0.0-alpha3``::
+to use ``bootstrap4.0.0-beta3``::
 
     <?= $this->Html->bootstrapCss([
         'url' => 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.3/css/bootstrap.min.css',
@@ -55,10 +55,10 @@ You will get something similar to in your view
 
 .. code-block:: html
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
-        integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
-        integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 To disabled the inclusion of ``popper`` javascript then add use the following::
 
@@ -67,7 +67,7 @@ To disabled the inclusion of ``popper`` javascript then add use the following::
 
 If you want an older javascript then pass in an array with `version` key as the first parameter. For example::
 
-    <?= $this->Html->bootstrapScript([ 'version' => '4.0.0-alpha.5']); ?>
+    <?= $this->Html->bootstrapScript([ 'version' => '4.0.0-beta3']); ?>
 
 You can also add urls that the plugin does not currently support by providing the `url` and `integrity` keys. For example to use 4.0.0-alpha4::
 
