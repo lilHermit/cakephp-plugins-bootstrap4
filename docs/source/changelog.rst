@@ -1,11 +1,19 @@
 Changelog
 #########
 
+4.0.0.4001 (5-June-2018)
+----------------------
+.. raw:: html
+
+    <span class="badge badge-primary pull-right pull-right">Supports Bootstrap 4.0.0</span>
+
+- Updates for CakePHP 3.6 deprecations
+
 4.0.0.4000 (20-January-2018)
 ----------------------
 .. raw:: html
 
-    <span class="badge badge-primary">Supports Bootstrap 4.0.0</span>
+    <span class="badge badge-primary pull-right pull-right">Supports Bootstrap 4.0.0</span>
 
 - Updated to Bootstrap 4.0.0 (Release)
 
@@ -13,7 +21,7 @@ Changelog
 ----------------------
 .. raw:: html
 
-    <span class="badge badge-primary">Supports Bootstrap 4.0.0-beta3</span>
+    <span class="badge badge-primary pull-right">Supports Bootstrap 4.0.0-beta3</span>
 
 - Updated to Bootstrap 4.0.0-beta3
     - Updates to custom checkbox/radio/multi-checkbox control
@@ -27,7 +35,7 @@ Changelog
 ----------------------
 .. raw:: html
 
-    <span class="badge badge-primary">Supports Bootstrap 4.0.0-beta2</span>
+    <span class="badge badge-primary pull-right">Supports Bootstrap 4.0.0-beta2</span>
 
 - Updated to Bootstrap 4.0.0-beta2
 - Fixed some tests
@@ -37,7 +45,7 @@ Changelog
 ----------------------
 .. raw:: html
 
-    <span class="badge badge-primary">Supports Bootstrap 4.0.0-beta</span>
+    <span class="badge badge-primary pull-right">Supports Bootstrap 4.0.0-beta</span>
 
 - Fixes to Form feedback (due to changes since alpha6) (using server-side methods)
 
@@ -45,7 +53,7 @@ Changelog
 ----------------------
 .. raw:: html
 
-    <span class="badge badge-primary">Supports Bootstrap 4.0.0-beta</span>
+    <span class="badge badge-primary pull-right">Supports Bootstrap 4.0.0-beta</span>
 
 - Updated to Bootstrap 4.0.0-beta
 - Updated tether references to popper
@@ -55,7 +63,7 @@ Changelog
 ----------------------
 .. raw:: html
 
-    <span class="badge badge-primary">Supports Bootstrap 4.0.0-alpha6</span>
+    <span class="badge badge-primary pull-right">Supports Bootstrap 4.0.0-alpha6</span>
 
 - Improvements to datetime parsing on HTML5 datetime controls
 - Fix to datetime control css class rendering
@@ -64,7 +72,7 @@ Changelog
 ----------------------
 .. raw:: html
 
-    <span class="badge badge-primary">Supports Bootstrap 4.0.0-alpha6</span>
+    <span class="badge badge-primary pull-right">Supports Bootstrap 4.0.0-alpha6</span>
 
 - Added support for bake templates
 
@@ -72,7 +80,7 @@ Changelog
 ---------------------
 .. raw:: html
 
-    <span class="badge badge-primary">Supports Bootstrap 4.0.0-alpha6</span>
+    <span class="badge badge-primary pull-right">Supports Bootstrap 4.0.0-alpha6</span>
 
 - ``Breaking change``: Namespace has been changed to PascalCase to comply with CakePHP conventions. This change is to facilitate the Bake Templates coming soon.
 
@@ -80,7 +88,7 @@ Changelog
 ---------------------
 .. raw:: html
 
-    <span class="badge badge-primary">Supports Bootstrap 4.0.0-alpha6</span>
+    <span class="badge badge-primary pull-right">Supports Bootstrap 4.0.0-alpha6</span>
 
 - Added support for :ref:`Block <block-layout>`, :ref:`Inline <inline-layout>` and :ref:`Grid <grid-layout>` layouts.
 - Added global form control and label class setting (:ref:`Docs here <layout-classes>`)
@@ -90,7 +98,7 @@ Changelog
 ---------------------
 .. raw:: html
 
-    <span class="badge badge-primary">Supports Bootstrap 4.0.0-alpha6</span>
+    <span class="badge badge-primary pull-right">Supports Bootstrap 4.0.0-alpha6</span>
 
 - Simplified Html5DateTime Validation with behavior
 - Unpinned from CakePHP 3.3.x (Now supports 3.4.x)
@@ -101,7 +109,7 @@ Changelog
 ---------------------
 .. raw:: html
 
-    <span class="badge badge-primary">Supports Bootstrap 4.0.0-alpha6</span>
+    <span class="badge badge-primary pull-right">Supports Bootstrap 4.0.0-alpha6</span>
 
 - New documentation
 - Improved File Browser control
@@ -112,7 +120,7 @@ Changelog
 ---------------------
 .. raw:: html
 
-    <span class="badge badge-primary">Supports Bootstrap 4.0.0-alpha6</span>
+    <span class="badge badge-primary pull-right">Supports Bootstrap 4.0.0-alpha6</span>
 
 - Fixed non-dismissible alert css
 - Excluded certain files from packagist dists
@@ -123,7 +131,7 @@ Changelog
 ---------------------
 .. raw:: html
 
-    <span class="badge badge-primary">Supports Bootstrap 4.0.0-alpha6</span>
+    <span class="badge badge-primary pull-right">Supports Bootstrap 4.0.0-alpha6</span>
 
 - Fixed help container (now not rendered as empty when no help)
 - Plugin javascript is no longer required
