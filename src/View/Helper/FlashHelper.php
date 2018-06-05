@@ -11,11 +11,11 @@ class FlashHelper extends \Cake\View\Helper\FlashHelper {
 
         $pluginOverrides = ['Flash/default', 'Flash/error', 'Flash/info', 'Flash/success', 'Flash/warning'];
 
-        if (!$this->request->session()->check("Flash.$key")) {
+        if (!$this->getSession()->check("Flash.$key")) {
             return null;
         }
 
-        $stack = $this->request->session()->consume("Flash.$key");
+        $stack = $this->getSession()->consume("Flash.$key");
 
         if (!is_array($stack)) {
             throw new \UnexpectedValueException(sprintf(
@@ -31,8 +31,22 @@ class FlashHelper extends \Cake\View\Helper\FlashHelper {
                 $item['element'] = 'LilHermit/Bootstrap4.' . $element;
             }
         }
-        $this->request->session()->write("Flash.$key", $stack);
+        $this->getSession()->write("Flash.$key", $stack);
 
         return parent::render($key, $options);
+    }
+
+    /**
+     * Wrapper for session/getSession so we can support CakePHP < 3.5
+     *
+     * @return \Cake\Network\Session
+     */
+    private function getSession() {
+        if (method_exists($this->request, 'getSession')) {
+            return $this->request->getSession();
+        } else {
+            /** @noinspection PhpDeprecationInspection */
+            return $this->request->session();
+        }
     }
 }

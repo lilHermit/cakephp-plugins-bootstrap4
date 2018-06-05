@@ -49,9 +49,9 @@ class BootstrapDateTimeWidget implements WidgetInterface {
         unset($data['val']);
 
         // Check and change the template to use
-        if ($data['type'] == 'time' && $this->_templates->config('bootstrapTime')) {
+        if ($data['type'] == 'time' && $this->getTemplateConfig('bootstrapTime')) {
             $template = 'bootstrapTime';
-        } else if ($data['type'] == 'date' && $this->_templates->config('bootstrapDate')) {
+        } else if ($data['type'] == 'date' && $this->getTemplateConfig('bootstrapDate')) {
             $template = 'bootstrapDate';
         } else {
             $template = 'bootstrapDateTime';
@@ -76,5 +76,21 @@ class BootstrapDateTimeWidget implements WidgetInterface {
             return [];
         }
         return [$data['name']];
+    }
+
+    /**
+     * Wrapper for template->config/template->getConfig so we can support CakePHP < 3.5
+     *
+     * @param string|null $key The key to get or null for the whole config.
+     *
+     * @return mixed Config value being read.
+     */
+    private function getTemplateConfig($key) {
+        if (method_exists($this->_templates, 'getConfig')) {
+            return $this->_templates->getConfig($key);
+        } else {
+            /** @noinspection PhpDeprecationInspection */
+            return $this->_templates->config($key);
+        }
     }
 }

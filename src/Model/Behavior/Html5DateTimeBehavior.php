@@ -10,6 +10,12 @@ use Cake\Validation\Validator;
 class Html5DateTimeBehavior extends Behavior {
 
     public function buildValidator(Event $event, Validator $validator, $name) {
-        return $validator->provider('bootstrap4', new RulesProvider('LilHermit\Bootstrap4\Validation\Validation'));
+
+        if (method_exists($validator, 'setProvider')) {
+            return $validator->setProvider('bootstrap4', new RulesProvider('LilHermit\Bootstrap4\Validation\Validation'));
+        } else {
+            /** @noinspection PhpDeprecationInspection */
+            return $validator->provider('bootstrap4', new RulesProvider('LilHermit\Bootstrap4\Validation\Validation'));
+        }
     }
 }

@@ -852,12 +852,34 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * @return $this|string|array
      */
     public function templates($templates = null) {
+        if ($templates === null || is_string($templates)) {
+            return $this->getTemplates($templates);
+        }
+
+        $this->setTemplates($templates);
+        return $this;
+    }
+
+    /**
+     * Gets templates to use.
+     *
+     * @param string|null|array $templates null or string allow reading templates. An array
+     *                                     allows templates to be added.
+     *
+     * @return $this|string|array
+     */
+    public function getTemplates($templates = null) {
 
         if ($templates !== null && !is_string($templates)) {
             $this->_userChangedTemplates = array_merge(array_keys($templates), $this->_userChangedTemplates);
         }
 
-        return parent::templates($templates);
+        if (method_exists(get_parent_class($this), 'getTemplates')) {
+            return parent::getTemplates($templates);
+        } else {
+            /** @noinspection PhpDeprecationInspection */
+            return parent::templates($templates);
+        }
     }
 
     private function switchTemplates(&$options, $type = null) {
