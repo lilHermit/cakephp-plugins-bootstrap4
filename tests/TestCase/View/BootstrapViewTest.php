@@ -8,10 +8,10 @@ class ViewTest extends \Cake\Test\TestCase\View\ViewTest {
         parent::setUp();
 
         $this->View = $this->PostsController->createView('TestApp\View\AppView');
-        $this->View->viewPath = 'Posts';
+        $this->View->setTemplatePath('Posts');
 
         $this->ThemeView = $this->ThemePostsController->createView('TestApp\View\AppView');
-        $this->ThemeView->viewPath = 'Posts';
+        $this->ThemeView->setTemplatePath('Posts');
     }
 
 }
