@@ -5,10 +5,13 @@ namespace LilHermit\Bootstrap4\Test\TestCase\View\Helper;
 use Cake\Collection\Collection;
 use Cake\Core\Configure;
 use Cake\ORM\Entity;
-use Cake\ORM\TableRegistry;
 use LilHermit\Bootstrap4\View\Helper\FormHelper;
 use TestApp\Model\Entity\Article;
 
+
+/**
+ * @property array $dateRegex
+ */
 class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
     /**
@@ -46,7 +49,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testSubmitTemplateVars() {
-        $this->Form->templates([
+        $this->Form->setTemplates([
             'inputSubmit' => '<input custom="{{forinput}}" type="{{type}}"{{attrs}}/>',
             'submitContainer' => '<div class="submit">{{content}}{{forcontainer}}</div>'
         ]);
@@ -127,7 +130,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      */
     public function testGetFormWithFalseModel() {
         $encoding = strtolower(Configure::read('App.encoding'));
-        $this->Form->request['controller'] = 'contact_test';
+        $this->Form->request = $this->Form->request->withParam('controller', 'contact_test');
         $result = $this->Form->create(false, [
             'type' => 'get',
             'url' => ['controller' => 'contact_test']
@@ -211,7 +214,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testTextFieldTypeNumberGenerationForIntegers() {
-        TableRegistry::get('Contacts', [
+        $this->getTableLocator()->get('Contacts', [
             'className' => 'Cake\Test\TestCase\View\Helper\ContactsTable'
         ]);
 
@@ -243,7 +246,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testFormSecurityMultipleSubmitButtons() {
-        $this->Form->request->params['_Token'] = 'testKey';
+        $this->Form->request = $this->Form->request->withParam('_Token', 'testKey');
 
         $this->Form->create($this->article);
         $this->Form->text('Address.title');
@@ -460,7 +463,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      */
     public function testFormValidationAssociated() {
         $nested = new Entity(['foo' => 'bar']);
-        $nested->errors('foo', ['not a valid bar']);
+        $nested->setError('foo', ['not a valid bar']);
         $entity = new Entity(['nested' => $nested]);
         $this->Form->create($entity, ['context' => ['table' => 'Articles']]);
 
@@ -479,7 +482,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $inner = new Entity(['bar' => 'baz']);
         $nested = new Entity(['foo' => $inner]);
         $entity = new Entity(['nested' => $nested]);
-        $inner->errors('bar', ['not a valid one']);
+        $inner->setError('bar', ['not a valid one']);
         $this->Form->create($entity, ['context' => ['table' => 'Articles']]);
         $result = $this->Form->error('nested.foo.bar');
         $this->assertEquals('<div class="invalid-feedback">not a valid one</div>', $result);
@@ -495,14 +498,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
     public function testFormValidationMultiRecord() {
         $one = new Entity();
         $two = new Entity();
-        TableRegistry::get('Contacts', [
+        $this->getTableLocator()->get('Contacts', [
             'className' => 'Cake\Test\TestCase\View\Helper\ContactsTable'
         ]);
         $one->set('email', '');
-        $one->errors('email', ['invalid email']);
+        $one->setError('email', ['invalid email']);
 
         $two->set('name', '');
-        $two->errors('name', ['This is wrong']);
+        $two->setError('name', ['This is wrong']);
         $this->Form->create([$one, $two], ['context' => ['table' => 'Contacts']]);
 
         $result = $this->Form->control('0.email');
@@ -554,7 +557,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testSecuritySubmitImageNoName() {
-        $this->Form->request->params['_Token'] = 'testKey';
+        $this->Form->request = $this->Form->request->withParam('_Token', 'testKey');
 
         $this->Form->create(false);
         $result = $this->Form->submit('save.png');
@@ -571,7 +574,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testSecuritySubmitImageName() {
-        $this->Form->request->params['_Token'] = 'testKey';
+        $this->Form->request = $this->Form->request->withParam('_Token', 'testKey');
 
         $this->Form->create(null);
         $result = $this->Form->submit('save.png', ['name' => 'test']);
@@ -865,9 +868,12 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->article['errors'] = [
             'Contact' => ['text' => 'wrong']
         ];
-        $this->Form->create($this->article);
 
-        $this->Form->request->data['Model']['text'] = 'test <strong>HTML</strong> values';
+        $this->Form->request = $this->Form->request
+            ->withData('Model.text', 'test <strong>HTML</strong> values')
+            ->withData('Contact.text', 'test');
+
+        $this->Form->create($this->article);
         $result = $this->Form->text('Model.text');
         $expected = [
             'input' => [
@@ -879,7 +885,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data['Contact']['text'] = 'test';
         $result = $this->Form->text('Contact.text', ['id' => 'theID']);
         $expected = [
             'input' => [
@@ -899,22 +904,25 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * Test default value setting.
      *
      * @return void
+     * @throws \Exception
      */
     public function testTextDefaultValue() {
-        $this->Form->request->data['Model']['field'] = 'test';
+
+        $this->Form->request = $this->Form->request->withData('Model.field', 'test');
         $result = $this->Form->text('Model.field', ['default' => 'default value']);
         $expected = ['input' => ['type' => 'text', 'name' => 'Model[field]', 'value' => 'test', 'class' => 'form-control']];
         $this->assertHtml($expected, $result);
 
-        unset($this->Form->request->data['Model']['field']);
+        $this->Form->request = $this->Form->request->withParsedBody([]);
+        $this->Form->create();
         $result = $this->Form->text('Model.field', ['default' => 'default value']);
         $expected = ['input' => ['type' => 'text', 'name' => 'Model[field]', 'value' => 'default value', 'class' => 'form-control']];
         $this->assertHtml($expected, $result);
 
         $this->loadFixtures('Articles');
-        $Articles = TableRegistry::get('Articles');
-        $title = $Articles->schema()->column('title');
-        $Articles->schema()->addColumn(
+        $Articles = $this->getTableLocator()->get('Articles');
+        $title = $Articles->getSchema()->getColumn('title');
+        $Articles->getSchema()->addColumn(
             'title',
             ['default' => 'default title'] + $title
         );
@@ -1104,7 +1112,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = ['input' => ['type' => 'password', 'name' => 'Contact[field]', 'class' => 'form-control']];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data['Contact']['passwd'] = 'test';
+        $this->Form->request = $this->Form->request->withData('Contact.passwd', 'test');
+        $this->Form->create($this->article);
         $result = $this->Form->password('Contact.passwd', ['id' => 'theID']);
         $expected = ['input' => ['type' => 'password', 'name' => 'Contact[passwd]', 'value' => 'test', 'id' => 'theID', 'class' => 'is-invalid form-control']];
         $this->assertHtml($expected, $result);
@@ -1227,12 +1236,13 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * Test default value setting on radio() method.
      *
      * @return void
+     * @throws \Exception
      */
     public function testRadioDefaultValue() {
         $this->loadFixtures('Articles');
-        $Articles = TableRegistry::get('Articles');
-        $title = $Articles->schema()->column('title');
-        $Articles->schema()->addColumn(
+        $Articles = $this->getTableLocator()->get('Articles');
+        $title = $Articles->getSchema()->getColumn('title');
+        $Articles->getSchema()->addColumn(
             'title',
             ['default' => '1'] + $title
         );
@@ -1316,7 +1326,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data = ['Model' => ['field' => 'value']];
+        $this->Form->request = $this->Form->request->withData('Model.field', 'value');
+        $this->Form->create();
         $result = $this->Form->select('Model.field', ['value' => 'good', 'other' => 'bad']);
         $expected = [
             'select' => ['name' => 'Model[field]', 'class' => 'form-control'],
@@ -1333,7 +1344,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $result = $this->Form->select('Model.field', new Collection(['value' => 'good', 'other' => 'bad']));
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data = [];
+        $this->Form->request = $this->Form->request->withParsedBody([]);
+        $this->Form->create();
         $result = $this->Form->select('Model.field', ['value' => 'good', 'other' => 'bad']);
         $expected = [
             'select' => ['name' => 'Model[field]', 'class' => 'form-control'],
@@ -1368,7 +1380,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data = ['Model' => ['contact_id' => 228]];
+        $this->Form->request = $this->Form->request->withData('Model.contact_id', 228);
+        $this->Form->create();
         $result = $this->Form->select(
             'Model.contact_id',
             ['228' => '228 value', '228-1' => '228-1 value', '228-2' => '228-2 value'],
@@ -1385,7 +1398,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data['Model']['field'] = 0;
+        $this->Form->request = $this->Form->request->withData('Model.field', 0);
+        $this->Form->create();
         $result = $this->Form->select('Model.field', ['0' => 'No', '1' => 'Yes']);
         $expected = [
             'select' => ['name' => 'Model[field]', 'class' => 'form-control'],
@@ -1601,6 +1615,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * Test generation of habtm select boxes.
      *
      * @return void
+     * @throws \Exception
      */
     public function testHabtmSelectBox() {
         $this->loadFixtures('Articles');
@@ -1714,6 +1729,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * picked up properly.
      *
      * @return void
+     * @throws \Exception
      */
     public function testErrorsForBelongsToManySelect() {
         $spacecraft = [
@@ -1724,7 +1740,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $this->loadFixtures('Articles');
         $article = new Article();
-        $article->errors('spacecraft', ['Invalid']);
+        $article->setError('spacecraft', ['Invalid']);
 
         $this->Form->create($article);
         $result = $this->Form->control('spacecraft._ids');
@@ -1816,7 +1832,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'checkbox', 'name' => 'Model[multi_field][]',
                 'value' => 'a+', 'id' => 'model-multi-field-a+', 'class' => 'form-check-input'
             ]],
-            ['label' => ['for' => 'model-multi-field-a+', 'class' => 'form-check-label']],            'first',
+            ['label' => ['for' => 'model-multi-field-a+', 'class' => 'form-check-label']], 'first',
             '/label',
             '/div',
             ['div' => ['class' => 'form-check']],
@@ -1891,7 +1907,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testSelectMultipleCheckboxRequestData() {
-        $this->Form->request->data = ['Model' => ['tags' => [1]]];
+        $this->Form->request = $this->Form->request->withData('Model.tags', [1]);
+        $this->Form->create();
         $result = $this->Form->select(
             'Model.tags',
             ['1' => 'first', 'Array' => 'Array'],
@@ -2015,9 +2032,10 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * Test default value setting on checkbox() method.
      *
      * @return void
+     * @throws \Exception
      */
     public function testCheckboxDefaultValue() {
-        $this->Form->request->data['Model']['field'] = false;
+        $this->Form->request = $this->Form->request->withData('Model.field', false);
         $result = $this->Form->checkbox('Model.field', ['default' => true, 'hiddenField' => false]);
         $expected = [
             'input' => [
@@ -2026,7 +2044,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ]];
         $this->assertHtml($expected, $result);
 
-        unset($this->Form->request->data['Model']['field']);
+        $this->Form->request = $this->Form->request->withParsedBody([]);
+        $this->Form->create();
         $result = $this->Form->checkbox('Model.field', ['default' => true, 'hiddenField' => false]);
         $expected = [
             'input' => [
@@ -2036,7 +2055,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ]];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data['Model']['field'] = true;
+        $this->Form->request = $this->Form->request->withData('Model.field', true);
+        $this->Form->create();
         $result = $this->Form->checkbox('Model.field', ['default' => false, 'hiddenField' => false]);
         $expected = [
             'input' => [
@@ -2046,7 +2066,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ]];
         $this->assertHtml($expected, $result);
 
-        unset($this->Form->request->data['Model']['field']);
+        $this->Form->request = $this->Form->request->withParsedBody([]);
+        $this->Form->create();
         $result = $this->Form->checkbox('Model.field', ['default' => false, 'hiddenField' => false]);
         $expected = [
             'input' => [
@@ -2056,8 +2077,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->assertHtml($expected, $result);
 
         $this->loadFixtures('Articles');
-        $Articles = TableRegistry::get('Articles');
-        $Articles->schema()->addColumn(
+        $Articles = $this->getTableLocator()->get('Articles');
+        $Articles->getSchema()->addColumn(
             'published',
             ['type' => 'boolean', 'null' => false, 'default' => true]
         );
@@ -2084,7 +2105,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->article['errors'] = [
             'published' => true
         ];
-        $this->Form->request->data['published'] = 'myvalue';
+
+        $this->Form->request = $this->Form->request->withData('published', 'myvalue');
         $this->Form->create($this->article);
 
         $result = $this->Form->checkbox('published', ['id' => 'theID', 'value' => 'myvalue']);
@@ -2101,7 +2123,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data['published'] = '';
+        $this->Form->request = $this->Form->request->withData('published', '');
+        $this->Form->create($this->article);
         $result = $this->Form->checkbox('published');
         $expected = [
             'input' => ['type' => 'hidden', 'class' => 'is-invalid', 'name' => 'published', 'value' => '0'],
@@ -2173,7 +2196,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testTextArea() {
-        $this->Form->request->data = ['field' => 'some test data'];
+        $this->Form->request = $this->Form->request->withData('field', 'some test data');
         $result = $this->Form->textarea('field');
         $expected = [
             'textarea' => ['name' => 'field', 'rows' => 5, 'class' => 'form-control'],
@@ -2189,7 +2212,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data = ['field' => 'some <strong>test</strong> data with <a href="#">HTML</a> chars'];
+        $this->Form->request = $this->Form->request->withData('field', 'some <strong>test</strong> data with <a href="#">HTML</a> chars');
+        $this->Form->create();
         $result = $this->Form->textarea('field');
         $expected = [
             'textarea' => ['name' => 'field', 'rows' => 5, 'class' => 'form-control'],
@@ -2198,9 +2222,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data = [
-            'Model' => ['field' => 'some <strong>test</strong> data with <a href="#">HTML</a> chars']
-        ];
+        $this->Form->request = $this->Form->request->withData('Model.field', 'some <strong>test</strong> data with <a href="#">HTML</a> chars');
+        $this->Form->create();
         $result = $this->Form->textarea('Model.field', ['escape' => false]);
         $expected = [
             'textarea' => ['name' => 'Model[field]', 'rows' => 5, 'class' => 'form-control'],
@@ -2287,7 +2310,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->article['errors'] = [
             'field' => true
         ];
-        $this->Form->request->data['field'] = 'test';
+        $this->Form->request = $this->Form->request->withData('field', 'test');
         $this->Form->create($this->article);
         $result = $this->Form->hidden('field', ['id' => 'theID']);
         $expected = [
@@ -2407,8 +2430,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testSecurePostButton() {
-        $this->Form->request->params['_csrfToken'] = 'testkey';
-        $this->Form->request->params['_Token'] = ['unlockedFields' => []];
+        $this->Form->request = $this->Form->request->withParam('_csrfToken', 'testkey');
+        $this->Form->request = $this->Form->request->withParam('_Token', ['unlockedFields' => []]);
 
         $result = $this->Form->postButton('Delete', '/posts/delete/1');
         $tokenDebug = urlencode(json_encode([
@@ -2535,10 +2558,11 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * Test the generation of fields for a multi record form.
      *
      * @return void
+     * @throws \Exception
      */
     public function testMultiRecordForm() {
         $this->loadFixtures('Articles', 'Comments');
-        $articles = TableRegistry::get('Articles');
+        $articles = $this->getTableLocator()->get('Articles');
         $articles->hasMany('Comments');
 
         $comment = new Entity(['comment' => 'Value']);
@@ -2582,7 +2606,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         //@codingStandardsIgnoreEnd
         $this->assertHtml($expected, $result);
 
-        $comment->errors('comment', ['Not valid']);
+        $comment->setError('comment', ['Not valid']);
         $result = $this->Form->control('0.comments.0.comment');
         //@codingStandardsIgnoreStart
         $expected = [
@@ -2607,8 +2631,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         //@codingStandardsIgnoreEnd
         $this->assertHtml($expected, $result);
 
-        TableRegistry::get('Comments')
-            ->validator('default')
+        $this->getTableLocator()->get('Comments')
+            ->getValidator('default')
             ->allowEmpty('comment', false);
         $result = $this->Form->control('0.comments.1.comment');
         //@codingStandardsIgnoreStart
@@ -3070,10 +3094,10 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testFileUploadFieldTypeGenerationForBinaries() {
-        $table = TableRegistry::get('Contacts', [
+        $table = $this->getTableLocator()->get('Contacts', [
             'className' => 'Cake\Test\TestCase\View\Helper\ContactsTable'
         ]);
-        $table->schema(['foo' => [
+        $table->setSchema(['foo' => [
             'type' => 'binary',
             'null' => false,
             'default' => null,
@@ -3110,14 +3134,16 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $result = $this->Form->file('Model.upload');
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data['Model']['upload'] = [
+        $this->Form->request = $this->Form->request->withData('Model.upload', [
             'name' => '', 'type' => '', 'tmp_name' => '',
             'error' => 4, 'size' => 0
-        ];
+        ]);
+        $this->Form->create();
         $result = $this->Form->file('Model.upload');
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data['Model']['upload'] = 'no data should be set in value';
+        $this->Form->request = $this->Form->request->withData('Model.upload', 'no data should be set in value');
+        $this->Form->create();
         $result = $this->Form->file('Model.upload');
         $this->assertHtml($expected, $result);
     }
@@ -3210,7 +3236,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data['Project']['release'] = '2050-02-10';
+        $this->Form->request = $this->Form->request->withData('Project.release', '2050-02-10');
+        $this->Form->create();
         $result = $this->Form->month('Project.release');
 
         $expected = [
@@ -3241,6 +3268,10 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testDay() {
+        /**
+         * @var string $daysRegex
+         */
+
         extract($this->dateRegex);
 
         $result = $this->Form->day('Model.field', ['value' => '', 'class' => 'form-control']);
@@ -3259,7 +3290,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data['Model']['field'] = '2006-10-10 23:12:32';
+        $this->Form->request = $this->Form->request->withData('Model.field', '2006-10-10 23:12:32');
+        $this->Form->create();
         $result = $this->Form->day('Model.field');
         $expected = [
             ['select' => ['name' => 'Model[field][day]', 'class' => 'form-control']],
@@ -3280,7 +3312,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data['Model']['field'] = '';
+        $this->Form->request = $this->Form->request->withData('Model.field', '');
+        $this->Form->create();
         $result = $this->Form->day('Model.field', ['value' => '10']);
         $expected = [
             ['select' => ['name' => 'Model[field][day]', 'class' => 'form-control']],
@@ -3301,7 +3334,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data['Project']['release'] = '2050-10-10';
+        $this->Form->request = $this->Form->request->withData('Project.release', '2050-10-10');
+        $this->Form->create();
         $result = $this->Form->day('Project.release');
 
         $expected = [
@@ -3337,6 +3371,10 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testMinute() {
+        /**
+         * @var string $minutesRegex
+         */
+
         extract($this->dateRegex);
 
         $result = $this->Form->minute('Model.field', ['value' => '']);
@@ -3358,7 +3396,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data['Model']['field'] = '2006-10-10 00:12:32';
+        $this->Form->request = $this->Form->request->withData('Model.field', '2006-10-10 23:12:32');
+        $this->Form->create();
         $result = $this->Form->minute('Model.field');
         $expected = [
             ['select' => ['name' => 'Model[field][minute]', 'class' => 'form-control']],
@@ -3382,7 +3421,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data['Model']['field'] = '';
+        $this->Form->request = $this->Form->request->withData('Model.field', '');
+        $this->Form->create();
         $result = $this->Form->minute('Model.field', ['interval' => 5]);
         $expected = [
             ['select' => ['name' => 'Model[field][minute]', 'class' => 'form-control']],
@@ -3402,7 +3442,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data['Model']['field'] = '2006-10-10 00:10:32';
+        $this->Form->request = $this->Form->request->withData('Model.field', '2006-10-10 00:10:32');
+        $this->Form->create();
         $result = $this->Form->minute('Model.field', ['interval' => 5]);
         $expected = [
             ['select' => ['name' => 'Model[field][minute]', 'class' => 'form-control']],
@@ -3431,6 +3472,10 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testMeridian() {
+        /**
+         * @var string $meridianRegex
+         */
+
         extract($this->dateRegex);
 
         $now = new \DateTime();
@@ -3456,6 +3501,10 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testHour() {
+        /**
+         * @var string $hoursRegex
+         */
+
         extract($this->dateRegex);
 
         $result = $this->Form->hour('Model.field', ['format' => 12, 'value' => '']);
@@ -3474,7 +3523,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data['Model']['field'] = '2006-10-10 00:12:32';
+        $this->Form->request = $this->Form->request->withData('Model.field', '2006-10-10 00:12:32');
+        $this->Form->create();
         $result = $this->Form->hour('Model.field', ['format' => 12]);
         $expected = [
             ['select' => ['name' => 'Model[field][hour]', 'class' => 'form-control']],
@@ -3494,14 +3544,16 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data['Model']['field'] = '';
+        $this->Form->request = $this->Form->request->withData('Model.field', '');
+        $this->Form->create();
         $result = $this->Form->hour('Model.field', ['format' => 24, 'value' => '23']);
         $this->assertContains('<option value="23" selected="selected">23</option>', $result);
 
         $result = $this->Form->hour('Model.field', ['format' => 12, 'value' => '23']);
         $this->assertContains('<option value="11" selected="selected">11</option>', $result);
 
-        $this->Form->request->data['Model']['field'] = '2006-10-10 00:12:32';
+        $this->Form->request = $this->Form->request->withData('Model.field', '2006-10-10 00:12:32');
+        $this->Form->create();
         $result = $this->Form->hour('Model.field', ['format' => 24]);
         $expected = [
             ['select' => ['name' => 'Model[field][hour]', 'class' => 'form-control']],
@@ -3521,13 +3573,15 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        unset($this->Form->request->data['Model']['field']);
+        $this->Form->request = $this->Form->request->withParsedBody([]);
+        $this->Form->create();
         $result = $this->Form->hour('Model.field', ['format' => 24, 'value' => 'now']);
         $thisHour = date('H');
         $optValue = date('G');
         $this->assertRegExp('/<option value="' . $thisHour . '" selected="selected">' . $optValue . '<\/option>/', $result);
 
-        $this->Form->request->data['Model']['field'] = '2050-10-10 01:12:32';
+        $this->Form->request = $this->Form->request->withData('Model.field', '2050-10-10 01:12:32');
+        $this->Form->create();
         $result = $this->Form->hour('Model.field', ['format' => 24]);
         $expected = [
             ['select' => ['name' => 'Model[field][hour]', 'class' => 'form-control']],
@@ -3591,7 +3645,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data['Contact']['published'] = '2006-10-10';
+        $this->Form->request = $this->Form->request->withData('Contact.published', '2006-10-10');
+        $this->Form->create();
         $result = $this->Form->year('Contact.published', [
             'empty' => false,
             'minYear' => 2006,
@@ -3623,6 +3678,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testDateTime() {
+        /**
+         * @var string $yearsRegex
+         * @var string $monthsRegex
+         * @var string $daysRegex
+         * @var string $hoursRegex
+         * @var string $minutesRegex
+         */
+
         extract($this->dateRegex);
 
         $result = $this->Form->dateTime('Contact.date', ['default' => true]);
@@ -3725,6 +3788,15 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testDatetimeEmpty() {
+        /**
+         * @var string $yearsRegex
+         * @var string $monthsRegex
+         * @var string $daysRegex
+         * @var string $hoursRegex
+         * @var string $minutesRegex
+         * @var string $meridianRegex
+         */
+
         extract($this->dateRegex);
 
         $result = $this->Form->dateTime('Contact.date', [
@@ -3781,6 +3853,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testDatetimeMinuteInterval() {
+        /**
+         * @var string $yearsRegex
+         * @var string $monthsRegex
+         * @var string $daysRegex
+         * @var string $hoursRegex
+         * @var string $minutesRegex
+         */
+
         extract($this->dateRegex);
 
         $result = $this->Form->dateTime('Contact.date', [
@@ -3896,8 +3976,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testFormSecuredControl() {
-        $this->Form->request->params['_csrfToken'] = 'testKey';
-        $this->Form->request->params['_Token'] = 'stuff';
+        $this->Form->request = $this->Form->request->withParam('_csrfToken', 'testKey');
+        $this->Form->request = $this->Form->request->withParam('_Token', 'stuff');
         $this->article['schema'] = [
             'ratio' => ['type' => 'decimal', 'length' => 5, 'precision' => 6],
             'population' => ['type' => 'decimal', 'length' => 15, 'precision' => 0],
@@ -4150,7 +4230,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testControl() {
-        TableRegistry::get('ValidateUsers', [
+        $this->getTableLocator()->get('ValidateUsers', [
             'className' => 'Cake\Test\TestCase\View\Helper\ValidateUsersTable'
         ]);
         $this->Form->create([], ['context' => ['table' => 'ValidateUsers']]);
@@ -4196,7 +4276,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testControlCustomization() {
-        TableRegistry::get('Contacts', [
+        $this->getTableLocator()->get('Contacts', [
             'className' => 'Cake\Test\TestCase\View\Helper\ContactsTable'
         ]);
         $this->Form->create([], ['context' => ['table' => 'Contacts']]);
@@ -4305,7 +4385,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data['Model']['0']['OtherModel']['field'] = 'My value';
+        $this->Form->request = $this->Form->request->withData('Model.0.OtherModel.field', 'My value');
         $this->Form->create();
         $result = $this->Form->control('Model.0.OtherModel.field', ['id' => 'myId']);
         $expected = [
@@ -4321,9 +4401,10 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data = [];
+        $this->Form->request = $this->Form->request->withParsedBody([]);
+        $this->Form->create();
 
-        $entity->errors('field', 'Badness!');
+        $entity->setError('field', 'Badness!');
         $this->Form->create($entity, ['context' => ['table' => 'Contacts']]);
         $result = $this->Form->control('field');
         $expected = [
@@ -4362,7 +4443,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $entity->errors('field', ['minLength'], true);
+        $entity->setError('field', ['minLength'], true);
         $result = $this->Form->control('field', [
             'error' => [
                 'minLength' => 'Le login doit contenir au moins 2 caractères',
@@ -4382,7 +4463,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $entity->errors('field', ['maxLength'], true);
+        $entity->setError('field', ['maxLength'], true);
         $result = $this->Form->control('field', [
             'error' => [
                 'minLength' => 'Le login doit contenir au moins 2 caractères',
@@ -4459,7 +4540,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testControlZero() {
-        TableRegistry::get('Contacts', [
+        $this->getTableLocator()->get('Contacts', [
             'className' => 'Cake\Test\TestCase\View\Helper\ContactsTable'
         ]);
         $this->Form->create([], ['context' => ['table' => 'Contacts']]);
@@ -4719,7 +4800,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->assertHtml($expected, $result);
 
         $this->View->viewVars['users'] = ['value' => 'good', 'other' => 'bad'];
-        $this->Form->request->data = ['Model' => ['user_id' => 'value']];
+        $this->Form->request = $this->Form->request->withData('Model.user_id', 'value');
+        $this->Form->create();
 
         $result = $this->Form->control('Model.user_id', ['empty' => true]);
         $expected = [
@@ -4742,7 +4824,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->assertHtml($expected, $result);
 
         $this->View->viewVars['users'] = ['value' => 'good', 'other' => 'bad'];
-        $this->Form->request->data = ['Thing' => ['user_id' => null]];
+        $this->Form->request = $this->Form->request->withData('Thing.user_id', null);
+        $this->Form->create();
         $result = $this->Form->control('Thing.user_id', ['empty' => 'Some Empty']);
         $expected = [
             'div' => ['class' => 'form-group'],
@@ -4765,7 +4848,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->assertHtml($expected, $result);
 
         $this->View->viewVars['users'] = ['value' => 'good', 'other' => 'bad'];
-        $this->Form->request->data = ['Thing' => ['user_id' => 'value']];
+        $this->Form->request = $this->Form->request->withData('Thing.user_id', 'value');
+        $this->Form->create();
         $result = $this->Form->control('Thing.user_id', ['empty' => 'Some Empty']);
         $expected = [
             'div' => ['class' => 'form-group'],
@@ -4787,7 +4871,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->data = [];
+        $this->Form->request = $this->Form->request->withParsedBody([]);
+        $this->Form->create();
         $result = $this->Form->control('Publisher.id', [
             'label' => 'Publisher',
             'type' => 'select',
@@ -4929,7 +5014,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testControlMagicSelectForTypeNumber() {
-        TableRegistry::get('ValidateUsers', [
+        $this->getTableLocator()->get('ValidateUsers', [
             'className' => 'Cake\Test\TestCase\View\Helper\ValidateUsersTable'
         ]);
         $entity = new Entity(['balance' => 1]);
@@ -5004,9 +5089,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->assertNotContains('<fieldset>', $result);
 
         $this->Form->create($this->article);
-        $this->Form->request->params['prefix'] = 'admin';
-        $this->Form->request->params['action'] = 'admin_edit';
-        $this->Form->request->params['controller'] = 'articles';
+        $this->Form->request = $this->Form->request->withParam('prefix', 'admin');
+        $this->Form->request = $this->Form->request->withParam('action', 'admin_edit');
+        $this->Form->request = $this->Form->request->withParam('controller', 'articles');
         $result = $this->Form->allControls();
         $expected = [
             'fieldset' => ['class' => 'form-group'],
@@ -5271,7 +5356,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testRadioControlInsideLabel() {
-        $this->Form->templates([
+        $this->Form->setTemplates([
             'label' => '<label{{attrs}}>{{input}}{{text}}</label>',
             'radioWrapper' => '{{label}}'
         ]);
@@ -5453,16 +5538,15 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testDateTimeLabelIdMatchesFirstControl() {
-        $this->assertTrue(true);
-        return;
+
         $result = $this->Form->control('Model.date', ['type' => 'date']);
-        $this->assertContains('<label>Date</label>', $result);
+        $this->assertContains('<label class="col-form-label">Date</label>', $result);
 
         $result = $this->Form->control('Model.date', ['type' => 'date', 'dateFormat' => 'DMY']);
-        $this->assertContains('<label>Date</label>', $result);
+        $this->assertContains('<label class="col-form-label">Date</label>', $result);
 
         $result = $this->Form->control('Model.date', ['type' => 'date', 'dateFormat' => 'YMD']);
-        $this->assertContains('<label>Date</label>', $result);
+        $this->assertContains('<label class="col-form-label">Date</label>', $result);
     }
 
     /**
@@ -5491,7 +5575,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      */
     public function testForMagicControlNonExistingNorValidated() {
         $this->Form->create($this->article);
-        $this->Form->templates(['inputContainer' => '{{content}}']);
+        $this->Form->setTemplates(['inputContainer' => '{{content}}']);
         $result = $this->Form->control('non_existing_nor_validated');
         $expected = [
             'label' => ['for' => 'non-existing-nor-validated', 'class'],
@@ -5519,7 +5603,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->request->data = ['non_existing_nor_validated' => 'CakePHP magic'];
+        $this->Form->request = $this->Form->request->withData('non_existing_nor_validated', 'CakePHP magic');
+        $this->Form->create();
         $result = $this->Form->control('non_existing_nor_validated');
         $expected = [
             'label' => ['for' => 'non-existing-nor-validated', 'class'],
@@ -5540,11 +5625,11 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testFormMagicControlLabel() {
-        TableRegistry::get('Contacts', [
+        $this->getTableLocator()->get('Contacts', [
             'className' => 'Cake\Test\TestCase\View\Helper\ContactsTable'
         ]);
         $this->Form->create([], ['context' => ['table' => 'Contacts']]);
-        $this->Form->templates(['inputContainer' => '{{content}}']);
+        $this->Form->setTemplates(['inputContainer' => '{{content}}']);
 
         $result = $this->Form->control('Contacts.name', ['label' => 'My label']);
         $expected = [
@@ -5668,7 +5753,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      */
     public function testHtml5ControlWithControl() {
         $this->Form->create();
-        $this->Form->templates(['inputContainer' => '{{content}}']);
+        $this->Form->setTemplates(['inputContainer' => '{{content}}']);
         $result = $this->Form->control('website', [
             'type' => 'url',
             'val' => 'http://domain.tld',
@@ -5689,7 +5774,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testControlsNotNested() {
-        $this->Form->templates([
+        $this->Form->setTemplates([
             'nestingLabel' => '{{hidden}}{{input}}<label{{attrs}}>{{text}}</label>',
             'formGroup' => '{{input}}{{label}}',
         ]);
@@ -5774,7 +5859,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testControlContainerTemplates() {
-        $this->Form->templates([
+        $this->Form->setTemplates([
             'checkboxContainer' => '<div class="check">{{content}}</div>',
             'radioContainer' => '<div class="rad">{{content}}</div>',
             'radioContainerError' => '<div class="rad err">{{content}}</div>',
@@ -5824,7 +5909,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testFormValueSourcesDefaults() {
-        $this->Form->request->query['password'] = 'open Sesame';
+        $this->Form->request = $this->Form->request->withQueryParams(['password' => 'open Sesame']);
         $this->Form->create();
 
         $result = $this->Form->password('password');

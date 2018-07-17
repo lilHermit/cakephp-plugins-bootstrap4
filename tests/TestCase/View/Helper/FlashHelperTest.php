@@ -9,6 +9,10 @@ use Cake\Network\Request;
 use LilHermit\Bootstrap4\View\BootstrapView;
 use LilHermit\Bootstrap4\View\Helper\FlashHelper;
 
+
+/**
+ * @property BootstrapView $View
+ */
 class FlashHelperTest extends \Cake\Test\TestCase\View\Helper\FlashHelperTest {
 
     /**
@@ -19,8 +23,8 @@ class FlashHelperTest extends \Cake\Test\TestCase\View\Helper\FlashHelperTest {
     public function setUp() {
         parent::setUp();
 
-        // Save the session with all the flashes (set by parent
-        $session = $this->View->request->session();
+        // Save the session with all the flashes (set by parent)
+        $session = $this->View->request->getSession();
 
         // Use our View (Bootstrap)
         $this->View = new BootstrapView();
@@ -100,7 +104,7 @@ class FlashHelperTest extends \Cake\Test\TestCase\View\Helper\FlashHelperTest {
             ['div' => ['id' => 'classy-message']], 'Recorded', '/div'
         ];
         $this->assertHtml($expected, $result);
-        $this->assertNull($this->View->request->session()->read('Flash.stack'));
+        $this->assertNull($this->View->request->getSession()->read('Flash.stack'));
     }
 
     /**
@@ -110,7 +114,7 @@ class FlashHelperTest extends \Cake\Test\TestCase\View\Helper\FlashHelperTest {
      */
     public function testFlashVariants() {
 
-        $this->View->request->session()->write('Flash.flash.0.element', 'Flash/error');
+        $this->View->request->getSession()->write('Flash.flash.0.element', 'Flash/error');
         $result = $this->Flash->render();
         $this->assertHtml([
             ['div' => ['class' => 'alert alert-danger alert-dismissible fade show', 'role' => 'alert']],
@@ -123,7 +127,7 @@ class FlashHelperTest extends \Cake\Test\TestCase\View\Helper\FlashHelperTest {
             ['/div' => true]
         ], $result);
 
-        $this->View->request->session()->write('Flash.flash.0', [
+        $this->View->request->getSession()->write('Flash.flash.0', [
             'key' => 'flash',
             'message' => 'This is a calling',
             'element' => 'Flash/success',
@@ -141,7 +145,7 @@ class FlashHelperTest extends \Cake\Test\TestCase\View\Helper\FlashHelperTest {
             ['/div' => true]
         ], $result);
 
-        $this->View->request->session()->write('Flash.flash.0', [
+        $this->View->request->getSession()->write('Flash.flash.0', [
             'key' => 'flash',
             'message' => 'This is a calling',
             'element' => 'Flash/warning',
@@ -167,7 +171,7 @@ class FlashHelperTest extends \Cake\Test\TestCase\View\Helper\FlashHelperTest {
      */
     public function testFlashNoDismiss() {
 
-        $this->View->request->session()->write('Flash.flash.0', [
+        $this->View->request->getSession()->write('Flash.flash.0', [
             'key' => 'flash',
             'message' => 'This is a calling',
             'element' => 'Flash/default',
@@ -180,7 +184,7 @@ class FlashHelperTest extends \Cake\Test\TestCase\View\Helper\FlashHelperTest {
             ['/div' => true]
         ], $result);
 
-        $this->View->request->session()->write('Flash.flash.0', [
+        $this->View->request->getSession()->write('Flash.flash.0', [
             'key' => 'flash',
             'message' => 'This is a calling',
             'element' => 'Flash/info',
@@ -193,7 +197,7 @@ class FlashHelperTest extends \Cake\Test\TestCase\View\Helper\FlashHelperTest {
             ['/div' => true]
         ], $result);
 
-        $this->View->request->session()->write('Flash.flash.0', [
+        $this->View->request->getSession()->write('Flash.flash.0', [
             'key' => 'flash',
             'message' => 'This is a calling',
             'element' => 'Flash/error',
@@ -206,7 +210,7 @@ class FlashHelperTest extends \Cake\Test\TestCase\View\Helper\FlashHelperTest {
             ['/div' => true]
         ], $result);
 
-        $this->View->request->session()->write('Flash.flash.0', [
+        $this->View->request->getSession()->write('Flash.flash.0', [
             'key' => 'flash',
             'message' => 'This is a calling',
             'element' => 'Flash/success',
@@ -219,7 +223,7 @@ class FlashHelperTest extends \Cake\Test\TestCase\View\Helper\FlashHelperTest {
             ['/div' => true]
         ], $result);
 
-        $this->View->request->session()->write('Flash.flash.0', [
+        $this->View->request->getSession()->write('Flash.flash.0', [
             'key' => 'flash',
             'message' => 'This is a calling',
             'element' => 'Flash/warning',
