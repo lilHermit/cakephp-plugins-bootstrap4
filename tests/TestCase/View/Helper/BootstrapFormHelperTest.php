@@ -2177,88 +2177,20 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
     }
 
-    public function testLayoutGridAllControls() {
 
-        $result = $this->Form->create(null, [
+    public function testLayoutGridTextControl() {
+
+        $this->Form->create(null, [
             'layout' => [
-                'type' => 'grid',
-                'classes' => [
-                    'submitContainer' => ['col-sm-10', 'offset-sm-2', 'p-1']
-                ]
+                'type' => 'grid'
             ]
         ]);
 
-        $result .= $this->Form->control('name', [
-
+        $result = $this->Form->control('name', [
             'placeholder' => 'Jane Doe'
         ]);
 
-        $result .= $this->Form->control('username', [
-            'placeholder' => 'Username',
-            'prepend' => ['text' => '@',]
-        ]);
-
-        $result .= $this->Form->control('checkbox1', [
-            'label' => 'My checkboxes',
-            'default' => 2,
-            'multiple' => 'checkbox',
-            'type' => 'select',
-            'options' => [
-                ['text' => 'First Checkbox', 'value' => 1],
-                ['text' => 'Second Checkbox', 'value' => 2]
-            ],
-            'customControls' => true
-        ]);
-
-        $result .= $this->Form->control('checkbox1', [
-            'label' => 'My checkboxes',
-            'default' => 2,
-            'multiple' => 'checkbox',
-            'type' => 'select',
-            'options' => [
-                ['text' => 'First Checkbox', 'value' => 1],
-                ['text' => 'Second Checkbox', 'value' => 2]
-            ],
-            'customControls' => false
-        ]);
-
-        $result .= $this->Form->control(
-            'radio1',
-            [
-                'label' => 'My Radios',
-                'default' => 2,
-                'type' => 'radio',
-                'options' => [
-                    ['text' => 'First Radio', 'value' => 1],
-                    ['text' => 'Second Radio', 'value' => 2]
-                ],
-                'customControls' => true
-            ]
-        );
-
-        $result .= $this->Form->control(
-            'radio',
-            [
-                'label' => 'My Radios',
-                'default' => 2,
-                'type' => 'radio',
-                'options' => [
-                    ['text' => 'First Radio', 'value' => 1],
-                    ['text' => 'Second Radio', 'value' => 2]
-                ],
-                'customControls' => false
-            ]
-        );
-
-        $result .= $this->Form->submit();
-        $result .= $this->Form->end();
-
         $this->assertHtml([
-            'form' => ['method', 'accept-charset', 'action', 'class' => 'container'],
-            ['div' => ['style']],
-            'input' => ['type' => 'hidden', 'name', 'value'],
-            '/div',
-            // Name text field
             ['div' => ['class' => 'form-group row']],
             'label' => ['class' => 'col-form-label col-sm-2', 'for'],
             'Name',
@@ -2266,8 +2198,25 @@ class BootstrapFormHelperTest extends TestCase {
             ['div' => ['class' => 'col-sm-10']],
             ['input' => ['name', 'type', 'id', 'placeholder', 'class' => 'form-control']],
             '/div',
-            '/div',
-            // Username suffix
+            '/div'
+        ], $result);
+    }
+
+    public function testLayoutGridTextPrependControl() {
+
+        $this->Form->create(null, [
+            'layout' => [
+                'type' => 'grid'
+            ]
+        ]);
+
+        $result = $this->Form->control('username', [
+            'placeholder' => 'Username',
+            'prepend' => ['text' => '@',]
+        ]);
+
+        $this->assertHtml([
+
             'div' => ['class' => 'form-group row'],
             ['label' => ['class' => 'col-form-label col-sm-2', 'for' => 'username']],
             'Username',
@@ -2283,7 +2232,38 @@ class BootstrapFormHelperTest extends TestCase {
             '/div',
             '/div',
             '/div',
-            // Multi-checkbox custom controls
+        ], $result);
+    }
+
+    /**
+     * Tests rendering of multiple checkboxes in grid
+     *
+     * Tests
+     *  a) CustomControls = true
+     *  b) CustomControls = false
+     */
+    public function testLayoutGridMultipleCheckboxControls() {
+
+        $this->Form->create(null, [
+            'layout' => [
+                'type' => 'grid'
+            ]
+        ]);
+
+
+        $result = $this->Form->control('checkbox1', [
+            'label' => 'My checkboxes',
+            'default' => 2,
+            'multiple' => 'checkbox',
+            'type' => 'select',
+            'options' => [
+                ['text' => 'First Checkbox', 'value' => 1],
+                ['text' => 'Second Checkbox', 'value' => 2]
+            ],
+            'customControls' => true
+        ]);
+
+        $this->assertHtml([
             ['div' => ['class' => 'form-group clearfix row']],
             ['label' => ['for', 'class' => 'col-sm-2']],
             'My checkboxes',
@@ -2307,7 +2287,21 @@ class BootstrapFormHelperTest extends TestCase {
             '/div',
             '/div',
 
-            // Multi-checkbox non custom controls
+        ], $result);
+
+        $result = $this->Form->control('checkbox1', [
+            'label' => 'My checkboxes',
+            'default' => 2,
+            'multiple' => 'checkbox',
+            'type' => 'select',
+            'options' => [
+                ['text' => 'First Checkbox', 'value' => 1],
+                ['text' => 'Second Checkbox', 'value' => 2]
+            ],
+            'customControls' => false
+        ]);
+
+        $this->assertHtml([
             ['div' => ['class' => 'form-group row']],
             ['label' => ['for', 'class' => 'col-sm-2']],
             'My checkboxes',
@@ -2330,12 +2324,102 @@ class BootstrapFormHelperTest extends TestCase {
             '/div',
             '/div',
             '/div',
+
+        ], $result);
+    }
+
+    /**
+     * Tests rendering of single checkbox in grid
+     *
+     * Tests
+     *  a) CustomControls = true
+     *  b) CustomControls = false
+     */
+    public function testLayoutGridSingleCheckboxControl() {
+
+        $this->Form->create(null, [
+            'layout' => [
+                'type' => 'grid'
+            ]
+        ]);
+
+        $result = $this->Form->control('checkbox1', [
+            'label' => 'I agree to the terms',
+            'type' => 'checkbox',
+            'customControls' => true
+        ]);
+
+        $this->assertHtml([
+            ['div' => ['class' => 'form-group row']],
+            ['div' => ['class' => 'custom-control custom-checkbox col-sm-10 offset-sm-2']],
+            ['input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => 0]],
+            ['input' => ['type', 'name', 'value', 'id', 'class' => 'custom-control-input']],
+            ['label' => ['for', 'class' => 'custom-control-label']],
+            'I agree to the terms',
+            '/label',
+            '/div',
+
+            '/div',
+
+        ], $result);
+
+        $result = $this->Form->control('checkbox1', [
+            'label' => 'I agree to the terms',
+            'type' => 'checkbox',
+            'customControls' => false
+        ]);
+
+        $this->assertHtml([
+            ['div' => ['class' => 'form-check row']],
+            ['div' => ['class' => 'col-sm-10 offset-sm-2']],
+            ['input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => 0]],
+
+            ['input' => ['type', 'name', 'value', 'id', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'checkbox1', 'class' => 'form-check-label']],
+            'I agree to the terms',
+            '/label',
+            '/div',
+            '/div',
+        ], $result);
+    }
+
+    /**
+     * Tests rendering of radios in grid
+     *
+     * Tests
+     *  a) CustomControls = true
+     *  b) CustomControls = false
+     */
+    public function testLayoutGridRadioControls() {
+
+        $this->Form->create(null, [
+            'layout' => [
+                'type' => 'grid'
+            ]
+        ]);
+
+        $result = $this->Form->control(
+            'radio1',
+            [
+                'label' => 'My Radios',
+                'default' => 2,
+                'type' => 'radio',
+                'options' => [
+                    ['text' => 'First Radio', 'value' => 1],
+                    ['text' => 'Second Radio', 'value' => 2]
+                ],
+                'customControls' => true
+            ]
+        );
+
+        $this->assertHtml([
+
             // Radios custom controls
             ['div' => ['class' => 'form-group row']],
             ['label' => ['class' => 'col-sm-2']],
             'My Radios',
             '/label',
-            ['div' => ['class' => 'col-sm-10']],
+            ['div' => ['class' => 'custom-control custom-radio col-sm-10 pl-0']],
             ['input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => '']],
 
             ['div' => ['class' => 'custom-control custom-radio']],
@@ -2354,12 +2438,30 @@ class BootstrapFormHelperTest extends TestCase {
             '/div',
             '/div',
             '/div',
+        ], $result);
+
+        $result = $this->Form->control(
+            'radio',
+            [
+                'label' => 'My Radios',
+                'default' => 2,
+                'type' => 'radio',
+                'options' => [
+                    ['text' => 'First Radio', 'value' => 1],
+                    ['text' => 'Second Radio', 'value' => 2]
+                ],
+                'customControls' => false
+            ]
+        );
+
+        $this->assertHtml([
+
             // Radios non custom controls
             ['div' => ['class' => 'form-group row']],
             ['label' => ['class' => 'col-sm-2']],
             'My Radios',
             '/label',
-            ['div' => ['class' => 'col-sm-10']],
+            ['div' => ['class' => 'col-sm-10 pl-0']],
             ['input' => ['type' => 'hidden', 'name', 'value' => ""]],
             ['div' => ['class' => 'form-check']],
             ['input' => ['type', 'name', 'value', 'id', 'class' => 'form-check-input']],
@@ -2374,7 +2476,45 @@ class BootstrapFormHelperTest extends TestCase {
             '/label',
             '/div',
             '/div',
+            '/div'
+        ], $result);
+    }
+
+    public function testLayoutGridFormWithSubmitControls() {
+
+        $result = $this->Form->create(null, [
+            'layout' => [
+                'type' => 'grid',
+                'classes' => [
+                    'submitContainer' => ['col-sm-10', 'offset-sm-2', 'p-1']
+                ]
+            ]
+        ]);
+
+
+        $result .= $this->Form->control('name', [
+            'placeholder' => 'Jane Doe'
+        ]);
+
+        $result .= $this->Form->submit();
+        $result .= $this->Form->end();
+
+        $this->assertHtml([
+            'form' => ['method', 'accept-charset', 'action', 'class' => 'container'],
+            ['div' => ['style']],
+            'input' => ['type' => 'hidden', 'name', 'value'],
             '/div',
+
+            // Input
+            ['div' => ['class' => 'form-group row']],
+            'label' => ['class' => 'col-form-label col-sm-2', 'for'],
+            'Name',
+            '/label',
+            ['div' => ['class' => 'col-sm-10']],
+            ['input' => ['name', 'type', 'id', 'placeholder', 'class' => 'form-control']],
+            '/div',
+            '/div',
+
             // Submit
             ['div' => ['class' => 'col-sm-10 offset-sm-2 p-1']],
             ['input' => ['type' => 'submit', 'class', 'value']],

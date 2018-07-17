@@ -19,6 +19,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                 'label' => [],
                 'control' => [],
                 'submitContainer' => [],
+                'checkboxContainer' => ['col-sm-10', 'offset-sm-2'],
+                'radioContainer' => ['col-sm-10 pl-0'],
                 'grid' => []
             ]
         ],
@@ -491,16 +493,14 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             'file' => 'custom-file-input'
         ];
 
-        if (isset($options['customControls'])) {
-            if (!$options['customControls']) {
-                $widgetsClassMap = array_merge($widgetsClassMap,
-                    [
-                        'multicheckbox' => 'form-check-input',
-                        'checkbox' => 'form-check-input',
-                        'radio' => 'form-check-input',
-                        'file' => 'form-control-file'
-                    ]);
-            }
+        if (!$this->isControlControls($options)) {
+            $widgetsClassMap = array_merge($widgetsClassMap,
+                [
+                    'multicheckbox' => 'form-check-input',
+                    'checkbox' => 'form-check-input',
+                    'radio' => 'form-check-input',
+                    'file' => 'form-control-file'
+                ]);
         }
 
         $type = null;
@@ -766,8 +766,25 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                 'formGroupGrid'
             ];
 
+            switch ($options['options']['type']) {
+                case 'checkbox':
+                    $baseClasses = $this->isControlControls($options['options']) ? ['custom-control', 'custom-checkbox'] : [];
+                    $groupClasses = Html::addClass($baseClasses, $this->getConfig('layout.classes.checkboxContainer', []), [
+                        'useIndex' => false
+                    ]);
+                    break;
+                case 'radio':
+                    $baseClasses = $this->isControlControls($options['options']) ? ['custom-control', 'custom-radio'] : [];
+                    $groupClasses = Html::addClass($baseClasses, $this->getConfig('layout.classes.radioContainer', []), [
+                        'useIndex' => false
+                    ]);
+                    break;
+                default:
+                    $groupClasses = $options['options']['gridClasses'][1];
+            }
+
             $attrs = $this->templater()->formatAttributes([
-                'class' => $options['options']['gridClasses'][1]
+                'class' => $groupClasses
             ]);
             $options['options']['templateVars']['attrs'] = $attrs;
         }
@@ -907,12 +924,14 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         }
 
         $newTemplates = [];
-        if ($options['customControls']) {
+        if ($this->isControlControls($options)) {
 
             switch ($type) {
                 case 'checkbox':
                     $newTemplates = [
-                        'checkboxContainer' => '<div class="custom-control custom-checkbox"{{attrs}}>{{content}}{{error}}{{help}}</div>'
+                        'checkboxContainer' => '<div class="custom-control custom-checkbox"{{attrs}}>{{content}}{{error}}{{help}}</div>',
+                        'checkboxContainerGrid' => '<div class="form-group row">{{content}}{{error}}{{help}}</div>',
+                        'checkboxFormGroupGrid' => "<div{{attrs}}>{{input}}{{label}}</div>"
                     ];
                     break;
                 case 'multicheckbox':
@@ -930,7 +949,9 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                     break;
                 case 'radio':
                     $newTemplates = [
-                        'radioWrapper' => '<div class="custom-control custom-radio">{{label}}</div>'
+                        'radioWrapper' => '<div class="custom-control custom-radio">{{label}}</div>',
+                        'radioContainerGrid' => '<div class="form-group row">{{content}}{{error}}{{help}}</div>',
+                        'radioFormGroupGrid' => "{{label}}<div{{attrs}}>{{input}}</div>"
                     ];
                     break;
                 case 'file':
@@ -956,7 +977,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                 case 'checkbox':
                     $newTemplates = [
                         'checkboxContainer' => '<div class="form-check"{{attrs}}>{{content}}{{error}}{{help}}</div>',
-                        'checkboxContainerGrid' => '<div class="form-check"{{attrs}}>{{content}}{{error}}{{help}}</div>',
+                        'checkboxContainerGrid' => '<div class="form-check row"{{attrs}}>{{content}}{{error}}{{help}}</div>',
                     ];
                     break;
                 case 'radio':
@@ -996,7 +1017,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     private function setLabelClass(&$options, $type = null, $fromInput = false) {
         $type = $this->decodeType($options, $type);
-        $customControls = $options['customControls'];
+        $customControls = $this->isControlControls($options);
 
         $label = false;
         $index = 'label';
@@ -1013,10 +1034,11 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                     } else {
                         $label = ['form-check-label'];
                     }
-                }
+                } else {
 
-                if ($this->isLayout('grid')) {
-                    $options = $this->_addLabelClass($options, $this->getConfig('layout.classes.grid.0'), 'label');
+                    if ($this->isLayout('grid')) {
+                        $options = $this->_addLabelClass($options, $this->getConfig('layout.classes.grid.0'), 'label');
+                    }
                 }
             } else {
                 if ($type === 'radio') {
@@ -1347,5 +1369,9 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     protected function isLayout($type) {
         return strstr($this->getConfig('layout.type'), $type) !== false;
+    }
+
+    protected function isControlControls($options) {
+        return isset($options['customControls']) && is_bool($options['customControls']) && $options['customControls'];
     }
 }
