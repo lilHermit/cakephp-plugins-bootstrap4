@@ -6029,4 +6029,316 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
     }
+
+    /**
+     * Test generation of a form button with confirm message.
+     *
+     * @return void
+     */
+    public function testButtonWithConfirm() {
+        $result = $this->Form->button('Hi', ['confirm' => 'Confirm me!']);
+        $expected = ['button' => ['type' => 'submit', 'class' => 'btn btn-primary', 'onclick' => 'if (confirm(&quot;Confirm me!&quot;)) { return true; } return false;'], 'Hi', '/button'];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * Tests to make sure `labelOptions` is rendered correctly by MultiCheckboxWidget and RadioWidget
+     *
+     * This test makes sure `false` excludes the label from the render
+     *
+     * @return void
+     */
+    public function testControlLabelManipulationDisableLabels() {
+        $result = $this->Form->control('test', [
+            'type' => 'radio',
+            'options' => ['A', 'B'],
+            'labelOptions' => false
+        ]);
+        $expected = [
+            ['div' => ['class' => 'form-group']],
+            '<label',
+            'Test',
+            '/label',
+            ['input' => ['type' => 'hidden', 'name' => 'test', 'value' => '']],
+            ['div' => ['class' => 'form-check']],
+            ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '0', 'id' => 'test-0', 'class' => 'form-check-input']],
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '1', 'id' => 'test-1', 'class' => 'form-check-input']],
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('checkbox1', [
+            'label' => 'My checkboxes',
+            'multiple' => 'checkbox',
+            'type' => 'select',
+            'options' => [
+                ['text' => 'First Checkbox', 'value' => 1],
+                ['text' => 'Second Checkbox', 'value' => 2]
+            ],
+            'labelOptions' => false
+        ]);
+        $expected = [
+            ['div' => ['class' => 'form-group']],
+            ['label' => ['for' => 'checkbox1']],
+            'My checkboxes',
+            '/label',
+            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
+            ['div' => ['class' => 'form-check']],
+            ['input' => ['type' => 'checkbox', 'name' => 'checkbox1[]', 'value' => '1', 'id' => 'checkbox1-1', 'class' => 'form-check-input']],
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['input' => ['type' => 'checkbox', 'name' => 'checkbox1[]', 'value' => '2', 'id' => 'checkbox1-2', 'class' => 'form-check-input']],
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * Tests to make sure `labelOptions` is rendered correctly by RadioWidget
+     *
+     * This test checks rendering of class (as string and array) also makes sure 'selected' is
+     * added to the class if checked.
+     *
+     * Also checks to make sure any custom attributes are rendered correctly
+     *
+     * @return void
+     */
+    public function testControlLabelManipulationRadios() {
+        $result = $this->Form->control('test', [
+            'type' => 'radio',
+            'options' => ['A', 'B'],
+            'labelOptions' => ['class' => 'custom-class']
+        ]);
+        $expected = [
+            ['div' => ['class' => 'form-group']],
+            '<label',
+            'Test',
+            '/label',
+            ['input' => ['type' => 'hidden', 'name' => 'test', 'value' => '']],
+            ['div' => ['class' => 'form-check']],
+            ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '0', 'id' => 'test-0', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'test-0', 'class' => 'custom-class form-check-label']],
+            'A',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '1', 'id' => 'test-1', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'test-1', 'class' => 'custom-class form-check-label']],
+            'B',
+            '/label',
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('test', [
+            'type' => 'radio',
+            'options' => ['A', 'B'],
+            'value' => 1,
+            'labelOptions' => ['class' => 'custom-class']
+        ]);
+        $expected = [
+
+            ['div' => ['class' => 'form-group']],
+            '<label',
+            'Test',
+            '/label',
+            ['input' => ['type' => 'hidden', 'name' => 'test', 'value' => '']],
+            ['div' => ['class' => 'form-check']],
+            ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '0', 'id' => 'test-0', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'test-0', 'class' => 'custom-class form-check-label']],
+            'A',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '1', 'id' => 'test-1', 'class' => 'form-check-input', 'checked' => 'checked']],
+            ['label' => ['for' => 'test-1', 'class' => 'custom-class form-check-label selected']],
+            'B',
+            '/label',
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('test', [
+            'type' => 'radio',
+            'options' => ['A', 'B'],
+            'value' => 1,
+            'labelOptions' => ['class' => ['custom-class', 'custom-class-array']]
+        ]);
+        $expected = [
+            ['div' => ['class' => 'form-group']],
+            '<label',
+            'Test',
+            '/label',
+            ['input' => ['type' => 'hidden', 'name' => 'test', 'value' => '']],
+            ['div' => ['class' => 'form-check']],
+            ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '0', 'id' => 'test-0', 'class' => 'form-check-input']],
+            ['label' => ['for' => 'test-0', 'class' => 'custom-class custom-class-array form-check-label']],
+            'A',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '1', 'id' => 'test-1', 'class' => 'form-check-input', 'checked' => 'checked']],
+            ['label' => ['for' => 'test-1', 'class' => 'custom-class custom-class-array form-check-label selected']],
+            'B',
+            '/label',
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->radio('test', ['A', 'B'], [
+            'label' => [
+                'class' => ['custom-class', 'another-class'],
+                'data-name' => 'bob'
+            ],
+            'value' => 1
+        ]);
+        $expected = [
+            'input' => ['type' => 'hidden', 'name' => 'test', 'value' => ''],
+            ['div' => ['class' => 'form-check']],
+            ['input' => ['type' => 'radio', 'name' => 'test', 'value' => '0', 'id' => 'test-0', 'class' => 'form-check-input']],
+            ['label' => ['class' => 'custom-class another-class form-check-label', 'data-name' => 'bob', 'for' => 'test-0']],
+            'A',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['input' => [
+                'type' => 'radio',
+                'name' => 'test',
+                'value' => '1',
+                'id' => 'test-1',
+                'checked' => 'checked',
+                'class' => 'form-check-input'
+            ]],
+            ['label' => ['class' => 'custom-class another-class form-check-label selected', 'data-name' => 'bob', 'for' => 'test-1']],
+            'B',
+            '/label',
+            '/div',
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * Tests to make sure `labelOptions` is rendered correctly by MultiCheckboxWidget
+     *
+     * This test checks rendering of class (as string and array) also makes sure 'selected' is
+     * added to the class if checked.
+     *
+     * Also checks to make sure any custom attributes are rendered correctly
+     *
+     * @return void
+     */
+    public function testControlLabelManipulationCheckboxes() {
+        $result = $this->Form->control('checkbox1', [
+            'label' => 'My checkboxes',
+            'multiple' => 'checkbox',
+            'type' => 'select',
+            'options' => [
+                ['text' => 'First Checkbox', 'value' => 1],
+                ['text' => 'Second Checkbox', 'value' => 2]
+            ],
+            'labelOptions' => ['class' => 'custom-class'],
+            'value' => ['1']
+        ]);
+        $expected = [
+            ['div' => ['class' => 'form-group']],
+            ['label' => ['for' => 'checkbox1']],
+            'My checkboxes',
+            '/label',
+            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
+            ['div' => ['class' => 'form-check']],
+            ['input' => [
+                'type' => 'checkbox',
+                'name' => 'checkbox1[]',
+                'value' => '1',
+                'id' => 'checkbox1-1',
+                'checked' => 'checked',
+                'class' => 'form-check-input'
+            ]],
+            ['label' => [
+                'class' => 'custom-class form-check-label selected',
+                'for' => 'checkbox1-1'
+            ]],
+            'First Checkbox',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['input' => [
+                'type' => 'checkbox',
+                'name' => 'checkbox1[]',
+                'value' => '2',
+                'id' => 'checkbox1-2',
+                'class' => 'form-check-input'
+            ]],
+            ['label' => [
+                'class' => 'custom-class form-check-label',
+                'for' => 'checkbox1-2'
+            ]],
+            'Second Checkbox',
+            '/label',
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('checkbox1', [
+            'label' => 'My checkboxes',
+            'multiple' => 'checkbox',
+            'type' => 'select',
+            'options' => [
+                ['text' => 'First Checkbox', 'value' => 1],
+                ['text' => 'Second Checkbox', 'value' => 2]
+            ],
+            'labelOptions' => ['class' => ['custom-class', 'another-class'], 'data-name' => 'bob'],
+            'value' => ['1']
+        ]);
+        $expected = [
+            ['div' => ['class' => 'form-group']],
+            ['label' => ['for' => 'checkbox1']],
+            'My checkboxes',
+            '/label',
+            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
+            ['div' => ['class' => 'form-check']],
+            ['input' => [
+                'type' => 'checkbox',
+                'name' => 'checkbox1[]',
+                'value' => '1',
+                'id' => 'checkbox1-1',
+                'checked' => 'checked',
+                'class' => 'form-check-input'
+            ]],
+            ['label' => [
+                'class' => 'custom-class another-class form-check-label selected',
+                'data-name' => 'bob',
+                'for' => 'checkbox1-1'
+            ]],
+            'First Checkbox',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['input' => [
+                'type' => 'checkbox',
+                'name' => 'checkbox1[]',
+                'value' => '2',
+                'id' => 'checkbox1-2',
+                'class' => 'form-check-input'
+            ]],
+            ['label' => [
+                'class' => 'custom-class another-class form-check-label',
+                'data-name' => 'bob',
+                'for' => 'checkbox1-2'
+            ]],
+            'Second Checkbox',
+            '/label',
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+    }
 }
