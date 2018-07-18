@@ -2833,4 +2833,306 @@ class BootstrapFormHelperTest extends TestCase {
         ];
         $this->assertHtml($expected, $result);
     }
+
+    /**
+     * Test single checkbox via control method with required
+     *
+     * Tests
+     *  a) without customControls
+     *  b) with customControls
+     */
+    public function testCheckboxRequiredControl() {
+
+        $result = $this->Form->control('terms_agreed', [
+            'label' => 'I agree to the terms of use',
+            'type' => 'checkbox',
+            'required' => true,
+            'customControls' => false
+        ]);
+
+        $this->assertHtml([
+            'div' => ['class' => 'form-check required'],
+            'input' => ['type' => 'hidden', 'name' => 'terms_agreed', 'value' => '0'],
+            [
+                'input' => [
+                    'type' => 'checkbox',
+                    'name' => 'terms_agreed',
+                    'value' => '1',
+                    'id' => 'terms-agreed',
+                    'required' => 'required',
+                    'class' => 'form-check-input'
+                ]
+            ],
+            'label' => ['for' => 'terms-agreed', 'class' => 'form-check-label'],
+            'I agree to the terms of use',
+            '/label',
+            '/div'
+        ], $result);
+
+        $result = $this->Form->control('terms_agreed', [
+            'label' => 'I agree to the terms of use',
+            'type' => 'checkbox',
+            'required' => true,
+            'customControls' => true
+        ]);
+
+        $this->assertHtml([
+            'div' => ['class' => 'custom-control custom-checkbox required'],
+            'input' => ['type' => 'hidden', 'name' => 'terms_agreed', 'value' => '0'],
+            [
+                'input' => [
+                    'type' => 'checkbox',
+                    'name' => 'terms_agreed',
+                    'value' => '1',
+                    'id' => 'terms-agreed',
+                    'required' => 'required',
+                    'class' => 'custom-control-input'
+                ]
+            ],
+            'label' => ['for' => 'terms-agreed', 'class' => 'custom-control-label'],
+            'I agree to the terms of use',
+            '/label',
+            '/div'
+        ], $result);
+
+    }
+
+    /**
+     * Test radios via control method with required
+     *
+     * Tests
+     *  a) without customControls
+     *  b) with customControls
+     */
+    public function testRadioRequiredControl() {
+
+        $result = $this->Form->control(
+            'radio1',
+            [
+                'label' => 'My Radios',
+                'default' => 2,
+                'type' => 'radio',
+                'required' => 'required',
+                'options' => [
+                    ['text' => 'First Radio', 'value' => 1],
+                    ['text' => 'Second Radio', 'value' => 2]
+                ],
+                'customControls' => false
+            ]
+        );
+        $this->assertHtml([
+            'div' => ['class' => 'form-group required'],
+            '<label',
+            'My Radios',
+            '/label',
+            'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => ''],
+            ['div' => ['class' => 'form-check']],
+            [
+                'input' => [
+                    'type' => 'radio',
+                    'name' => 'radio1',
+                    'value' => '1',
+                    'id' => 'radio1-1',
+                    'required' => 'required',
+                    'class' => 'form-check-input'
+                ]
+            ],
+            ['label' => ['for' => 'radio1-1', 'class' => 'form-check-label']],
+            'First Radio',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            [
+                'input' => [
+                    'type' => 'radio',
+                    'name' => 'radio1',
+                    'value' => '2',
+                    'checked' => 'checked',
+                    'id' => 'radio1-2',
+                    'required' => 'required',
+                    'class' => 'form-check-input'
+                ]
+            ],
+            ['label' => ['for' => 'radio1-2', 'class' => 'form-check-label selected']],
+            'Second Radio',
+            '/label',
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Form->control(
+            'radio1',
+            [
+                'label' => 'My Radios',
+                'default' => 2,
+                'type' => 'radio',
+                'required' => 'required',
+                'options' => [
+                    ['text' => 'First Radio', 'value' => 1],
+                    ['text' => 'Second Radio', 'value' => 2]
+                ],
+                'customControls' => true
+            ]
+        );
+
+        $this->assertHtml([
+            'div' => ['class' => 'form-group required'],
+            '<label',
+            'My Radios',
+            '/label',
+
+            'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => ''],
+            ['div' => ['class' => 'custom-control custom-radio']],
+            [
+                'input' => [
+                    'type' => 'radio',
+                    'name' => 'radio1',
+                    'value' => '1',
+                    'id' => 'radio1-1',
+                    'required' => 'required',
+                    'class' => 'custom-control-input'
+                ]
+            ],
+            ['label' => ['for' => 'radio1-1', 'class' => 'custom-control-label']],
+            'First Radio',
+            '/label',
+            '/div',
+
+            ['div' => ['class' => 'custom-control custom-radio']],
+            [
+                'input' => [
+                    'type' => 'radio',
+                    'name' => 'radio1',
+                    'value' => '2',
+                    'id' => 'radio1-2',
+                    'checked' => 'checked',
+                    'required' => 'required',
+                    'class' => 'custom-control-input'
+                ]
+            ],
+
+            ['label' => ['for' => 'radio1-2', 'class' => 'custom-control-label selected']],
+            'Second Radio',
+            '/label',
+
+            '/div',
+            '/div'
+        ], $result);
+    }
+
+    /**
+     * Test Multiple checkboxes via control method with required
+     *
+     * Tests
+     *  a) without customControls
+     *  b) with customControls
+     */
+    public function testMultiCheckboxesRadioRequiredControl() {
+        $result = $this->Form->control('checkbox1', [
+            'label' => 'My checkboxes',
+            'default' => 2,
+            'multiple' => 'checkbox',
+            'type' => 'select',
+            'required' => 'required',
+            'options' => [
+                ['text' => 'First Checkbox', 'value' => 1],
+                ['text' => 'Second Checkbox', 'value' => 2]
+            ],
+            'customControls' => false
+        ]);
+        $this->assertHtml([
+            'div' => ['class' => 'form-group required'],
+            ['label' => ['for' => 'checkbox1']],
+            'My checkboxes',
+            '/label',
+            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
+            ['div' => ['class' => 'form-check']],
+            [
+                'input' => [
+                    'type' => 'checkbox',
+                    'name' => 'checkbox1[]',
+                    'value' => '1',
+                    'id' => 'checkbox1-1',
+                    'required' => 'required',
+                    'class' => 'form-check-input'
+                ]
+            ],
+            ['label' => ['for' => 'checkbox1-1', 'class' => 'form-check-label']],
+            'First Checkbox',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            [
+                'input' => [
+                    'type' => 'checkbox',
+                    'name' => 'checkbox1[]',
+                    'value' => '2',
+                    'checked' => 'checked',
+                    'id' => 'checkbox1-2',
+                    'required' => 'required',
+                    'class' => 'form-check-input'
+                ]
+            ],
+            ['label' => ['for' => 'checkbox1-2', 'class' => 'form-check-label selected']],
+            'Second Checkbox',
+            '/label',
+            '/div',
+            '/div'
+        ], $result);
+
+        $result = $this->Form->control('checkbox1', [
+            'label' => 'My checkboxes',
+            'default' => 2,
+            'multiple' => 'checkbox',
+            'type' => 'select',
+            'required' => 'required',
+            'options' => [
+                ['text' => 'First Checkbox', 'value' => 1],
+                ['text' => 'Second Checkbox', 'value' => 2]
+            ]
+        ]);
+
+        $this->assertHtml([
+            'div' => ['class' => 'form-group clearfix required'],
+            ['label' => ['for' => 'checkbox1']],
+            'My checkboxes',
+            '/label',
+
+            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
+
+            ['div' => ['class' => 'custom-control custom-checkbox']],
+            [
+                'input' => [
+                    'type' => 'checkbox',
+                    'name' => 'checkbox1[]',
+                    'value' => '1',
+                    'id' => 'checkbox1-1',
+                    'required' => 'required',
+                    'class' => 'custom-control-input'
+                ]
+            ],
+            ['label' => ['for' => 'checkbox1-1', 'class' => 'custom-control-label']],
+            'First Checkbox',
+            '/label',
+            '/div',
+
+            ['div' => ['class' => 'custom-control custom-checkbox']],
+            [
+                'input' => [
+                    'type' => 'checkbox',
+                    'name' => 'checkbox1[]',
+                    'value' => '2',
+                    'checked' => 'checked',
+                    'id' => 'checkbox1-2',
+                    'required' => 'required',
+                    'class' => 'custom-control-input'
+                ]
+            ],
+            ['label' => ['for' => 'checkbox1-2', 'class' => 'custom-control-label selected']],
+            'Second Checkbox',
+            '/label',
+            '/div',
+            '/div'
+        ], $result);
+    }
 }

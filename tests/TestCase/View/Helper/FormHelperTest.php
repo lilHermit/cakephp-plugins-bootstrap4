@@ -2637,7 +2637,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $result = $this->Form->control('0.comments.1.comment');
         //@codingStandardsIgnoreStart
         $expected = [
-            'div' => ['class' => 'form-group'],
+            'div' => ['class' => 'form-group required'],
             'label' => ['for' => '0-comments-1-comment', 'class' => 'col-form-label'],
             'Comment',
             '/label',
@@ -2670,7 +2670,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $result = $this->Form->control('title');
         $expected = [
-            'div' => ['class' => 'form-group'],
+            'div' => ['class' => 'form-group required'],
             'label' => ['for' => 'title', 'class' => 'col-form-label'],
             'Title',
             '/label',
@@ -4183,7 +4183,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'error' => 'Custom error!'
         ]);
         $expected = [
-            'div' => ['class' => 'form-group'],
+            'div' => ['class' => 'form-group required'],
             'label' => ['for' => 'title', 'class'],
             'Title',
             '/label',
@@ -4203,7 +4203,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'error' => ['error message' => 'Custom error!']
         ]);
         $expected = [
-            'div' => ['class' => 'form-group'],
+            'div' => ['class' => 'form-group required'],
             'label' => ['for' => 'title', 'class'],
             'Title',
             '/label',
@@ -5146,9 +5146,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'fieldset' => ['class' => 'form-group'],
             '<legend', 'New Article', '/legend',
             'input' => ['type' => 'hidden', 'name' => 'id', 'id' => 'id'],
-            ['div' => ['class' => 'form-group']],
+            ['div' => ['class' => 'form-group required']],
             '*/div',
-            ['div' => ['class' => 'form-group']],
+            ['div' => ['class' => 'form-group required']],
             '*/div',
             ['div' => ['class' => 'form-group']],
             '*/div',
@@ -5161,13 +5161,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $result = $this->Form->allControls([
             'published' => ['type' => 'boolean']
         ]);
+
         $expected = [
             'fieldset' => ['class' => 'form-group'],
             '<legend', 'New Article', '/legend',
             'input' => ['type' => 'hidden', 'name' => 'id', 'id' => 'id'],
-            ['div' => ['class' => 'form-group']],
+            ['div' => ['class' => 'form-group required']],
             '*/div',
-            ['div' => ['class' => 'form-group']],
+            ['div' => ['class' => 'form-group required']],
             '*/div',
             ['div' => ['class' => 'form-group']],
             '*/div',
@@ -5185,9 +5186,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'Hello',
             '/legend',
             'input' => ['type' => 'hidden', 'name' => 'id', 'id' => 'id'],
-            ['div' => ['class' => 'form-group']],
+            ['div' => ['class' => 'form-group required']],
             '*/div',
-            ['div' => ['class' => 'form-group']],
+            ['div' => ['class' => 'form-group required']],
             '*/div',
             ['div' => ['class' => 'form-group']],
             '*/div',
@@ -5228,9 +5229,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             'fieldset' => ['class' => 'form-group'],
             '<legend', 'New Article', '/legend',
-            ['div' => ['class' => 'form-group']],
+            ['div' => ['class' => 'form-group required']],
             '*/div',
-            ['div' => ['class' => 'form-group']],
+            ['div' => ['class' => 'form-group required']],
             '*/div',
             ['div' => ['class' => 'form-group']],
             '*/div',
@@ -5248,9 +5249,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'fieldset' => ['class' => 'form-group'],
             '<legend', 'New Article', '/legend',
             'input' => ['type' => 'hidden', 'name' => 'id', 'id' => 'id'],
-            ['div' => ['class' => 'form-group']],
+            ['div' => ['class' => 'form-group required']],
             '*/div',
-            ['div' => ['class' => 'form-group']],
+            ['div' => ['class' => 'form-group required']],
             '*/div',
             ['div' => ['class' => 'form-group']],
             '*/div',
@@ -5560,7 +5561,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->Form->create($this->article);
         $result = $this->Form->control('title', ['label' => false]);
         $expected = [
-            'div' => ['class' => 'form-group'],
+            'div' => ['class' => 'form-group required'],
             'input' => ['type' => 'text', 'required' => 'required', 'id' => 'title', 'name' => 'title',
                 'class' => 'form-control'],
             '/div'
