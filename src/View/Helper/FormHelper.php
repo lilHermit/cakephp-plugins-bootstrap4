@@ -19,8 +19,6 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                 'label' => [],
                 'control' => [],
                 'submitContainer' => [],
-                'checkboxContainer' => ['col-sm-10', 'offset-sm-2'],
-                'radioContainer' => ['col-sm-10 pl-0'],
                 'grid' => []
             ]
         ],
@@ -53,7 +51,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'fieldset' => '<fieldset{{attrs}}>{{content}}</fieldset>',
         'formStart' => '<form{{attrs}}>',
         'formEnd' => '</form>',
-        'formGroupGrid' => '{{label}}<div{{attrs}}>{{input}}',
+        'formGroupGrid' => '{{label}}<div{{attrs}}>{{input}}</div>',
         'formGroup' => '{{label}}{{input}}',
         'hiddenBlock' => '<div style="display:none;">{{content}}</div>',
         'hidden' => '<input type="hidden" name="{{name}}"{{attrs}}/>',
@@ -61,8 +59,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'inputSubmit' => '<input type="{{type}}"{{attrs}}/>',
         'inputContainer' => '<div class="form-group{{required}}">{{content}}{{help}}</div>',
         'inputContainerError' => '<div class="form-group{{required}}">{{content}}{{error}}{{help}}</div>',
-        'inputContainerGrid' => '<div class="form-group row{{required}}">{{content}}{{help}}</div></div>',
-        'inputContainerGridError' => '<div class="form-group row{{required}}">{{content}}{{error}}{{help}}</div></div>',
+        'inputContainerGrid' => '<div class="form-group row{{required}}">{{content}}{{help}}</div>',
+        'inputContainerGridError' => '<div class="form-group row{{required}}">{{content}}{{error}}{{help}}</div>',
         'label' => '<label{{attrs}}>{{text}}</label>',
         'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
         'legend' => '<legend>{{text}}</legend>',
@@ -71,7 +69,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'option' => '<option value="{{value}}"{{attrs}}>{{text}}</option>',
         'optgroup' => '<optgroup label="{{label}}"{{attrs}}>{{content}}</optgroup>',
         'radio' => '<input type="radio" name="{{name}}" value="{{value}}"{{attrs}}>',
-        'radioWrapper' => '{input}{{label}}',
+        'radioWrapper' => '{{input}}{{label}}',
         'select' => '<select name="{{name}}"{{attrs}}>{{content}}</select>',
         'selectMultiple' => '<select name="{{name}}[]" multiple="multiple"{{attrs}}>{{content}}</select>',
         'textarea' => '<textarea name="{{name}}"{{attrs}}>{{value}}</textarea>',
@@ -198,7 +196,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         $this->switchTemplates($options);
 
         // Move certain options to templateVars
-        $this->_parseTemplateVar($options, ['help', 'prepend', 'append']);
+        $this->_parseTemplateVar($options, ['help', 'prepend', 'append', 'boom']);
 
         if (method_exists(get_parent_class($this), 'control')) {
             return parent::control($fieldName, $options);
@@ -769,6 +767,23 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             switch ($options['options']['type']) {
                 case 'checkbox':
                     $baseClasses = $this->isControlControls($options['options']) ? ['custom-control', 'custom-checkbox'] : [];
+                    $groupClasses = Html::addClass($baseClasses, $this->getConfig('layout.classes.checkboxContainer', ['col-sm-10', 'offset-sm-2']), [
+                        'useIndex' => false
+                    ]);
+                    break;
+                case 'radio':
+                    $groupClasses = Html::addClass([], $this->getConfig('layout.classes.radioContainer', ['col-sm-10 pl-0']), [
+                        'useIndex' => false
+                    ]);
+                    break;
+                default:
+                    $groupClasses = $options['options']['gridClasses'][1];
+            }
+        } else {
+
+            switch ($options['options']['type']) {
+                case 'checkbox':
+                    $baseClasses = $this->isControlControls($options['options']) ? ['custom-control', 'custom-checkbox'] : ['form-check'];
                     $groupClasses = Html::addClass($baseClasses, $this->getConfig('layout.classes.checkboxContainer', []), [
                         'useIndex' => false
                     ]);
@@ -779,9 +794,14 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                         'useIndex' => false
                     ]);
                     break;
-                default:
-                    $groupClasses = $options['options']['gridClasses'][1];
             }
+        }
+
+        if ($options['options']['required']) {
+            $groupClasses[] = 'required';
+        }
+
+        if (isset($groupClasses)) {
 
             $attrs = $this->templater()->formatAttributes([
                 'class' => $groupClasses
@@ -929,9 +949,10 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             switch ($type) {
                 case 'checkbox':
                     $newTemplates = [
-                        'checkboxContainer' => '<div class="custom-control custom-checkbox{{required}}"{{attrs}}>{{content}}{{error}}{{help}}</div>',
+                        'checkboxContainer' => '{{content}}{{error}}{{help}}',
                         'checkboxContainerGrid' => '<div class="form-group row{{required}}">{{content}}{{error}}{{help}}</div>',
-                        'checkboxFormGroupGrid' => "<div{{attrs}}>{{input}}{{label}}</div>"
+                        'checkboxFormGroupGrid' => "<div{{attrs}}>{{input}}{{label}}</div>",
+                        'checkboxFormGroup' =>     "<div{{attrs}}>{{input}}{{label}}</div>",
                     ];
                     break;
                 case 'multicheckbox':
@@ -976,8 +997,9 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                     break;
                 case 'checkbox':
                     $newTemplates = [
-                        'checkboxContainer' => '<div class="form-check{{required}}"{{attrs}}>{{content}}{{error}}{{help}}</div>',
-                        'checkboxContainerGrid' => '<div class="form-check row{{required}}"{{attrs}}>{{content}}{{error}}{{help}}</div>',
+                        'checkboxContainer' => '{{content}}{{error}}{{help}}',
+                        'checkboxContainerGrid' => '<div class="form-group row{{required}}"{{attrs}}>{{content}}{{error}}{{help}}</div>',
+                        'checkboxFormGroup' =>     "<div{{attrs}}>{{input}}{{label}}</div>",
                     ];
                     break;
                 case 'radio':

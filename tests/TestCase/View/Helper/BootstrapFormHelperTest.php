@@ -2017,12 +2017,12 @@ class BootstrapFormHelperTest extends TestCase {
     public function testTemplateOverriding() {
 
         $this->Form->setTemplates([
-            'checkboxContainer' => '<div class="check">{{content}}</div>'
+            'checkboxFormGroup' => "<span{{attrs}}>{{input}}{{label}}</span>",
         ]);
         $result = $this->Form->control('agree_terms', ['type' => 'checkbox', 'customControls' => false]);
 
         $this->assertHtml([
-            'div' => ['class' => 'check'],
+            'span' => ['class' => 'form-check'],
             'input' => [
                 'type' => 'hidden',
                 'name' => 'agree_terms',
@@ -2038,7 +2038,7 @@ class BootstrapFormHelperTest extends TestCase {
             ['label' => ['class' => 'form-check-label', 'for' => 'agree-terms']],
             'Agree Terms',
             '/label',
-            '/div'
+            '/span'
         ], $result);
     }
 
@@ -2370,7 +2370,7 @@ class BootstrapFormHelperTest extends TestCase {
         ]);
 
         $this->assertHtml([
-            ['div' => ['class' => 'form-check row']],
+            ['div' => ['class' => 'form-group row']],
             ['div' => ['class' => 'col-sm-10 offset-sm-2']],
             ['input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => 0]],
 
@@ -2419,7 +2419,7 @@ class BootstrapFormHelperTest extends TestCase {
             ['label' => ['class' => 'col-sm-2']],
             'My Radios',
             '/label',
-            ['div' => ['class' => 'custom-control custom-radio col-sm-10 pl-0']],
+            ['div' => ['class' => 'col-sm-10 pl-0']],
             ['input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => '']],
 
             ['div' => ['class' => 'custom-control custom-radio']],
@@ -3132,6 +3132,211 @@ class BootstrapFormHelperTest extends TestCase {
             'Second Checkbox',
             '/label',
             '/div',
+            '/div'
+        ], $result);
+    }
+
+    public function testOverwritingLayoutContainerClasses() {
+        $this->Form->create(null, [
+            'layout' => [
+                'classes' => [
+                    'submitContainer' => ['submit-class'],
+                    'checkboxContainer' => ['checkbox-class'],
+
+                    // TODO
+                    // Radio container is currently broken (outside grid) if there becomes a need then
+                    // I'll fix it ;-)
+                    'radioContainer' => ['radio-class']
+                ]
+            ]
+        ]);
+
+        $result = $this->Form->control('terms_agreed', [
+            'type' => 'checkbox',
+            'label' => false,
+            'customControls' => true
+        ]);
+
+        $result .= $this->Form->control('terms_agreed', [
+            'type' => 'checkbox',
+            'label' => false,
+            'customControls' => false
+        ]);
+
+        $result .= $this->Form->submit();
+
+        $this->assertHtml([
+            // Checkbox (custom)
+            ['div' => ['class' => 'custom-control custom-checkbox checkbox-class']],
+            'input' => ['type' => 'hidden', 'name' => 'terms_agreed', 'value' => '0'],
+            [
+                'input' => [
+                    'type' => 'checkbox',
+                    'name', 'value', 'id', 'class'
+                ]
+            ],
+            '/div',
+
+            // Checkbox (non-custom)
+            ['div' => ['class' => 'form-check checkbox-class']],
+            ['input' => ['type' => 'hidden', 'name' => 'terms_agreed', 'value' => '0']],
+            [
+                'input' => [
+                    'type' => 'checkbox',
+                    'name', 'value', 'id', 'class'
+                ]
+            ],
+            '/div',
+
+            // Submit
+            ['div' => ['class' => 'submit-class']],
+            [
+                'input' => [
+                    'type' => 'submit',
+                    'value',
+                    'class'
+                ]
+            ],
+            '/div'
+        ], $result);
+    }
+
+    public function testOverwritingLayoutContainerClassesGrid() {
+        $this->Form->create(null, [
+            'layout' => [
+                'type' => 'grid',
+                'classes' => [
+                    'submitContainer' => ['submit-class'],
+                    'checkboxContainer' => ['checkbox-class'],
+                    'radioContainer' => ['radio-class']
+                ]
+            ]
+        ]);
+
+        $result = $this->Form->control('terms_agreed', [
+            'type' => 'checkbox',
+            'label' => false,
+            'customControls' => true
+        ]);
+
+        $result .= $this->Form->control('terms_agreed', [
+            'type' => 'checkbox',
+            'label' => false,
+            'customControls' => false
+        ]);
+
+        $result .= $this->Form->control(
+            'radio1',
+            [
+                'label' => 'My Radios',
+                'default' => 2,
+                'type' => 'radio',
+                'options' => [
+                    ['text' => 'First Radio', 'value' => 1],
+                    ['text' => 'Second Radio', 'value' => 2]
+                ],
+                'customControls' => true
+            ]
+        );
+
+        $result .= $this->Form->control(
+            'radio',
+            [
+                'label' => 'My Radios',
+                'default' => 2,
+                'type' => 'radio',
+                'options' => [
+                    ['text' => 'First Radio', 'value' => 1],
+                    ['text' => 'Second Radio', 'value' => 2]
+                ],
+                'customControls' => false
+            ]
+        );
+
+        $result .= $this->Form->submit();
+
+        $this->assertHtml([
+            // Checkbox (custom)
+            ['div' => ['class' => 'form-group row']],
+            ['div' => ['class' => 'custom-control custom-checkbox checkbox-class']],
+            'input' => ['type' => 'hidden', 'name' => 'terms_agreed', 'value' => '0'],
+            [
+                'input' => [
+                    'type' => 'checkbox',
+                    'name', 'value', 'id', 'class'
+                ]
+            ],
+            '/div',
+            '/div',
+
+            // Checkbox (non-custom)
+            ['div' => ['class' => 'form-group row']],
+            ['div' => ['class' => 'checkbox-class']],
+            ['input' => ['type' => 'hidden', 'name' => 'terms_agreed', 'value' => '0']],
+            [
+                'input' => [
+                    'type' => 'checkbox',
+                    'name', 'value', 'id', 'class'
+                ]
+            ],
+            '/div',
+            '/div',
+
+            // Radios custom controls
+            ['div' => ['class' => 'form-group row']],
+            ['label' => ['class' => 'col-sm-2']],
+            'My Radios',
+            '/label',
+            ['div' => ['class' => 'radio-class']],
+            ['input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => '']],
+
+            ['div' => ['class' => 'custom-control custom-radio']],
+            ['input' => ['type', 'name', 'value', 'id', 'class' => 'custom-control-input']],
+            ['label' => ['for', 'class' => 'custom-control-label']],
+            'First Radio',
+            '/label',
+            '/div',
+
+            ['div' => ['class' => 'custom-control custom-radio']],
+            ['input' => ['type', 'name', 'value', 'id', 'checked', 'class' => 'custom-control-input']],
+            ['label' => ['for' => 'radio1-2', 'class' => 'custom-control-label selected']],
+            'Second Radio',
+            '/label',
+            '/div',
+            '/div',
+            '/div',
+
+            // Radios non custom controls
+            ['div' => ['class' => 'form-group row']],
+            ['label' => ['class' => 'col-sm-2']],
+            'My Radios',
+            '/label',
+            ['div' => ['class' => 'radio-class']],
+            ['input' => ['type' => 'hidden', 'name', 'value' => ""]],
+            ['div' => ['class' => 'form-check']],
+            ['input' => ['type', 'name', 'value', 'id', 'class' => 'form-check-input']],
+            ['label' => ['for', 'class' => 'form-check-label']],
+            'First Radio',
+            '/label',
+            '/div',
+            ['div' => ['class' => 'form-check']],
+            ['input' => ['type', 'name', 'value', 'checked', 'id', 'class' => 'form-check-input']],
+            ['label' => ['for', 'class' => 'form-check-label selected']],
+            'Second Radio',
+            '/label',
+            '/div',
+            '/div',
+            '/div',
+
+            // Submit
+            ['div' => ['class' => 'submit-class']],
+            [
+                'input' => [
+                    'type' => 'submit',
+                    'value',
+                    'class'
+                ]
+            ],
             '/div'
         ], $result);
     }

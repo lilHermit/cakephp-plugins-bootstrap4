@@ -5876,12 +5876,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'type' => 'checkbox',
         ]);
         $expected = [
-            'div' => ['class' => 'check'],
+            ['div' => ['class' => 'check']],
+            ['div' => ['class' => 'form-check']],
             ['input' => ['type' => 'hidden', 'name' => 'accept', 'value' => 0]],
             ['input' => ['id' => 'accept', 'type' => 'checkbox', 'name' => 'accept', 'value' => 1, 'class']],
             'label' => ['for' => 'accept', 'class'],
             'Accept',
             '/label',
+            '/div',
             '/div'
         ];
         $this->assertHtml($expected, $result);
