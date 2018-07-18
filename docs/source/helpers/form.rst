@@ -195,7 +195,7 @@ on all control method calls, this can now be eliminated now with the following::
             'placeholder' => 'Username',
         ]);
 
-Supported elements for ``classes`` are ``control``, ``label``, ``grid`` & ``submitContainer``
+Supported elements for ``classes`` are ``control``, ``label``, ``grid``, ``submitContainer``, ``radioContainer`` & ``checkboxContainer``
 
 Creating Textual Controls
 =========================

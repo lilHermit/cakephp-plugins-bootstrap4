@@ -1,8 +1,17 @@
 Changelog
 #########
 
+4.0.0.4002 (18-July-2018)
+-------------------------
+.. raw:: html
+
+    <span class="badge badge-primary pull-right pull-right">Supports Bootstrap 4.0.0</span>
+
+- Fixed missing required css class (`Issue #3 <https://bitbucket.org/lilHermit/cakephp-plugins-bootstrap4/issues/3>`_)
+- Fixed checkboxes and radio in grid layout (`Issue #5 <https://bitbucket.org/lilHermit/cakephp-plugins-bootstrap4/issues/5>`_)
+
 4.0.0.4001 (5-June-2018)
-----------------------
+------------------------
 .. raw:: html
 
     <span class="badge badge-primary pull-right pull-right">Supports Bootstrap 4.0.0</span>
@@ -10,7 +19,7 @@ Changelog
 - Updates for CakePHP 3.6 deprecations
 
 4.0.0.4000 (20-January-2018)
-----------------------
+----------------------------
 .. raw:: html
 
     <span class="badge badge-primary pull-right pull-right">Supports Bootstrap 4.0.0</span>
@@ -18,7 +27,7 @@ Changelog
 - Updated to Bootstrap 4.0.0 (Release)
 
 4.0.0.2300 (03-January-2018)
-----------------------
+----------------------------
 .. raw:: html
 
     <span class="badge badge-primary pull-right">Supports Bootstrap 4.0.0-beta3</span>
@@ -32,7 +41,7 @@ Changelog
 
 
 4.0.0.2200 (20-Nov-2017)
-----------------------
+------------------------
 .. raw:: html
 
     <span class="badge badge-primary pull-right">Supports Bootstrap 4.0.0-beta2</span>
@@ -42,7 +51,7 @@ Changelog
 - Updated all FormHelper::input to FormHelper::control calls
 
 2.2.0.1 (29-Aug-2017)
-----------------------
+---------------------
 .. raw:: html
 
     <span class="badge badge-primary pull-right">Supports Bootstrap 4.0.0-beta</span>
@@ -50,7 +59,7 @@ Changelog
 - Fixes to Form feedback (due to changes since alpha6) (using server-side methods)
 
 2.2.0.0 (24-Aug-2017)
-----------------------
+---------------------
 .. raw:: html
 
     <span class="badge badge-primary pull-right">Supports Bootstrap 4.0.0-beta</span>
