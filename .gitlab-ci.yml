@@ -10,6 +10,7 @@ deploy_master:
   - git config core.sparseCheckout true
   - ls -la
   - ls -la .git
+  - mkdir .git/info
   - echo -e "docs\nupdate-docs.sh" > .git/info/sparse-checkout
 
   # This forcing a re-checkout
