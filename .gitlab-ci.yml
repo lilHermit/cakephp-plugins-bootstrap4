@@ -25,22 +25,26 @@ deploy_master:
   - ./update-docs.sh
   - rsync -rltDEp --delete --chmod=Dg+s,ug+w,o-w,Fo-w,+X * $DEPLOY_USERNAME@$DEPLOY_HOST:$DEPLOY_ROOT_PATH/lilHermit-cakephp-plugins-bootstrap4-master
 
-#deploy_production:
-#  only:
-#   - master
-#  stage: deploy
-#  script:
-#    - composer install --no-dev
-#    - curl $DEPLOY_LOCAL_CONFIG > config/local.php
-#    - eval $(ssh-agent -s)
-#    - ssh-add <(echo "$DEPLOY_PRIVATE_KEY")
-#    - mkdir -p ~/.ssh
-#    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-#    - rsync -rltDEp --delete --exclude config/autotask.php --exclude webroot/uploads --chmod=Dg+s,ug+w,o-w,Fo-w,+X . $DEPLOY_USERNAME@$DEPLOY_HOST:$DEPLOY_ROOT_PATH
-#    - ssh $DEPLOY_USERNAME@$DEPLOY_HOST "(cd $DEPLOY_ROOT_PATH/; composer run-script post-deploy-cmd)"
-#  environment:
-#    name: production
-#  cache:
-#    key: composer-no-dev
-#    paths:
-#      - vendor/
+deploy_production:
+  only:
+  - /^[0-9\.]*$/
+  stage: deploy
+  script:
+  # Switching to sparse-checkout
+  - git config core.sparseCheckout true
+  - mkdir .git/info
+  - echo -e "docs\nupdate-docs.sh" > .git/info/sparse-checkout
+
+  # This forcing a re-checkout
+  - git checkout HEAD^
+  - git checkout $BITBUCKET_COMMIT
+
+  ## Setup the ssh key
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$DEPLOY_PRIVATE_KEY")
+  - mkdir -p ~/.ssh
+  - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+
+  # Build and deploy
+  - ./update-docs.sh
+  - rsync -rltDEp --delete --chmod=Dg+s,ug+w,o-w,Fo-w,+X * $DEPLOY_USERNAME@$DEPLOY_HOST:$DEPLOY_ROOT_PATH/lilHermit-cakephp-plugins-bootstrap4
