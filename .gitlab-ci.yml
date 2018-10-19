@@ -8,8 +8,6 @@ deploy_master:
   script:
   # Switching to sparse-checkout
   - git config core.sparseCheckout true
-  - ls -la
-  - ls -la .git
   - mkdir .git/info
   - echo -e "docs\nupdate-docs.sh" > .git/info/sparse-checkout
 
@@ -17,12 +15,17 @@ deploy_master:
   - git checkout HEAD^
   - git checkout $BITBUCKET_COMMIT
 
+  ## Setup the ssh key
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$DEPLOY_PRIVATE_KEY")
+  - mkdir -p ~/.ssh
+  - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+
   # Build and deploy
   - ./update-docs.sh
   - rsync -rltDEp --delete --chmod=Dg+s,ug+w,o-w,Fo-w,+X * $DEPLOY_USERNAME@$DEPLOY_HOST:$DEPLOY_ROOT_PATH/lilHermit-cakephp-plugins-bootstrap4-master
 
 #deploy_production:
-#  when: manual
 #  only:
 #   - master
 #  stage: deploy
