@@ -3340,4 +3340,15 @@ class BootstrapFormHelperTest extends TestCase {
             '/div'
         ], $result);
     }
+
+    /**
+     * Test to check that templates in core are merged in with bootstrap ones
+     */
+    public function testCoreTemplatesMerge() {
+
+        $coreFormHelper = new \Cake\View\Helper\FormHelper(new View());
+        $coreFormStartTemplate = $coreFormHelper->getConfig('templates.formStart');
+        $bootstrapFormStartTemplate = $this->Form->getConfig('templates.formStart');
+        $this->assertSame($coreFormStartTemplate, $bootstrapFormStartTemplate);
+    }
 }

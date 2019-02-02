@@ -38,41 +38,23 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'time' => 'bootstrapTime'
     ];
 
-    protected $_templates = [
-        'button' => '<button{{attrs}}>{{text}}</button>',
+    public $_bootstrapTemplates = [
 
         'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}>',
         'checkboxFormGroup' => '{{input}}{{label}}',
         'checkboxWrapper' => '<div class="checkbox">{{label}}</div>',
         'dateWidget' => '{{year}} {{month}} {{day}} {{hour}} {{minute}} {{second}} {{meridian}}',
         'error' => '<div class="invalid-feedback">{{content}}</div>',
-        'errorList' => '<ul>{{content}}</ul>',
-        'errorItem' => '<li>{{text}}</li>',
-        'fieldset' => '<fieldset{{attrs}}>{{content}}</fieldset>',
-        'formStart' => '<form{{attrs}}>',
-        'formEnd' => '</form>',
         'formGroupGrid' => '{{label}}<div{{attrs}}>{{input}}</div>',
-        'formGroup' => '{{label}}{{input}}',
-        'hiddenBlock' => '<div style="display:none;">{{content}}</div>',
         'hidden' => '<input type="hidden" name="{{name}}"{{attrs}}/>',
-        'input' => '<input type="{{type}}" name="{{name}}"{{attrs}}/>',
-        'inputSubmit' => '<input type="{{type}}"{{attrs}}/>',
         'inputContainer' => '<div class="form-group{{required}}">{{content}}{{help}}</div>',
         'inputContainerError' => '<div class="form-group{{required}}">{{content}}{{error}}{{help}}</div>',
         'inputContainerGrid' => '<div class="form-group row{{required}}">{{content}}{{help}}</div>',
         'inputContainerGridError' => '<div class="form-group row{{required}}">{{content}}{{error}}{{help}}</div>',
-        'label' => '<label{{attrs}}>{{text}}</label>',
-        'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
-        'legend' => '<legend>{{text}}</legend>',
-        'multicheckboxTitle' => '<legend>{{text}}</legend>',
-        'multicheckboxWrapper' => '<fieldset{{attrs}}>{{content}}</fieldset>',
-        'option' => '<option value="{{value}}"{{attrs}}>{{text}}</option>',
-        'optgroup' => '<optgroup label="{{label}}"{{attrs}}>{{content}}</optgroup>',
         'radio' => '<input type="radio" name="{{name}}" value="{{value}}"{{attrs}}>',
         'radioWrapper' => '{{input}}{{label}}',
         'select' => '<select name="{{name}}"{{attrs}}>{{content}}</select>',
         'selectMultiple' => '<select name="{{name}}[]" multiple="multiple"{{attrs}}>{{content}}</select>',
-        'textarea' => '<textarea name="{{name}}"{{attrs}}>{{value}}</textarea>',
         'submitContainer' => '{{content}}',
         'datetimeFormGroup' => '{{label}}<div class="form-inline">{{input}}</div>',
         'dateFormGroup' => '{{label}}<div class="form-inline">{{input}}</div>',
@@ -87,7 +69,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     public function __construct(View $View, array $config = []) {
 
         $this->_defaultConfig = array_merge($this->_defaultConfig, [
-            'templates' => $this->_templates,
+            'templates' => $this->_mergeTemplates(),
         ], $this->bootstrapConfigDefaults);
 
         $this->_defaultWidgets =
@@ -96,6 +78,11 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         $this->_parseGlobals($config);
 
         parent::__construct($View, $config);
+    }
+
+    private function _mergeTemplates() {
+
+        return $this->_bootstrapTemplates + $this->_defaultConfig['templates'];
     }
 
     public function create($model = null, array $options = []) {
@@ -187,7 +174,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             'gridClasses' => $this->getConfig('layout.classes.grid')
         ];
 
-        $this->_defaultConfig['templates'] = $this->_templates;
+        $this->_defaultConfig['templates'] = $this->_mergeTemplates();
 
         // Work out the type, so we can switchTemplates if required!
         $options = $this->_parseOptions($fieldName, $options);
@@ -375,7 +362,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         $attributes += [
             'customControls' => $this->getConfig('customControls')
         ];
-        $this->_defaultConfig['templates'] = $this->_templates;
+        $this->_defaultConfig['templates'] = $this->_mergeTemplates();
         $this->setLabelClass($attributes, 'multicheckbox');
         $this->switchTemplates($attributes, 'multicheckbox');
 
@@ -396,7 +383,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             'type' => 'checkbox'
         ];
 
-        $this->_defaultConfig['templates'] = $this->_templates;
+        $this->_defaultConfig['templates'] = $this->_mergeTemplates();
         $this->setLabelClass($options, 'checkbox');
         $this->switchTemplates($options, 'checkbox');
 
@@ -410,7 +397,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             'type' => 'radio'
         ];
 
-        $this->_defaultConfig['templates'] = $this->_templates;
+        $this->_defaultConfig['templates'] = $this->_mergeTemplates();
         $this->setLabelClass($attributes, 'radio');
         $this->switchTemplates($attributes, 'radio');
 
@@ -463,7 +450,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             'type' => 'file'
         ];
 
-        $this->_defaultConfig['templates'] = $this->_templates;
+        $this->_defaultConfig['templates'] = $this->_mergeTemplates();
         $this->switchTemplates($options, 'file');
 
         return parent::file($fieldName, $options);
