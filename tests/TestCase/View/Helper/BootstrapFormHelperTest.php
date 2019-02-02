@@ -2562,8 +2562,10 @@ class BootstrapFormHelperTest extends TestCase {
      */
     public function testDateTimeFormatWithDateTime() {
 
+        $originalRequest = $this->Form->getView()->getRequest();
+
         // Test (1)
-        $this->Form->request = $this->Form->request->withData('expiry', Chronos::parse('2017-08-02 11:12:07'));
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', Chronos::parse('2017-08-02 11:12:07')));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'datetime']],
         ]);
@@ -2575,7 +2577,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (2)
-        $this->Form->request = $this->Form->request->withData('expiry', \Cake\I18n\Time::parse('2017-08-02 11:12:07'));
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', \Cake\I18n\Time::parse('2017-08-02 11:12:07')));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'datetime']]
         ]);
@@ -2587,7 +2589,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (3)
-        $this->Form->request = $this->Form->request->withData('expiry', '2017-08-02 11:00:07');
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', '2017-08-02 11:00:07'));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'datetime']]
         ]);
@@ -2599,7 +2601,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (4)
-        $this->Form->request = $this->Form->request->withData('expiry', '2017-08-02oop14:00:07');
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', '2017-08-02oop14:00:07'));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'datetime']]
         ]);
@@ -2611,7 +2613,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (5)
-        $this->Form->request = $this->Form->request->withData('expiry', '');
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', ''));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'datetime']]
         ]);
@@ -2623,7 +2625,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (6)
-        $this->Form->request = $this->Form->request->withData('expiry', null);
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', null));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'datetime']]
         ]);
@@ -2649,8 +2651,10 @@ class BootstrapFormHelperTest extends TestCase {
      */
     public function testDateTimeFormatWithDate() {
 
+        $originalRequest = $this->Form->getView()->getRequest();
+
         // Test (1)
-        $this->Form->request = $this->Form->request->withData('expiry', Chronos::parse('2017-08-02'));
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', Chronos::parse('2017-08-02')));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'date']],
         ]);
@@ -2662,7 +2666,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (2)
-        $this->Form->request = $this->Form->request->withData('expiry', \Cake\I18n\Time::parse('2017-08-02 11:12:07'));
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', \Cake\I18n\Time::parse('2017-08-02 11:12:07')));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'date']]
         ]);
@@ -2674,7 +2678,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (3)
-        $this->Form->request = $this->Form->request->withData('expiry', '2017-08-02 11:00:07');
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', '2017-08-02 11:00:07'));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'date']]
         ]);
@@ -2686,7 +2690,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (4)
-        $this->Form->request = $this->Form->request->withData('expiry', '2017-08-02oop14:00:07');
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', '2017-08-02oop14:00:07'));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'date']]
         ]);
@@ -2698,7 +2702,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (5)
-        $this->Form->request = $this->Form->request->withData('expiry', '');
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', ''));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'date']]
         ]);
@@ -2710,7 +2714,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (6)
-        $this->Form->request = $this->Form->request->withData('expiry', null);
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', null));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'date']]
         ]);
@@ -2736,8 +2740,10 @@ class BootstrapFormHelperTest extends TestCase {
      */
     public function testDateTimeFormatWithTime() {
 
+        $originalRequest = $this->Form->getView()->getRequest();
+
         // Test (1)
-        $this->Form->request = $this->Form->request->withData('expiry', Chronos::parse('2017-08-02 11:22:07'));
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', Chronos::parse('2017-08-02 11:22:07')));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'time']],
         ]);
@@ -2749,7 +2755,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (2)
-        $this->Form->request = $this->Form->request->withData('expiry', \Cake\I18n\Time::parse('2017-08-02 11:12:07'));
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', \Cake\I18n\Time::parse('2017-08-02 11:12:07')));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'time']]
         ]);
@@ -2761,7 +2767,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (3)
-        $this->Form->request = $this->Form->request->withData('expiry', '2017-08-02 11:00:07');
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', '2017-08-02 11:00:07'));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'time']]
         ]);
@@ -2773,7 +2779,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (4)
-        $this->Form->request = $this->Form->request->withData('expiry', '2017-08-02oop14:00:07');
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', '2017-08-02oop14:00:07'));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'time']]
         ]);
@@ -2785,7 +2791,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (5)
-        $this->Form->request = $this->Form->request->withData('expiry', '');
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', ''));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'time']]
         ]);
@@ -2797,7 +2803,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (6)
-        $this->Form->request = $this->Form->request->withData('expiry', null);
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', null));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'time']]
         ]);
