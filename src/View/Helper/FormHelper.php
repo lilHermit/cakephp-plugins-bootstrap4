@@ -63,7 +63,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'help' => '<small{{attrs}}>{{content}}</small>',
         'prependAppendText' => '<span{{attrs}}>{{content}}</span>',
         'prependAppendWrapper' => '<div{{attrs}}>{{content}}</div>',
-        'prependAppendContainer' => '<div{{attrs}}>{{prepend}}{{input}}{{append}}</div>'
+        'prependAppendContainer' => '<div{{attrs}}>{{prepend}}{{input}}{{append}}</div>',
+        'confirmJs' => '{{confirm}}'
     ];
 
     public function __construct(View $View, array $config = []) {
