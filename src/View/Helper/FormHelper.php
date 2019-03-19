@@ -171,6 +171,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             'help' => false,
             'prepend' => false,
             'append' => false,
+            'required' => null,
             'gridClasses' => $this->getConfig('layout.classes.grid')
         ];
 
