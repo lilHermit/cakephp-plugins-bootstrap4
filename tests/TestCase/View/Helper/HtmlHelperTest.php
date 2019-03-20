@@ -20,10 +20,11 @@ class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
 
         // Switch the HtmlHelper to Plugin version
         $this->Html = new HtmlHelper($this->View);
-        $this->Html->request = new ServerRequest([
-            'webroot' => '',
+        $request = new ServerRequest([
+            'webroot' => ''
         ]);
-        $this->Html->Url->request = $this->Html->request;
+        $this->Html->getView()->setRequest($request);
+        $this->Html->Url->getView()->setRequest($request);
     }
 
     public function testGetCrumbFirstLink() {

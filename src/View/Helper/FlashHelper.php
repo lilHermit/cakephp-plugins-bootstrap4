@@ -39,14 +39,28 @@ class FlashHelper extends \Cake\View\Helper\FlashHelper {
     /**
      * Wrapper for session/getSession so we can support CakePHP < 3.5
      *
-     * @return \Cake\Network\Session
+     * @return \Cake\Http\Session
      */
     private function getSession() {
-        if (method_exists($this->request, 'getSession')) {
-            return $this->request->getSession();
+        if (method_exists($this->getRequestWrapper(), 'getSession')) {
+            return $this->getRequestWrapper()->getSession();
         } else {
             /** @noinspection PhpDeprecationInspection */
-            return $this->request->session();
+            return $this->getRequestWrapper()->session();
+        }
+    }
+
+    /**
+     * Wrapper for request/getRequest so we can support CakePHP < 3.5
+     *
+     * @return \Cake\Network\Request
+     */
+    private function getRequestWrapper() {
+        if (method_exists($this->getView(), 'getRequest')) {
+            return $this->getView()->getRequest();
+        } else {
+            /** @noinspection PhpDeprecationInspection */
+            return $this->request;
         }
     }
 }
