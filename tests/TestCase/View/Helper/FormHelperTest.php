@@ -4,10 +4,49 @@ namespace LilHermit\Bootstrap4\Test\TestCase\View\Helper;
 
 use Cake\Collection\Collection;
 use Cake\Core\Configure;
+use Cake\Form\Form;
+use Cake\Http\ServerRequest;
 use Cake\ORM\Entity;
+use Cake\ORM\Table;
+use Cake\Validation\Validator;
+use Cake\View\Form\EntityContext;
 use LilHermit\Bootstrap4\View\Helper\FormHelper;
 use TestApp\Model\Entity\Article;
 
+/**
+ * Contact class
+ */
+class ContactsTable extends Table
+{
+
+    /**
+     * Default schema
+     *
+     * @var array
+     */
+    protected $_schema = [
+        'id' => ['type' => 'integer', 'null' => '', 'default' => '', 'length' => '8'],
+        'name' => ['type' => 'string', 'null' => '', 'default' => '', 'length' => '255'],
+        'email' => ['type' => 'string', 'null' => '', 'default' => '', 'length' => '255'],
+        'phone' => ['type' => 'string', 'null' => '', 'default' => '', 'length' => '255'],
+        'password' => ['type' => 'string', 'null' => '', 'default' => '', 'length' => '255'],
+        'published' => ['type' => 'date', 'null' => true, 'default' => null, 'length' => null],
+        'created' => ['type' => 'date', 'null' => '1', 'default' => '', 'length' => ''],
+        'updated' => ['type' => 'datetime', 'null' => '1', 'default' => '', 'length' => null],
+        'age' => ['type' => 'integer', 'null' => '', 'default' => '', 'length' => null],
+        '_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]]
+    ];
+
+    /**
+     * Initializes the schema
+     *
+     * @return void
+     */
+    public function initialize(array $config)
+    {
+        $this->setSchema($this->_schema);
+    }
+}
 
 /**
  * @property array $dateRegex
@@ -6351,4 +6390,392 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
     }
+
+    /**
+     * tests fields that are required use custom validation messages
+     *
+     * @return void
+     */
+    public function testHtml5ErrorMessage()
+    {
+        $this->Form->setConfig('autoSetCustomValidity', true);
+
+        $validator = (new \Cake\Validation\Validator())
+            ->requirePresence('email', true, 'Custom error message')
+            ->requirePresence('password')
+            ->alphaNumeric('password')
+            ->notBlank('phone');
+
+        $table = $this->getTableLocator()->get('Contacts', [
+            'className' => __NAMESPACE__ . '\ContactsTable'
+        ]);
+        $table->setValidator('default', $validator);
+        $contact = new Entity();
+
+        $this->Form->create($contact, ['context' => ['table' => 'Contacts']]);
+        $this->Form->setTemplates(['inputContainer' => '{{content}}']);
+
+        $result = $this->Form->control('password');
+        $expected = [
+            'label' => ['for' => 'password', 'class' => 'col-form-label'],
+            'Password',
+            '/label',
+            'input' => [
+                'id' => 'password',
+                'name' => 'password',
+                'type' => 'password',
+                'value' => '',
+                'required' => 'required',
+                'onvalid' => 'this.setCustomValidity(&#039;&#039;)',
+                'oninvalid' => 'this.setCustomValidity(&#039;This field is required&#039;)',
+                'class' => 'form-control'
+            ]
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('phone');
+        $expected = [
+            'label' => ['for' => 'phone', 'class'=> 'col-form-label'],
+            'Phone',
+            '/label',
+            'input' => [
+                'id' => 'phone',
+                'name' => 'phone',
+                'type' => 'tel',
+                'value' => '',
+                'maxlength' => 255,
+                'required' => 'required',
+                'onvalid' => 'this.setCustomValidity(&#039;&#039;)',
+                'oninvalid' => 'this.setCustomValidity(&#039;This field cannot be left empty&#039;)',
+                'class'=> 'form-control'
+            ]
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('email');
+        $expected = [
+            'label' => ['for' => 'email',   'class'=> 'col-form-label'],
+            'Email',
+            '/label',
+            'input' => [
+                'id' => 'email',
+                'name' => 'email',
+                'type' => 'email',
+                'value' => '',
+                'maxlength' => 255,
+                'required' => 'required',
+                'onvalid' => 'this.setCustomValidity(&#039;&#039;)',
+                'oninvalid' => 'this.setCustomValidity(&#039;Custom error message&#039;)',
+                'class'=> 'form-control'
+            ]
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * tests that custom validation messages are in templateVars
+     *
+     * @return void
+     */
+    public function testHtml5ErrorMessageInTemplateVars()
+    {
+        $validator = (new \Cake\Validation\Validator())
+            ->requirePresence('email', true, 'Custom error "message" & entities')
+            ->requirePresence('password')
+            ->alphaNumeric('password')
+            ->notBlank('phone');
+
+        $table = $this->getTableLocator()->get('Contacts', [
+            'className' => __NAMESPACE__ . '\ContactsTable'
+        ]);
+        $table->setValidator('default', $validator);
+        $contact = new Entity();
+
+        $this->Form->create($contact, ['context' => ['table' => 'Contacts']]);
+        $this->Form->setTemplates([
+            'input' => '<input type="{{type}}" name="{{name}}"{{attrs}} data-message="{{customValidityMessage}}" {{custom}}/>',
+            'inputContainer' => '{{content}}'
+        ]);
+
+        $result = $this->Form->control('password');
+        $expected = [
+            'label' => ['for' => 'password', 'class' => 'col-form-label'],
+            'Password',
+            '/label',
+            'input' => [
+                'id' => 'password',
+                'name' => 'password',
+                'type' => 'password',
+                'value' => '',
+                'required' => 'required',
+                'data-message' => 'This field is required',
+                'class'=> 'form-control'
+            ]
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('phone');
+        $expected = [
+            'label' => ['for' => 'phone', 'class' => 'col-form-label'],
+            'Phone',
+            '/label',
+            'input' => [
+                'id' => 'phone',
+                'name' => 'phone',
+                'type' => 'tel',
+                'value' => '',
+                'maxlength' => 255,
+                'required' => 'required',
+                'data-message' => 'This field cannot be left empty',
+                'class'=> 'form-control'
+            ],
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('email', [
+            'templateVars' => [
+                'custom' => 'data-custom="1"'
+            ]
+        ]);
+        $expected = [
+            'label' => ['for' => 'email', 'class' => 'col-form-label'],
+            'Email',
+            '/label',
+            'input' => [
+                'id' => 'email',
+                'name' => 'email',
+                'type' => 'email',
+                'value' => '',
+                'maxlength' => 255,
+                'required' => 'required',
+                'data-message' => 'Custom error &quot;message&quot; &amp; entities',
+                'data-custom' => '1',
+                'class'=> 'form-control'
+            ],
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+
+    /**
+     * testControlMaxLengthArrayContext method
+     *
+     * Test control() with maxlength attribute in Array Context.
+     *
+     * @return void
+     */
+    public function testControlMaxLengthArrayContext()
+    {
+        $this->article['schema'] = [
+            'title' => ['length' => 10]
+        ];
+
+        $this->Form->create($this->article);
+        $result = $this->Form->control('title');
+        $expected = [
+            'div' => ['class'],
+            'label' => ['for', 'class'],
+            'Title',
+            '/label',
+            'input' => [
+                'id',
+                'name' => 'title',
+                'type' => 'text',
+                'required' => 'required',
+                'maxlength' => 10,
+                'class'=> 'form-control'
+            ],
+            '/div',
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlMaxLengthEntityContext method
+     *
+     * Test control() with maxlength attribute in Entity Context.
+     *
+     * @return void
+     */
+    public function testControlMaxLengthEntityContext()
+    {
+        $this->article['schema']['title']['length'] = 45;
+
+        $validator = new Validator();
+        $validator->maxLength('title', 10);
+        $article = new EntityContext(
+            new ServerRequest(),
+            [
+                'entity' => new Entity($this->article),
+                'table' => new Table([
+                    'schema' => $this->article['schema'],
+                    'validator' => $validator
+                ])
+            ]
+        );
+
+        $this->Form->create($article);
+        $result = $this->Form->control('title');
+        $expected = [
+            'div' => ['class'],
+            'label' => ['for', 'class'],
+            'Title',
+            '/label',
+            'input' => [
+                'id',
+                'name' => 'title',
+                'type' => 'text',
+                'required' => 'required',
+                'maxlength' => 10,
+                'class'=> 'form-control'
+            ],
+            '/div',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->article['schema']['title']['length'] = 45;
+        $validator = new Validator();
+        $validator->maxLength('title', 55);
+        $article = new EntityContext(
+            new ServerRequest(),
+            [
+                'entity' => new Entity($this->article),
+                'table' => new Table([
+                    'schema' => $this->article['schema'],
+                    'validator' => $validator
+                ])
+
+            ]
+        );
+
+        $this->Form->create($article);
+        $result = $this->Form->control('title');
+        $expected = [
+            'div' => ['class'],
+            'label' => ['for', 'class'],
+            'Title',
+            '/label',
+            'input' => [
+                'id',
+                'name' => 'title',
+                'type' => 'text',
+                'required' => 'required',
+                'maxlength' => 55, // Length set in validator should take precedence over schema.
+                'class'=> 'form-control'
+            ],
+            '/div',
+        ];
+        $this->assertHtml($expected, $result);
+
+        $this->article['schema']['title']['length'] = 45;
+        $validator = new Validator();
+        $validator->maxLength('title', 55);
+        $article = new EntityContext(
+            new ServerRequest(),
+            [
+                'entity' => new Entity($this->article),
+                'table' => new Table([
+                    'schema' => $this->article['schema'],
+                    'validator' => $validator
+                ])
+
+            ]
+        );
+
+        $this->Form->create($article);
+        $result = $this->Form->control('title', ['maxlength' => 10]);
+        $expected = [
+            'div' => ['class'],
+            'label' => ['for', 'class'],
+            'Title',
+            '/label',
+            'input' => [
+                'id',
+                'name' => 'title',
+                'type' => 'text',
+                'required' => 'required',
+                'maxlength' => 10, // Length set in options should take highest precedence.
+                'class'=> 'form-control'
+            ],
+            '/div',
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlMinMaxLengthEntityContext method
+     *
+     * Test control() with maxlength attribute in Entity Context sets the minimum val.
+     *
+     * @return void
+     */
+    public function testControlMinMaxLengthEntityContext()
+    {
+        $validator = new Validator();
+        $validator->maxLength('title', 10);
+        $article = new EntityContext(
+            new ServerRequest(),
+            [
+                'entity' => new Entity($this->article),
+                'table' => new Table([
+                    'schema' => $this->article['schema'],
+                    'validator' => $validator
+                ])
+            ]
+        );
+
+        $this->Form->create($article);
+        $result = $this->Form->control('title');
+        $expected = [
+            'div' => ['class'],
+            'label' => ['for', 'class'],
+            'Title',
+            '/label',
+            'input' => [
+                'id',
+                'name' => 'title',
+                'type' => 'text',
+                'required' => 'required',
+                'maxlength' => 10,
+                'class'=> 'form-control'
+            ],
+            '/div',
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlMaxLengthFormContext method
+     *
+     * Test control() with maxlength attribute in Form Context.
+     *
+     * @return void
+     */
+    public function testControlMaxLengthFormContext()
+    {
+        $validator = new Validator();
+        $validator->maxLength('title', 10);
+        $form = new Form();
+        $form->setValidator('default', $validator);
+
+        $this->Form->create($form);
+        $result = $this->Form->control('title');
+        $expected = [
+            'div' => ['class'],
+            'label' => ['for', 'class'],
+            'Title',
+            '/label',
+            'input' => [
+                'id',
+                'name' => 'title',
+                'type' => 'text',
+                'required' => 'required',
+                'maxlength' => 10,
+                'class'=> 'form-control'
+            ],
+            '/div',
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
 }
