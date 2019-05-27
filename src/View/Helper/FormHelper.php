@@ -372,8 +372,29 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     public function select($fieldName, $options = [], array $attributes = []) {
         $attributes += [
+            'multiple' => null,
+            'label' => null,
             'customControls' => $this->getConfig('customControls')
         ];
+
+        if ($attributes['multiple'] === 'checkbox') {
+            unset($attributes['multiple'], $attributes['empty']);
+            if (is_string($attributes['label'])) {
+                unset($attributes['label']);
+            }
+
+            $attributes += [
+                'multiple' => null,
+                'label' => null,
+                'customControls' => $this->getConfig('customControls')
+            ];
+
+            $this->_defaultConfig['templates'] = $this->_mergeTemplates();
+            $this->setLabelClass($attributes, 'multicheckbox');
+            $this->switchTemplates($attributes, 'multicheckbox');
+
+            return parent::multiCheckbox($fieldName, $options, $attributes);
+        }
 
         return parent::select($fieldName, $options, $attributes);
     }
