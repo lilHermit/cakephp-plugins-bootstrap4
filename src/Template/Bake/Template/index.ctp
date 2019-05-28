@@ -34,7 +34,7 @@ use Cake\Utility\Inflector;
 
 $fields = collection($fields)
 ->filter(function($field) use ($schema) {
-return !in_array($schema->columnType($field), ['binary', 'text']);
+return !in_array(getColumnType($schema, $field), ['binary', 'text']);
 });
 
 if (isset($modelObject) && $modelObject->behaviors()->has('Tree')) {
@@ -45,6 +45,16 @@ return $field === 'lft' || $field === 'rght';
 
 if (!empty($indexColumns)) {
 $fields = $fields->take($indexColumns);
+}
+
+if (!function_exists('getColumnType')) {
+    function getColumnType($schema, $field) {
+        if (method_exists($schema, 'getColumnType')) {
+            return $schema->getColumnType($field);
+        } else {
+            return $schema->column($field);
+        }
+    }
 }
 
 %>
@@ -81,7 +91,7 @@ break;
 }
 }
 if ($isKey !== true) {
-if (!in_array($schema->columnType($field), ['integer', 'biginteger', 'decimal', 'float'])) {
+if (!in_array(getColumnType($schema, $field), ['integer', 'biginteger', 'decimal', 'float'])) {
 %>
                 <td><?= h($<%= $singularVar %>-><%= $field %>) ?></td>
 <%

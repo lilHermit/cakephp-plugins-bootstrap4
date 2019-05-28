@@ -20,7 +20,16 @@ foreach ($associations as $type => $data) {
       $bakeEntities[] = $details['controller'];
   }
 }
-%>
+
+if (!function_exists('getColumnType')) {
+    function getColumnType($schema, $field) {
+        if (method_exists($schema, 'getColumnType')) {
+            return $schema->getColumnType($field);
+        } else {
+            return $schema->column($field);
+        }
+    }
+}%>
 <?php
 /**
  * @var \<%= $namespace %>\View\AppView $this
@@ -49,10 +58,10 @@ $associationFields = collection($fields)
 
 $groupedFields = collection($fields)
     ->filter(function($field) use ($schema) {
-        return $schema->columnType($field) !== 'binary';
+        return getColumnType($schema, $field) !== 'binary';
     })
     ->groupBy(function($field) use ($schema, $associationFields) {
-        $type = $schema->columnType($field);
+        $type = getColumnType($schema, $field);
         if (isset($associationFields[$field])) {
             return 'string';
         }

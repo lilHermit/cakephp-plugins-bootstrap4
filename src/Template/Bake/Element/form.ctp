@@ -29,12 +29,14 @@ if (isset($modelObject) && $modelObject->hasBehavior('Tree')) {
     });
 }
 
-function getColumn($schema, $field) {
+if (!function_exists('getColumn')) {
+    function getColumn($schema, $field) {
 
-    if (method_exists($schema, 'getColumn')) {
-        return $schema->getColumn($field);
-    } else {
-        return $schema->column($field);
+        if (method_exists($schema, 'getColumn')) {
+            return $schema->getColumn($field);
+        } else {
+            return $schema->column($field);
+        }
     }
 }
 %>
