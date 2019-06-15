@@ -3,7 +3,7 @@
   "description": "Bootstrap-4 plugin for CakePHP-3",
   "type": "cakephp-plugin",
   "require": {
-    "cakephp/cakephp": "^3.7",
+    "cakephp/cakephp": "^3.3",
     "lilhermit/cakephp-plugin-toolkit": "^1.2.1"
   },
   "require-dev": {
