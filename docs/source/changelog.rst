@@ -1,6 +1,19 @@
 Changelog
 #########
 
+4.0.0.4003 (15-June-2019)
+-------------------------
+.. raw:: html
+
+    <span class="badge badge-primary pull-right pull-right">Supports Bootstrap 4.0.0</span>
+
+- Fixed depreciated method in Bake (`Issue #6 <https://github.com/lilHermit/cakephp-plugins-bootstrap4/issues/6>`_ + `Issue #14 <https://github.com/lilHermit/cakephp-plugins-bootstrap4/issues/14>`_)
+- Fixed templating issue (`Issue #8 <https://github.com/lilHermit/cakephp-plugins-bootstrap4/issues/8>`_)
+- Fixed hidden field issue with CakePHP 3.7.x (`Issue #10 <https://github.com/lilHermit/cakephp-plugins-bootstrap4/issues/10>`_)
+- Merged Immutable objects as now recommended (`PR #15 <https://github.com/lilHermit/cakephp-plugins-bootstrap4/pull/15>`_)
+  Thanks to `Ali1 <https://github.com/Ali1>`_
+
+
 4.0.0.4002 (18-July-2018)
 -------------------------
 .. raw:: html
