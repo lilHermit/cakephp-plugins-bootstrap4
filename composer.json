@@ -29,7 +29,7 @@
   },
   "minimum-stability": "dev",
   "repositories": {
-    "lilHermit/cakephp-plugins-toolkit": {
+    "lilhermit/cakephp-plugins-toolkit": {
       "type": "vcs",
       "url": "git@github.com:Moutard3/cakephp-plugins-toolkit.git"
     }
