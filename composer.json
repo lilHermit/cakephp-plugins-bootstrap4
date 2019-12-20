@@ -23,6 +23,11 @@
       "TestPlugin\\": "tests/test_app/Plugin/TestPlugin/src"
     }
   },
+  "prefer-stable": true,
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
   "repositories": {
     "lilHermit/cakephp-plugins-toolkit": {
       "type": "vcs",
