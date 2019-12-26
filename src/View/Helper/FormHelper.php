@@ -85,7 +85,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return $this->_bootstrapTemplates + $this->_defaultConfig['templates'];
     }
 
-    public function create($model = null, array $options = []) {
+    public function create($model = null, array $options = []): string {
 
         $options += [
             'customControls' => $this->getConfig('customControls'),
