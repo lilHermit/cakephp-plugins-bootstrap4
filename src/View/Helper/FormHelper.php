@@ -164,7 +164,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * @return string Completed form widget.
      * @link http://book.cakephp.org/3.0/en/views/helpers/form.html#creating-form-inputs
      */
-    public function control($fieldName, array $options = []) {
+    public function control($fieldName, array $options = []):string {
         $options += [
             'customControls' => $this->getConfig('customControls'),
             'html5Render' => $this->getConfig('html5Render'),
@@ -225,7 +225,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * @link       http://book.cakephp.org/3.0/en/views/helpers/form.html#creating-form-inputs
      * @deprecated 3.4.0 Use FormHelper::control() instead.
      */
-    public function input($fieldName, array $options = []) {
+    public function input($fieldName, array $options = []): string {
         return $this->control($fieldName, $options);
     }
 
@@ -252,7 +252,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * @return string Completed form inputs.
      * @link http://book.cakephp.org/3.0/en/views/helpers/form.html#generating-entire-forms
      */
-    public function controls(array $fields, array $options = []) {
+    public function controls(array $fields, array $options = []): string {
         if (method_exists(get_parent_class($this), 'controls')) {
             return parent::controls($fields, $options);
         } else {
@@ -277,7 +277,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * @link       http://book.cakephp.org/3.0/en/views/helpers/form.html#generating-entire-forms
      * @deprecated 3.4.0 Use FormHelper::controls() instead.
      */
-    public function inputs(array $fields, array $options = []) {
+    public function inputs(array $fields, array $options = []): string {
         return $this->controls($fields, $options);
     }
 
@@ -329,7 +329,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * @return string Completed form controls.
      * @link http://book.cakephp.org/3.0/en/views/helpers/form.html#generating-entire-forms
      */
-    public function allControls(array $fields = [], array $options = []) {
+    public function allControls(array $fields = [], array $options = []): string {
         if (method_exists(get_parent_class($this), 'allControls')) {
             return parent::allControls($fields, $options);
         } else {
@@ -355,11 +355,11 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * @link       http://book.cakephp.org/3.0/en/views/helpers/form.html#generating-entire-forms
      * @deprecated 3.4.0 Use FormHelper::allControls() instead.
      */
-    public function allInputs(array $fields = [], array $options = []) {
+    public function allInputs(array $fields = [], array $options = []): string {
         return $this->allControls($fields, $options);
     }
 
-    public function multiCheckbox($fieldName, $options, array $attributes = []) {
+    public function multiCheckbox($fieldName, $options, array $attributes = []): string {
         $attributes += [
             'customControls' => $this->getConfig('customControls')
         ];
@@ -370,7 +370,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return parent::multiCheckbox($fieldName, $options, $attributes);
     }
 
-    public function select($fieldName, $options = [], array $attributes = []) {
+    public function select($fieldName, $options = [], array $attributes = []): string {
         $attributes += [
             'multiple' => null,
             'label' => null,
@@ -399,7 +399,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return parent::select($fieldName, $options, $attributes);
     }
 
-    public function checkbox($fieldName, array $options = []) {
+    public function checkbox($fieldName, array $options = []): string {
         $options += [
             'customControls' => $this->getConfig('customControls'),
             'type' => 'checkbox'
@@ -413,7 +413,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     }
 
 
-    public function radio($fieldName, $options = [], array $attributes = []) {
+    public function radio($fieldName, $options = [], array $attributes = []): string {
         $attributes += [
             'customControls' => $this->getConfig('customControls'),
             'type' => 'radio'
@@ -426,7 +426,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return parent::radio($fieldName, $options, $attributes);
     }
 
-    public function fieldset($fields = '', array $options = []) {
+    public function fieldset($fields = '', array $options = []): string {
         if (!isset($options['fieldset']) || $options['fieldset'] !== false) {
             $options = Html::addClass($options, 'form-group', ['useIndex' => 'fieldset.class']);
         }
@@ -434,13 +434,13 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return parent::fieldset($fields, $options);
     }
 
-    public function hidden($fieldName, array $options = []) {
+    public function hidden($fieldName, array $options = []): string {
         $options['type'] = 'hidden';
 
         return parent::hidden($fieldName, $options);
     }
 
-    public function widget($name, array $data = []) {
+    public function widget($name, array $data = []): string {
         $data = $this->_addWidgetClass($data, $name);
 
         // Clean up any elements so they don't end up as attributes
@@ -449,7 +449,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return parent::widget($name, $data);
     }
 
-    protected function cleanArray($data = [], $extras = []) {
+    protected function cleanArray($data = [], $extras = []): array {
 
         $elements = array_merge([
             'customControls',
@@ -466,7 +466,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return $data;
     }
 
-    public function file($fieldName, array $options = []) {
+    public function file($fieldName, array $options = []): string {
         $options += [
             'customControls' => $this->getConfig('customControls'),
             'type' => 'file'
@@ -478,7 +478,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return parent::file($fieldName, $options);
     }
 
-    protected function _initInputField($field, $options = []) {
+    protected function _initInputField($field, $options = []): array {
         $options = parent::_initInputField($field, $options);
         $options = $this->_addWidgetClass($options);
 
@@ -732,7 +732,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return $this->renderPrependAppend($input, $options);
     }
 
-    protected function _inputContainerTemplate($options) {
+    protected function _inputContainerTemplate($options): string {
         $this->formatHelp($options['options']);
 
         $containers = [];
@@ -765,7 +765,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         ]);
     }
 
-    protected function _groupTemplate($options) {
+    protected function _groupTemplate($options):string {
         $containers = [];
         if ($this->isLayout('grid')) {
             $containers += [
@@ -1123,7 +1123,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * @return string the element.
      */
 
-    public function button($title, array $options = []) {
+    public function button($title, array $options = []): string {
 
         $options += ['type' => 'submit'];
 
@@ -1168,7 +1168,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      *
      * @return string A HTML submit button
      */
-    public function submit($caption = null, array $options = []) {
+    public function submit($caption = null, array $options = []): string {
 
         if (!preg_match('/\.(jpg|jpe|jpeg|gif|png|ico)$/', $caption)) {
             $options = $this->parseButtonClass($options);
@@ -1363,7 +1363,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      *
      * @return array
      */
-    protected function _parseOptions($fieldName, $options) {
+    protected function _parseOptions($fieldName, $options): array {
 
         $needsMagicType = false;
         if (empty($options['type'])) {
