@@ -7,7 +7,7 @@ class FlashHelper extends \Cake\View\Helper\FlashHelper {
     /**
      * {@inheritDoc}
      */
-    public function render($key = 'flash', array $options = []) {
+    public function render($key = 'flash', array $options = []): ?string {
 
         $pluginOverrides = ['Flash/default', 'Flash/error', 'Flash/info', 'Flash/success', 'Flash/warning'];
 
