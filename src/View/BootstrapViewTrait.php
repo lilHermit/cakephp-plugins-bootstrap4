@@ -21,7 +21,7 @@ trait BootstrapViewTrait {
         list($plugin, $name) = $this->pluginSplit($name, $pluginCheck);
 
         $paths = $this->_paths($plugin);
-        $elementPaths = $this->_getSubPaths('Element');
+        $elementPaths = $this->_getSubPaths('element');
         foreach ($elementPaths as $elementPath) {
             foreach ($paths as $path) {
                 if (file_exists($path . $elementPath . DIRECTORY_SEPARATOR . $name . $this->_ext)) {
