@@ -22,5 +22,12 @@
       "TestApp\\": "tests/test_app/TestApp",
       "TestPlugin\\": "tests/test_app/Plugin/TestPlugin/src"
     }
+  },
+  "scripts": {
+    "install-dev": [
+      "composer config preferred-install.cakephp/cakephp source",
+      "rm -rf vendor/cakephp/cakephp",
+      "composer install"
+    ]
   }
 }
