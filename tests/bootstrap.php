@@ -74,6 +74,8 @@ Configure::write('App', [
     ]
 ]);
 
+error_reporting(E_ALL & ~E_USER_DEPRECATED);
+
 Cache::setConfig([
     '_cake_core_' => [
         'engine' => 'File',

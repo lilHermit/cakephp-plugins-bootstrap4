@@ -16,8 +16,7 @@ use TestApp\Model\Entity\Article;
 /**
  * Contact class
  */
-class ContactsTable extends Table
-{
+class ContactsTable extends Table {
 
     /**
      * Default schema
@@ -42,8 +41,7 @@ class ContactsTable extends Table
      *
      * @return void
      */
-    public function initialize(array $config)
-    {
+    public function initialize(array $config) {
         $this->setSchema($this->_schema);
     }
 }
@@ -6105,8 +6103,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      *
      * @return void
      */
-    public function testHtml5ErrorMessage()
-    {
+    public function testHtml5ErrorMessage() {
         $this->Form->setConfig('autoSetCustomValidity', true);
 
         $validator = (new \Cake\Validation\Validator())
@@ -6135,8 +6132,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'password',
                 'value' => '',
                 'required' => 'required',
-                'onvalid' => 'this.setCustomValidity(&#039;&#039;)',
-                'oninvalid' => 'this.setCustomValidity(&#039;This field is required&#039;)',
+                'oninput' => 'this.setCustomValidity(&#039;&#039;)',
+                'oninvalid' => 'this.setCustomValidity(&#039;&#039;); if (!this.validity.valid) this.setCustomValidity(&#039;This field is required&#039;)',
                 'class' => 'form-control'
             ]
         ];
@@ -6144,7 +6141,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $result = $this->Form->control('phone');
         $expected = [
-            'label' => ['for' => 'phone', 'class'=> 'col-form-label'],
+            'label' => ['for' => 'phone', 'class' => 'col-form-label'],
             'Phone',
             '/label',
             'input' => [
@@ -6154,16 +6151,16 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'value' => '',
                 'maxlength' => 255,
                 'required' => 'required',
-                'onvalid' => 'this.setCustomValidity(&#039;&#039;)',
-                'oninvalid' => 'this.setCustomValidity(&#039;This field cannot be left empty&#039;)',
-                'class'=> 'form-control'
+                'oninput' => 'this.setCustomValidity(&#039;&#039;)',
+                'oninvalid' => 'this.setCustomValidity(&#039;&#039;); if (!this.validity.valid) this.setCustomValidity(&#039;This field cannot be left empty&#039;)',
+                'class' => 'form-control'
             ]
         ];
         $this->assertHtml($expected, $result);
 
         $result = $this->Form->control('email');
         $expected = [
-            'label' => ['for' => 'email',   'class'=> 'col-form-label'],
+            'label' => ['for' => 'email', 'class' => 'col-form-label'],
             'Email',
             '/label',
             'input' => [
@@ -6173,9 +6170,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'value' => '',
                 'maxlength' => 255,
                 'required' => 'required',
-                'onvalid' => 'this.setCustomValidity(&#039;&#039;)',
-                'oninvalid' => 'this.setCustomValidity(&#039;Custom error message&#039;)',
-                'class'=> 'form-control'
+                'oninput' => 'this.setCustomValidity(&#039;&#039;)',
+                'oninvalid' => 'this.setCustomValidity(&#039;&#039;); if (!this.validity.valid) this.setCustomValidity(&#039;Custom error message&#039;)',
+                'class' => 'form-control'
             ]
         ];
         $this->assertHtml($expected, $result);
@@ -6186,8 +6183,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      *
      * @return void
      */
-    public function testHtml5ErrorMessageInTemplateVars()
-    {
+    public function testHtml5ErrorMessageInTemplateVars() {
         $validator = (new \Cake\Validation\Validator())
             ->requirePresence('email', true, 'Custom error "message" & entities')
             ->requirePresence('password')
@@ -6218,7 +6214,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'value' => '',
                 'required' => 'required',
                 'data-message' => 'This field is required',
-                'class'=> 'form-control'
+                'class' => 'form-control'
             ]
         ];
         $this->assertHtml($expected, $result);
@@ -6236,7 +6232,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'maxlength' => 255,
                 'required' => 'required',
                 'data-message' => 'This field cannot be left empty',
-                'class'=> 'form-control'
+                'class' => 'form-control'
             ],
         ];
         $this->assertHtml($expected, $result);
@@ -6259,7 +6255,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'required' => 'required',
                 'data-message' => 'Custom error &quot;message&quot; &amp; entities',
                 'data-custom' => '1',
-                'class'=> 'form-control'
+                'class' => 'form-control'
             ],
         ];
         $this->assertHtml($expected, $result);
@@ -6273,8 +6269,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      *
      * @return void
      */
-    public function testControlMaxLengthArrayContext()
-    {
+    public function testControlMaxLengthArrayContext() {
         $this->article['schema'] = [
             'title' => ['length' => 10]
         ];
@@ -6292,7 +6287,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text',
                 'required' => 'required',
                 'maxlength' => 10,
-                'class'=> 'form-control'
+                'class' => 'form-control'
             ],
             '/div',
         ];
@@ -6306,8 +6301,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      *
      * @return void
      */
-    public function testControlMaxLengthEntityContext()
-    {
+    public function testControlMaxLengthEntityContext() {
         $this->article['schema']['title']['length'] = 45;
 
         $validator = new Validator();
@@ -6336,7 +6330,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text',
                 'required' => 'required',
                 'maxlength' => 10,
-                'class'=> 'form-control'
+                'class' => 'form-control'
             ],
             '/div',
         ];
@@ -6370,7 +6364,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text',
                 'required' => 'required',
                 'maxlength' => 55, // Length set in validator should take precedence over schema.
-                'class'=> 'form-control'
+                'class' => 'form-control'
             ],
             '/div',
         ];
@@ -6404,7 +6398,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text',
                 'required' => 'required',
                 'maxlength' => 10, // Length set in options should take highest precedence.
-                'class'=> 'form-control'
+                'class' => 'form-control'
             ],
             '/div',
         ];
@@ -6418,8 +6412,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      *
      * @return void
      */
-    public function testControlMinMaxLengthEntityContext()
-    {
+    public function testControlMinMaxLengthEntityContext() {
         $validator = new Validator();
         $validator->maxLength('title', 10);
         $article = new EntityContext(
@@ -6446,7 +6439,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text',
                 'required' => 'required',
                 'maxlength' => 10,
-                'class'=> 'form-control'
+                'class' => 'form-control'
             ],
             '/div',
         ];
@@ -6460,8 +6453,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      *
      * @return void
      */
-    public function testControlMaxLengthFormContext()
-    {
+    public function testControlMaxLengthFormContext() {
         $validator = new Validator();
         $validator->maxLength('title', 10);
         $form = new Form();
@@ -6480,9 +6472,53 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text',
                 'required' => 'required',
                 'maxlength' => 10,
-                'class'=> 'form-control'
+                'class' => 'form-control'
             ],
             '/div',
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * Test datetime with array empty value, ensuring
+     * empty options aren't duplicated.
+     *
+     * @return void
+     */
+    public function testDatetimeEmptyArrayForm() {
+
+        /**
+         * @var string $monthsRegex
+         * @var string $daysRegex
+         */
+
+        extract($this->dateRegex);
+
+        $result = $this->Form->dateTime('Contact.date', [
+            'minYear' => '2017',
+            'maxYear' => '2019',
+            'empty' => [
+                'year' => 'pick year',
+                'month' => 'pick month',
+            ],
+            'hour' => false,
+            'minute' => false,
+            'second' => false,
+            'meridian' => false,
+        ]);
+        $expected = [
+            ['select' => ['name' => 'Contact[date][year]', 'class' => 'form-control']],
+            ['option' => ['value' => '', 'selected' => 'selected']], 'pick year', '/option',
+            '*/select',
+
+            ['select' => ['name' => 'Contact[date][month]', 'class' => 'form-control']],
+            ['option' => ['value' => '', 'selected' => 'selected']], 'pick month', '/option',
+            $monthsRegex,
+            '*/select',
+
+            ['select' => ['name' => 'Contact[date][day]', 'class' => 'form-control']],
+            $daysRegex,
+            '*/select',
         ];
         $this->assertHtml($expected, $result);
     }
