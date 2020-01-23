@@ -17,11 +17,11 @@ trait BootstrapViewTrait {
      *
      * @inheritdoc
      */
-    protected function _getElementFileName($name, $pluginCheck = true) {
-        list($plugin, $name) = $this->pluginSplit($name, $pluginCheck);
+    protected function _getElementFileName(string $name, bool $pluginCheck = true) {
+        [$plugin, $name] = $this->pluginSplit($name, $pluginCheck);
 
         $paths = $this->_paths($plugin);
-        $elementPaths = $this->_getSubPaths('element');
+        $elementPaths = $this->_getSubPaths(static::TYPE_ELEMENT);
         foreach ($elementPaths as $elementPath) {
             foreach ($paths as $path) {
                 if (file_exists($path . $elementPath . DIRECTORY_SEPARATOR . $name . $this->_ext)) {

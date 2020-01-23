@@ -18,8 +18,7 @@ class BootstrapView extends View {
 
     use BootstrapViewTrait;
 
-    public function initialize(): void
-    {
+    public function initialize(): void  {
         parent::initialize();
 
         $this->initializeBootstrap();
