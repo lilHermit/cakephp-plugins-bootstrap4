@@ -3,13 +3,13 @@
   "description": "Bootstrap-4 plugin for CakePHP-3",
   "type": "cakephp-plugin",
   "require": {
-    "cakephp/cakephp": "^3.3",
+    "cakephp/cakephp": "^4.0",
     "lilhermit/cakephp-plugin-toolkit": "^1.2.1"
   },
   "require-dev": {
-    "phpunit/phpunit": "^5.7|^6.0",
-    "ext-json": "^1.2",
-    "squizlabs/php_codesniffer": "2.*"
+    "phpunit/phpunit": "8.5",
+    "cakephp/cakephp-codesniffer": "4.0.0",
+    "ext-json": "^1.2"
   },
   "autoload": {
     "psr-4": {

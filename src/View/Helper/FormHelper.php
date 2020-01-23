@@ -1168,7 +1168,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      *
      * @return string A HTML submit button
      */
-    public function submit($caption = null, array $options = []): string {
+    public function submit(?string $caption = null, array $options = []): string {
 
         if (!preg_match('/\.(jpg|jpe|jpeg|gif|png|ico)$/', $caption)) {
             $options = $this->parseButtonClass($options);

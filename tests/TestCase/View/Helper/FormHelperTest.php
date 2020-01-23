@@ -41,7 +41,7 @@ class ContactsTable extends Table {
      *
      * @return void
      */
-    public function initialize(array $config) {
+    public function initialize(array $config) : void {
         $this->setSchema($this->_schema);
     }
 }
@@ -56,7 +56,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      *
      * @return void
      */
-    public function setUp() {
+    public function setUp() : void {
 
         parent::setUp();
 

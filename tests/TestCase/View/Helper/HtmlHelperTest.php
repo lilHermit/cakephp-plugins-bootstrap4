@@ -15,7 +15,7 @@ use LilHermit\Bootstrap4\View\Helper\HtmlHelper;
  */
 class HtmlHelperTest extends \Cake\Test\TestCase\View\Helper\HtmlHelperTest {
 
-    public function setUp() {
+    public function setUp(): void {
         parent::setUp();
 
         // Switch the HtmlHelper to Plugin version
