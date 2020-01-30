@@ -1,4 +1,4 @@
-image: docker.lilhermit.co.uk:5000/lilhermit/sphinx-doc:latest
+image: docker.lilhermit.co.uk/lilhermit/sphinx-doc:latest
 
 deploy_master:
   only:
