@@ -186,12 +186,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         // Move certain options to templateVars
         $this->_parseTemplateVar($options, ['help', 'prepend', 'append', 'boom']);
 
-        if (method_exists(get_parent_class($this), 'control')) {
-            return parent::control($fieldName, $options);
-        } else {
-            /** @noinspection PhpDeprecationInspection */
-            return parent::input($fieldName, $options);
-        }
+        return parent::control($fieldName, $options);
     }
 
     private function _addLabelClass($options, $class, $index = 'label') {
@@ -215,72 +210,6 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         );
     }
 
-    /**
-     * Generates a form control element complete with label and wrapper div.
-     *
-     * @param string $fieldName This should be "modelname.fieldname"
-     * @param array  $options   Each type of input takes different options.
-     *
-     * @return string Completed form widget.
-     * @link       http://book.cakephp.org/3.0/en/views/helpers/form.html#creating-form-inputs
-     * @deprecated 3.4.0 Use FormHelper::control() instead.
-     */
-    public function input($fieldName, array $options = []): string {
-        return $this->control($fieldName, $options);
-    }
-
-    /**
-     * Generate a set of controls for `$fields` wrapped in a fieldset element.
-     *
-     * You can customize individual controls through `$fields`.
-     * ```
-     * $this->Form->controls([
-     *   'name' => ['label' => 'custom label'],
-     *   'email'
-     * ]);
-     * ```
-     *
-     * @param array $fields  An array of the fields to generate. This array allows
-     *                       you to set custom types, labels, or other options.
-     * @param array $options Options array. Valid keys are:
-     *                       - `fieldset` Set to false to disable the fieldset. You can also pass an
-     *                       array of params to be applied as HTML attributes to the fieldset tag.
-     *                       If you pass an empty array, the fieldset will be enabled.
-     *                       - `legend` Set to false to disable the legend for the generated input set.
-     *                       Or supply a string to customize the legend text.
-     *
-     * @return string Completed form inputs.
-     * @link http://book.cakephp.org/3.0/en/views/helpers/form.html#generating-entire-forms
-     */
-    public function controls(array $fields, array $options = []): string {
-        if (method_exists(get_parent_class($this), 'controls')) {
-            return parent::controls($fields, $options);
-        } else {
-            /** @noinspection PhpDeprecationInspection */
-            return parent::inputs($fields, $options);
-        }
-    }
-
-    /**
-     * Generate a set of controls for `$fields` wrapped in a fieldset element.
-     *
-     * @param array $fields  An array of the fields to generate. This array allows
-     *                       you to set custom types, labels, or other options.
-     * @param array $options Options array. Valid keys are:
-     *                       - `fieldset` Set to false to disable the fieldset. You can also pass an
-     *                       array of params to be applied as HTML attributes to the fieldset tag.
-     *                       If you pass an empty array, the fieldset will be enabled.
-     *                       - `legend` Set to false to disable the legend for the generated input set.
-     *                       Or supply a string to customize the legend text.
-     *
-     * @return string Completed form inputs.
-     * @link       http://book.cakephp.org/3.0/en/views/helpers/form.html#generating-entire-forms
-     * @deprecated 3.4.0 Use FormHelper::controls() instead.
-     */
-    public function inputs(array $fields, array $options = []): string {
-        return $this->controls($fields, $options);
-    }
-
     protected function _getLabel($fieldName, $options) {
         if ($options['type'] === 'hidden') {
             return false;
@@ -296,67 +225,6 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         }
 
         return $this->_inputLabel($fieldName, $label, $options);
-    }
-
-    /**
-     * Generate a set of controls for `$fields`. If $fields is empty the fields
-     * of current model will be used.
-     *
-     * You can customize individual controls through `$fields`.
-     * ```
-     * $this->Form->allControls([
-     *   'name' => ['label' => 'custom label']
-     * ]);
-     * ```
-     *
-     * You can exclude fields by specifying them as `false`:
-     *
-     * ```
-     * $this->Form->allControls(['title' => false]);
-     * ```
-     *
-     * In the above example, no field would be generated for the title field.
-     *
-     * @param array $fields  An array of customizations for the fields that will be
-     *                       generated. This array allows you to set custom types, labels, or other options.
-     * @param array $options Options array. Valid keys are:
-     *                       - `fieldset` Set to false to disable the fieldset. You can also pass an array of params to
-     *                       be applied as HTML attributes to the fieldset tag. If you pass an empty array, the
-     *                       fieldset will be enabled
-     *                       - `legend` Set to false to disable the legend for the generated control set. Or supply a
-     *                       string to customize the legend text.
-     *
-     * @return string Completed form controls.
-     * @link http://book.cakephp.org/3.0/en/views/helpers/form.html#generating-entire-forms
-     */
-    public function allControls(array $fields = [], array $options = []): string {
-        if (method_exists(get_parent_class($this), 'allControls')) {
-            return parent::allControls($fields, $options);
-        } else {
-            /** @noinspection PhpDeprecationInspection */
-            return parent::allInputs($fields, $options);
-        }
-    }
-
-    /**
-     * Generate a set of controls for `$fields`. If $fields is empty the fields
-     * of current model will be used.
-     *
-     * @param array $fields  An array of customizations for the fields that will be
-     *                       generated. This array allows you to set custom types, labels, or other options.
-     * @param array $options Options array. Valid keys are:
-     *                       - `fieldset` Set to false to disable the fieldset. You can also pass an array of params to
-     *                       be applied as HTML attributes to the fieldset tag. If you pass an empty array, the
-     *                       fieldset will be enabled
-     *                       - `legend` Set to false to disable the legend for the generated control set. Or supply a
-     *                       string to customize the legend text.
-     *
-     * @return string Completed form controls.
-     * @link       http://book.cakephp.org/3.0/en/views/helpers/form.html#generating-entire-forms
-     * @deprecated 3.4.0 Use FormHelper::allControls() instead.
-     */
-    public function allInputs(array $fields = [], array $options = []): string {
-        return $this->allControls($fields, $options);
     }
 
     public function multiCheckbox($fieldName, $options, array $attributes = []): string {
@@ -542,7 +410,6 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
         return $options;
     }
-
 
     /**
      *
@@ -852,16 +719,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             $this->_userChangedTemplates = array_merge(array_keys($templates), $this->_userChangedTemplates);
         }
 
-        $this->_setTemplatesWrapper($templates);
-    }
-
-    protected function _setTemplatesWrapper(array $templates) {
-        if (method_exists(get_parent_class($this), 'setTemplates')) {
-            parent::setTemplates($templates);
-        } else {
-            /** @noinspection PhpDeprecationInspection */
-            parent::templates($templates);
-        }
+        parent::setTemplates($templates);
     }
 
     /**
@@ -884,26 +742,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             }
         }
 
-        $this->_setTemplatesWrapper($templates);
-    }
-
-    /**
-     * Gets/sets templates to use.
-     *
-     * @param string|null|array $templates null or string allow reading templates. An array
-     *                                     allows templates to be added.
-     *
-     * @return $this|string|array
-     * @deprecated 3.4.0 Use setTemplates()/getTemplates() instead.
-     *
-     */
-    public function templates($templates = null) {
-        if ($templates === null || is_string($templates)) {
-            return $this->getTemplates($templates);
-        }
-
-        $this->setTemplates($templates);
-        return $this;
+        parent::setTemplates($templates);
     }
 
     /**
@@ -920,12 +759,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             $this->_userChangedTemplates = array_merge(array_keys($templates), $this->_userChangedTemplates);
         }
 
-        if (method_exists(get_parent_class($this), 'getTemplates')) {
-            return parent::getTemplates($templates);
-        } else {
-            /** @noinspection PhpDeprecationInspection */
-            return parent::templates($templates);
-        }
+        return parent::getTemplates($templates);
     }
 
     private function switchTemplates(&$options, $type = null) {
