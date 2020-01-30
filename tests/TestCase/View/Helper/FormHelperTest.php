@@ -6,8 +6,11 @@ use Cake\Collection\Collection;
 use Cake\Core\Configure;
 use Cake\Form\Form;
 use Cake\Http\ServerRequest;
+use Cake\I18n\Date;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 use Cake\View\Form\EntityContext;
 use LilHermit\Bootstrap4\View\Helper\FormHelper;
@@ -41,10 +44,43 @@ class ContactsTable extends Table {
      *
      * @return void
      */
-    public function initialize(array $config) : void {
+    public function initialize(array $config): void {
         $this->setSchema($this->_schema);
     }
 }
+
+class ValidateUsersTable extends Table {
+    /**
+     * schema method
+     *
+     * @var array
+     */
+    protected $_schema = [
+        'id' => ['type' => 'integer', 'null' => '', 'default' => '', 'length' => '8'],
+        'name' => ['type' => 'string', 'null' => '', 'default' => '', 'length' => '255'],
+        'email' => ['type' => 'string', 'null' => '', 'default' => '', 'length' => '255'],
+        'balance' => ['type' => 'float', 'null' => false, 'length' => 5, 'precision' => 2],
+        'cost_decimal' => ['type' => 'decimal', 'null' => false, 'length' => 6, 'precision' => 3],
+        'null_decimal' => ['type' => 'decimal', 'null' => false, 'length' => null, 'precision' => null],
+        'ratio' => ['type' => 'decimal', 'null' => false, 'length' => 10, 'precision' => 6],
+        'population' => ['type' => 'decimal', 'null' => false, 'length' => 15, 'precision' => 0],
+        'created' => ['type' => 'date', 'null' => '1', 'default' => '', 'length' => ''],
+        'updated' => ['type' => 'datetime', 'null' => '1', 'default' => '', 'length' => null],
+        '_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]],
+    ];
+
+    /**
+     * Initializes the schema
+     *
+     * @param array $config
+     *
+     * @return void
+     */
+    public function initialize(array $config): void {
+        $this->setSchema($this->_schema);
+    }
+}
+
 
 /**
  * @property array $dateRegex
@@ -56,7 +92,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      *
      * @return void
      */
-    public function setUp() : void {
+    public function setUp(): void {
 
         parent::setUp();
 
@@ -68,16 +104,18 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
     }
 
     public function testRenderingWidgetWithEmptyName() {
-        $this->assertEquals([], $this->Form->fields);
+        $this->View->setRequest($this->View->getRequest()->withAttribute('formTokenData', []));
+        $this->Form->create();
 
         $result = $this->Form->widget('select', ['secure' => true, 'name' => '']);
-        $this->assertEquals('<select name="" class="form-control"></select>', $result);
-        $this->assertEquals([], $this->Form->fields);
+        $this->assertSame('<select name="" class="form-control"></select>', $result);
+        $result = $this->Form->getFormProtector()->__debugInfo()['fields'];
+        $this->assertEquals([], $result);
 
         $result = $this->Form->widget('select', ['secure' => true, 'name' => '0']);
-        $this->assertEquals('<select name="0" class="form-control"></select>', $result);
-        $this->assertEquals(['0'], $this->Form->fields);
-
+        $this->assertSame('<select name="0" class="form-control"></select>', $result);
+        $result = $this->Form->getFormProtector()->__debugInfo()['fields'];
+        $this->assertEquals(['0'], $result);
 
     }
 
@@ -169,7 +207,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
     public function testGetFormWithFalseModel() {
         $encoding = strtolower(Configure::read('App.encoding'));
         $this->Form->getView()->setRequest($this->Form->getView()->getRequest()->withParam('controller', 'contact_test'));
-        $result = $this->Form->create(false, [
+        $result = $this->Form->create(null, [
             'type' => 'get',
             'url' => ['controller' => 'contact_test']
         ]);
@@ -253,7 +291,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      */
     public function testTextFieldTypeNumberGenerationForIntegers() {
         $this->getTableLocator()->get('Contacts', [
-            'className' => 'Cake\Test\TestCase\View\Helper\ContactsTable'
+            'className' => ContactsTable::class
         ]);
 
         $this->Form->create([], ['context' => ['table' => 'Contacts']]);
@@ -284,7 +322,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testFormSecurityMultipleSubmitButtons() {
-        $this->Form->getView()->setRequest($this->Form->getView()->getRequest()->withParam('_Token', 'testKey'));
+        $this->View->setRequest($this->View->getRequest()->withAttribute('formTokenData', []));
 
         $this->Form->create($this->article);
         $this->Form->text('Address.title');
@@ -537,7 +575,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $one = new Entity();
         $two = new Entity();
         $this->getTableLocator()->get('Contacts', [
-            'className' => 'Cake\Test\TestCase\View\Helper\ContactsTable'
+            'className' => ContactsTable::class
         ]);
         $one->set('email', '');
         $one->setError('email', ['invalid email']);
@@ -595,15 +633,17 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testSecuritySubmitImageNoName() {
-        $this->Form->getView()->setRequest($this->Form->getView()->getRequest()->withParam('_Token', 'testKey'));
+        $this->View->setRequest($this->View->getRequest()->withAttribute('formTokenData', []));
 
-        $this->Form->create(false);
+        $this->Form->create();
         $result = $this->Form->submit('save.png');
         $expected = [
             'input' => ['type' => 'image', 'src' => 'img/save.png'],
         ];
         $this->assertHtml($expected, $result);
-        $this->assertEquals(['x', 'y'], $this->Form->unlockField());
+
+        $result = $this->Form->getFormProtector()->__debugInfo()['unlockedFields'];
+        $this->assertEquals(['x', 'y'], $result);
     }
 
     /**
@@ -612,7 +652,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testSecuritySubmitImageName() {
-        $this->Form->getView()->setRequest($this->Form->getView()->getRequest()->withParam('_Token', 'testKey'));
+        $this->View->setRequest($this->View->getRequest()->withAttribute('formTokenData', []));
 
         $this->Form->create(null);
         $result = $this->Form->submit('save.png', ['name' => 'test']);
@@ -620,7 +660,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'input' => ['type' => 'image', 'name' => 'test', 'src' => 'img/save.png'],
         ];
         $this->assertHtml($expected, $result);
-        $this->assertEquals(['test', 'test_x', 'test_y'], $this->Form->unlockField());
+
+        $result = $this->Form->getFormProtector()->__debugInfo()['unlockedFields'];
+        $this->assertEquals(['test', 'test_x', 'test_y'], $result);
     }
 
     /**
@@ -631,7 +673,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testCreateIdPrefix() {
-        $this->Form->create(false, ['idPrefix' => 'prefix']);
+        $this->Form->create(null, ['idPrefix' => 'prefix']);
 
         $result = $this->Form->control('field');
         $expected = [
@@ -965,7 +1007,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['default' => 'default title'] + $title
         );
 
-        $entity = $Articles->newEntity();
+        $entity = $Articles->newEmptyEntity();
         $this->Form->create($entity);
         // Get default value from schema
         $result = $this->Form->text('title');
@@ -983,7 +1025,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->assertHtml($expected, $result);
 
         // Default value from schema is used only for new entities.
-        $entity->isNew(false);
+        $entity->setNew(false);
         $result = $this->Form->text('title');
         $expected = ['input' => ['type' => 'text', 'name' => 'title', 'class' => 'form-control']];
         $this->assertHtml($expected, $result);
@@ -1285,7 +1327,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['default' => '1'] + $title
         );
 
-        $this->Form->create($Articles->newEntity());
+        $this->Form->create($Articles->newEmptyEntity());
 
         $result = $this->Form->radio('title', ['option A', 'option B']);
         $expected = [
@@ -2121,7 +2163,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ['type' => 'boolean', 'null' => false, 'default' => true]
         );
 
-        $this->Form->create($Articles->newEntity());
+        $this->Form->create($Articles->newEmptyEntity());
         $result = $this->Form->checkbox('published', ['hiddenField' => false]);
         $expected = [
             'input' => [
@@ -2375,11 +2417,11 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->assertHtml($expected, $result);
 
         $result = $this->Form->button('Clear Form >', ['type' => 'reset']);
-        $expected = ['button' => ['type' => 'reset', 'class' => 'btn btn-primary'], 'Clear Form >', '/button'];
+        $expected = ['button' => ['type' => 'reset', 'class' => 'btn btn-primary'], 'Clear Form &gt;', '/button'];
         $this->assertHtml($expected, $result);
 
         $result = $this->Form->button('Clear Form >', ['type' => 'reset', 'id' => 'clearForm']);
-        $expected = ['button' => ['type' => 'reset', 'id' => 'clearForm', 'class' => 'btn btn-primary'], 'Clear Form >', '/button'];
+        $expected = ['button' => ['type' => 'reset', 'id' => 'clearForm', 'class' => 'btn btn-primary'], 'Clear Form &gt;', '/button'];
         $this->assertHtml($expected, $result);
 
         $result = $this->Form->button('<Clear Form>', ['type' => 'reset', 'escape' => true]);
@@ -2406,9 +2448,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $result = $this->Form->postButton('Hi', '/controller/action');
         $expected = [
             'form' => ['method' => 'post', 'action' => '/controller/action', 'accept-charset' => 'utf-8'],
-            'div' => ['style' => 'display:none;'],
-            'input' => ['type' => 'hidden', 'name' => '_method', 'value' => 'POST'],
-            '/div',
             'button' => ['type' => 'submit', 'class' => 'btn btn-primary'],
             'Hi',
             '/button',
@@ -2449,9 +2488,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $result = $this->Form->postButton('Hi', '/controller/action', ['form' => ['class' => 'inline']]);
         $expected = [
             'form' => ['method' => 'post', 'action' => '/controller/action', 'accept-charset' => 'utf-8', 'class' => 'inline'],
-            'div' => ['style' => 'display:none;'],
-            'input' => ['type' => 'hidden', 'name' => '_method', 'value' => 'POST'],
-            '/div',
             'button' => ['type' => 'submit', 'class' => 'btn btn-primary'],
             'Hi',
             '/button',
@@ -2468,8 +2504,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testSecurePostButton() {
-        $this->Form->getView()->setRequest($this->Form->getView()->getRequest()->withParam('_csrfToken', 'testkey'));
-        $this->Form->getView()->setRequest($this->Form->getView()->getRequest()->withParam('_Token', ['unlockedFields' => []]));
+        $this->View->setRequest($this->View->getRequest()
+            ->withAttribute('csrfToken', 'testkey')
+            ->withAttribute('formTokenData', ['unlockedFields' => []]));
 
         $result = $this->Form->postButton('Delete', '/posts/delete/1');
         $tokenDebug = urlencode(json_encode([
@@ -2483,7 +2520,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'method' => 'post', 'action' => '/posts/delete/1', 'accept-charset' => 'utf-8',
             ],
             ['div' => ['style' => 'display:none;']],
-            ['input' => ['type' => 'hidden', 'name' => '_method', 'value' => 'POST']],
             ['input' => ['type' => 'hidden', 'name' => '_csrfToken', 'value' => 'testkey', 'autocomplete' => 'off']],
             '/div',
             'button' => ['type' => 'submit', 'class' => 'btn btn-primary'],
@@ -2671,9 +2707,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $this->getTableLocator()->get('Comments')
             ->getValidator('default')
-            ->allowEmptyString('comment', false);
+            ->allowEmptyString('comment', null, false);
         $result = $this->Form->control('0.comments.1.comment');
-        //@codingStandardsIgnoreStart
+        // phpcs:disable
         $expected = [
             'div' => ['class' => 'form-group required'],
             'label' => ['for' => '0-comments-1-comment', 'class' => 'col-form-label'],
@@ -2683,12 +2719,15 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'name',
                 'required' => 'required',
                 'id' => '0-comments-1-comment',
-                'rows' => 5, 'class' => 'form-control'
+                'rows' => 5, 'class' => 'form-control',
+                'data-validity-message' => 'This field cannot be left empty',
+                'oninvalid' => 'this.setCustomValidity(&#039;&#039;); if (!this.value) this.setCustomValidity(this.dataset.validityMessage)',
+                'oninput' => 'this.setCustomValidity(&#039;&#039;)',
             ],
             '/textarea',
             '/div'
         ];
-        //@codingStandardsIgnoreEnd
+        // phpcs:enable
         $this->assertHtml($expected, $result);
     }
 
@@ -2717,14 +2756,17 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'name' => 'title',
                 'id' => 'title',
                 'required' => 'required',
-                'class' => 'form-control'
+                'class' => 'form-control',
+                'data-validity-message' => 'This field cannot be left empty',
+                'oninvalid' => 'this.setCustomValidity(&#039;&#039;); if (!this.value) this.setCustomValidity(this.dataset.validityMessage)',
+                'oninput' => 'this.setCustomValidity(&#039;&#039;)',
             ],
-            '/div'
+            '/div',
         ];
         $this->assertHtml($expected, $result);
 
         $result = $this->Form->control('title', ['required' => false]);
-        $this->assertNotContains('required', $result);
+        $this->assertStringNotContainsString('required', $result);
 
         $result = $this->Form->control('body');
         $expected = [
@@ -2738,12 +2780,12 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'id' => 'body',
                 'class' => 'form-control'
             ],
-            '/div'
+            '/div',
         ];
         $this->assertHtml($expected, $result);
 
         $result = $this->Form->control('body', ['required' => true]);
-        $this->assertContains('required', $result);
+        $this->assertStringContainsString('required', $result);
     }
 
     /**
@@ -2842,7 +2884,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      */
     public function testFileUploadFieldTypeGenerationForBinaries() {
         $table = $this->getTableLocator()->get('Contacts', [
-            'className' => 'Cake\Test\TestCase\View\Helper\ContactsTable'
+            'className' => ContactsTable::class
         ]);
         $table->setSchema(['foo' => [
             'type' => 'binary',
@@ -2919,432 +2961,45 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testMonth() {
-        $result = $this->Form->month('Model.field', ['value' => '']);
+        $result = $this->Form->month('field', ['value' => '']);
         $expected = [
-            ['select' => ['name' => 'Model[field][month]', 'class' => 'form-control']],
-            ['option' => ['value' => '', 'selected' => 'selected']],
-            '/option',
-            ['option' => ['value' => '01']],
-            date('F', strtotime('2008-01-01 00:00:00')),
-            '/option',
-            ['option' => ['value' => '02']],
-            date('F', strtotime('2008-02-01 00:00:00')),
-            '/option',
-            '*/select',
+            'input' => [
+                'type' => 'month',
+                'name' => 'field',
+                'value' => '',
+                'class' => 'form-control'
+            ],
         ];
         $this->assertHtml($expected, $result);
 
-        $result = $this->Form->month('Model.field', ['empty' => true, 'value' => '']);
-        $expected = [
-            ['select' => ['name' => 'Model[field][month]', 'class' => 'form-control']],
-            ['option' => ['selected' => 'selected', 'value' => '']],
-            '/option',
-            ['option' => ['value' => '01']],
-            date('F', strtotime('2008-01-01 00:00:00')),
-            '/option',
-            ['option' => ['value' => '02']],
-            date('F', strtotime('2008-02-01 00:00:00')),
-            '/option',
-            '*/select',
-        ];
-        $this->assertHtml($expected, $result);
-
-        $result = $this->Form->month('Model.field', ['value' => '', 'monthNames' => false]);
-        $expected = [
-            ['select' => ['name' => 'Model[field][month]', 'class' => 'form-control']],
-            ['option' => ['selected' => 'selected', 'value' => '']],
-            '/option',
-            ['option' => ['value' => '01']],
-            '1',
-            '/option',
-            ['option' => ['value' => '02']],
-            '2',
-            '/option',
-            '*/select',
-        ];
-        $this->assertHtml($expected, $result);
-
-        $monthNames = [
-            '01' => 'Jan', '02' => 'Feb', '03' => 'Mar', '04' => 'Apr', '05' => 'May', '06' => 'Jun',
-            '07' => 'Jul', '08' => 'Aug', '09' => 'Sep', '10' => 'Oct', '11' => 'Nov', '12' => 'Dec'
-        ];
-        $result = $this->Form->month('Model.field', ['value' => '1', 'monthNames' => $monthNames]);
-        $expected = [
-            ['select' => ['name' => 'Model[field][month]', 'class' => 'form-control']],
-            ['option' => ['value' => '']],
-            '/option',
-            ['option' => ['value' => '01', 'selected' => 'selected']],
-            'Jan',
-            '/option',
-            ['option' => ['value' => '02']],
-            'Feb',
-            '/option',
-            '*/select',
-        ];
-        $this->assertHtml($expected, $result);
-
-        $this->Form->getView()->setRequest($this->Form->getView()->getRequest()->withData('Project.release', '2050-02-10'));
+        $this->View->setRequest(
+            $this->View->getRequest()->withData('release', '2050-02-10')
+        );
         $this->Form->create();
-        $result = $this->Form->month('Project.release');
+        $result = $this->Form->month('release');
 
         $expected = [
-            ['select' => ['name' => 'Project[release][month]', 'class' => 'form-control']],
-            ['option' => ['value' => '']],
-            '/option',
-            ['option' => ['value' => '01']],
-            'January',
-            '/option',
-            ['option' => ['value' => '02', 'selected' => 'selected']],
-            'February',
-            '/option',
-            '*/select',
+            'input' => [
+                'type' => 'month',
+                'name' => 'release',
+                'value' => '2050-02',
+                'class' => 'form-control'
+            ],
         ];
         $this->assertHtml($expected, $result);
 
-        $result = $this->Form->month('Contact.published', [
-            'empty' => 'Published on',
-        ]);
-        $this->assertContains('Published on', $result);
-    }
-
-    /**
-     * testDay method
-     *
-     * Test generation of a day input.
-     *
-     * @return void
-     */
-    public function testDay() {
-        /**
-         * @var string $daysRegex
-         */
-
-        extract($this->dateRegex);
-
-        $result = $this->Form->day('Model.field', ['value' => '', 'class' => 'form-control']);
-        $expected = [
-            ['select' => ['name' => 'Model[field][day]', 'class' => 'form-control']],
-            ['option' => ['selected' => 'selected', 'value' => '']],
-            '/option',
-            ['option' => ['value' => '01']],
-            '1',
-            '/option',
-            ['option' => ['value' => '02']],
-            '2',
-            '/option',
-            $daysRegex,
-            '/select',
-        ];
-        $this->assertHtml($expected, $result);
-
-        $this->Form->getView()->setRequest($this->Form->getView()->getRequest()->withData('Model.field', '2006-10-10 23:12:32'));
+        $this->View->setRequest(
+            $this->View->getRequest()->withData('release', '2050-03')
+        );
         $this->Form->create();
-        $result = $this->Form->day('Model.field');
+        $result = $this->Form->month('release');
         $expected = [
-            ['select' => ['name' => 'Model[field][day]', 'class' => 'form-control']],
-            ['option' => ['value' => '']],
-            '/option',
-            ['option' => ['value' => '01']],
-            '1',
-            '/option',
-            ['option' => ['value' => '02']],
-            '2',
-            '/option',
-            $daysRegex,
-            ['option' => ['value' => '10', 'selected' => 'selected']],
-            '10',
-            '/option',
-            $daysRegex,
-            '/select',
-        ];
-        $this->assertHtml($expected, $result);
-
-        $this->Form->getView()->setRequest($this->Form->getView()->getRequest()->withData('Model.field', ''));
-        $this->Form->create();
-        $result = $this->Form->day('Model.field', ['value' => '10']);
-        $expected = [
-            ['select' => ['name' => 'Model[field][day]', 'class' => 'form-control']],
-            ['option' => ['value' => '']],
-            '/option',
-            ['option' => ['value' => '01']],
-            '1',
-            '/option',
-            ['option' => ['value' => '02']],
-            '2',
-            '/option',
-            $daysRegex,
-            ['option' => ['value' => '10', 'selected' => 'selected']],
-            '10',
-            '/option',
-            $daysRegex,
-            '/select',
-        ];
-        $this->assertHtml($expected, $result);
-
-        $this->Form->getView()->setRequest($this->Form->getView()->getRequest()->withData('Project.release', '2050-10-10'));
-        $this->Form->create();
-        $result = $this->Form->day('Project.release');
-
-        $expected = [
-            ['select' => ['name' => 'Project[release][day]', 'class' => 'form-control']],
-            ['option' => ['value' => '']],
-            '/option',
-            ['option' => ['value' => '01']],
-            '1',
-            '/option',
-            ['option' => ['value' => '02']],
-            '2',
-            '/option',
-            $daysRegex,
-            ['option' => ['value' => '10', 'selected' => 'selected']],
-            '10',
-            '/option',
-            $daysRegex,
-            '/select',
-        ];
-        $this->assertHtml($expected, $result);
-
-        $result = $this->Form->day('Contact.published', [
-            'empty' => 'Published on',
-        ]);
-        $this->assertContains('Published on', $result);
-    }
-
-    /**
-     * testMinute method
-     *
-     * Test generation of a minute input.
-     *
-     * @return void
-     */
-    public function testMinute() {
-        /**
-         * @var string $minutesRegex
-         */
-
-        extract($this->dateRegex);
-
-        $result = $this->Form->minute('Model.field', ['value' => '']);
-        $expected = [
-            ['select' => ['name' => 'Model[field][minute]', 'class' => 'form-control']],
-            ['option' => ['selected' => 'selected', 'value' => '']],
-            '/option',
-            ['option' => ['value' => '00']],
-            '00',
-            '/option',
-            ['option' => ['value' => '01']],
-            '01',
-            '/option',
-            ['option' => ['value' => '02']],
-            '02',
-            '/option',
-            $minutesRegex,
-            '/select',
-        ];
-        $this->assertHtml($expected, $result);
-
-        $this->Form->getView()->setRequest($this->Form->getView()->getRequest()->withData('Model.field', '2006-10-10 23:12:32'));
-        $this->Form->create();
-        $result = $this->Form->minute('Model.field');
-        $expected = [
-            ['select' => ['name' => 'Model[field][minute]', 'class' => 'form-control']],
-            ['option' => ['value' => '']],
-            '/option',
-            ['option' => ['value' => '00']],
-            '00',
-            '/option',
-            ['option' => ['value' => '01']],
-            '01',
-            '/option',
-            ['option' => ['value' => '02']],
-            '02',
-            '/option',
-            $minutesRegex,
-            ['option' => ['value' => '12', 'selected' => 'selected']],
-            '12',
-            '/option',
-            $minutesRegex,
-            '/select',
-        ];
-        $this->assertHtml($expected, $result);
-
-        $this->Form->getView()->setRequest($this->Form->getView()->getRequest()->withData('Model.field', ''));
-        $this->Form->create();
-        $result = $this->Form->minute('Model.field', ['interval' => 5]);
-        $expected = [
-            ['select' => ['name' => 'Model[field][minute]', 'class' => 'form-control']],
-            ['option' => ['selected' => 'selected', 'value' => '']],
-            '/option',
-            ['option' => ['value' => '00']],
-            '00',
-            '/option',
-            ['option' => ['value' => '05']],
-            '05',
-            '/option',
-            ['option' => ['value' => '10']],
-            '10',
-            '/option',
-            $minutesRegex,
-            '/select',
-        ];
-        $this->assertHtml($expected, $result);
-
-        $this->Form->getView()->setRequest($this->Form->getView()->getRequest()->withData('Model.field', '2006-10-10 00:10:32'));
-        $this->Form->create();
-        $result = $this->Form->minute('Model.field', ['interval' => 5]);
-        $expected = [
-            ['select' => ['name' => 'Model[field][minute]', 'class' => 'form-control']],
-            ['option' => ['value' => '']],
-            '/option',
-            ['option' => ['value' => '00']],
-            '00',
-            '/option',
-            ['option' => ['value' => '05']],
-            '05',
-            '/option',
-            ['option' => ['value' => '10', 'selected' => 'selected']],
-            '10',
-            '/option',
-            $minutesRegex,
-            '/select',
-        ];
-        $this->assertHtml($expected, $result);
-    }
-
-    /**
-     * testMeridian method
-     *
-     * Test generating an input for the meridian.
-     *
-     * @return void
-     */
-    public function testMeridian() {
-        /**
-         * @var string $meridianRegex
-         */
-
-        extract($this->dateRegex);
-
-        $now = new \DateTime();
-        $result = $this->Form->meridian('Model.field', ['value' => 'am']);
-        $expected = [
-            ['select' => ['name' => 'Model[field][meridian]', 'class' => 'form-control']],
-            ['option' => ['value' => '']],
-            '/option',
-            $meridianRegex,
-            ['option' => ['value' => $now->format('a'), 'selected' => 'selected']],
-            $now->format('a'),
-            '/option',
-            '*/select'
-        ];
-        $this->assertHtml($expected, $result);
-    }
-
-    /**
-     * testHour method
-     *
-     * Test generation of an hour input.
-     *
-     * @return void
-     */
-    public function testHour() {
-        /**
-         * @var string $hoursRegex
-         */
-
-        extract($this->dateRegex);
-
-        $result = $this->Form->hour('Model.field', ['format' => 12, 'value' => '']);
-        $expected = [
-            ['select' => ['name' => 'Model[field][hour]', 'class' => 'form-control']],
-            ['option' => ['selected' => 'selected', 'value' => '']],
-            '/option',
-            ['option' => ['value' => '01']],
-            '1',
-            '/option',
-            ['option' => ['value' => '02']],
-            '2',
-            '/option',
-            $hoursRegex,
-            '/select',
-        ];
-        $this->assertHtml($expected, $result);
-
-        $this->Form->getView()->setRequest($this->Form->getView()->getRequest()->withData('Model.field', '2006-10-10 00:12:32'));
-        $this->Form->create();
-        $result = $this->Form->hour('Model.field', ['format' => 12]);
-        $expected = [
-            ['select' => ['name' => 'Model[field][hour]', 'class' => 'form-control']],
-            ['option' => ['value' => '']],
-            '/option',
-            ['option' => ['value' => '01']],
-            '1',
-            '/option',
-            ['option' => ['value' => '02']],
-            '2',
-            '/option',
-            $hoursRegex,
-            ['option' => ['value' => '12', 'selected' => 'selected']],
-            '12',
-            '/option',
-            '/select',
-        ];
-        $this->assertHtml($expected, $result);
-
-        $this->Form->getView()->setRequest($this->Form->getView()->getRequest()->withData('Model.field', ''));
-        $this->Form->create();
-        $result = $this->Form->hour('Model.field', ['format' => 24, 'value' => '23']);
-        $this->assertContains('<option value="23" selected="selected">23</option>', $result);
-
-        $result = $this->Form->hour('Model.field', ['format' => 12, 'value' => '23']);
-        $this->assertContains('<option value="11" selected="selected">11</option>', $result);
-
-        $this->Form->getView()->setRequest($this->Form->getView()->getRequest()->withData('Model.field', '2006-10-10 00:12:32'));
-        $this->Form->create();
-        $result = $this->Form->hour('Model.field', ['format' => 24]);
-        $expected = [
-            ['select' => ['name' => 'Model[field][hour]', 'class' => 'form-control']],
-            ['option' => ['value' => '']],
-            '/option',
-            ['option' => ['value' => '00', 'selected' => 'selected']],
-            '0',
-            '/option',
-            ['option' => ['value' => '01']],
-            '1',
-            '/option',
-            ['option' => ['value' => '02']],
-            '2',
-            '/option',
-            $hoursRegex,
-            '/select',
-        ];
-        $this->assertHtml($expected, $result);
-
-        $this->Form->getView()->setRequest($this->Form->getView()->getRequest()->withParsedBody([]));
-        $this->Form->create();
-        $result = $this->Form->hour('Model.field', ['format' => 24, 'value' => 'now']);
-        $thisHour = date('H');
-        $optValue = date('G');
-        $this->assertRegExp('/<option value="' . $thisHour . '" selected="selected">' . $optValue . '<\/option>/', $result);
-
-        $this->Form->getView()->setRequest($this->Form->getView()->getRequest()->withData('Model.field', '2050-10-10 01:12:32'));
-        $this->Form->create();
-        $result = $this->Form->hour('Model.field', ['format' => 24]);
-        $expected = [
-            ['select' => ['name' => 'Model[field][hour]', 'class' => 'form-control']],
-            ['option' => ['value' => '']],
-            '/option',
-            ['option' => ['value' => '00']],
-            '0',
-            '/option',
-            ['option' => ['value' => '01', 'selected' => 'selected']],
-            '1',
-            '/option',
-            ['option' => ['value' => '02']],
-            '2',
-            '/option',
-            $hoursRegex,
-            '/select',
+            'input' => [
+                'type' => 'month',
+                'name' => 'release',
+                'value' => '2050-03',
+                'class' => 'form-control'
+            ],
         ];
         $this->assertHtml($expected, $result);
     }
@@ -3357,9 +3012,13 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testYear() {
-        $result = $this->Form->year('Model.field', ['value' => '', 'minYear' => 2006, 'maxYear' => 2007]);
+        $this->View->setRequest(
+            $this->View->getRequest()->withData('published', '2006')
+        );
+
+        $result = $this->Form->year('field', ['value' => '', 'min' => 2006, 'max' => 2007]);
         $expected = [
-            ['select' => ['name' => 'Model[field][year]', 'class' => 'form-control']],
+            ['select' => ['name' => 'field', 'class' => 'form-control']],
             ['option' => ['selected' => 'selected', 'value' => '']],
             '/option',
             ['option' => ['value' => '2007']],
@@ -3372,14 +3031,14 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $result = $this->Form->year('Model.field', [
+        $result = $this->Form->year('field', [
             'value' => '',
-            'minYear' => 2006,
-            'maxYear' => 2007,
-            'orderYear' => 'asc'
+            'min' => 2006,
+            'max' => 2007,
+            'order' => 'asc'
         ]);
         $expected = [
-            ['select' => ['name' => 'Model[field][year]', 'class' => 'form-control']],
+            ['select' => ['name' => 'field', 'class' => 'form-control']],
             ['option' => ['selected' => 'selected', 'value' => '']],
             '/option',
             ['option' => ['value' => '2006']],
@@ -3394,13 +3053,13 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $this->Form->getView()->setRequest($this->Form->getView()->getRequest()->withData('Contact.published', '2006-10-10'));
         $this->Form->create();
-        $result = $this->Form->year('Contact.published', [
+        $result = $this->Form->year('published', [
             'empty' => false,
-            'minYear' => 2006,
-            'maxYear' => 2007,
+            'min' => 2006,
+            'max' => 2007,
         ]);
         $expected = [
-            ['select' => ['name' => 'Contact[published][year]', 'class' => 'form-control']],
+            ['select' => ['name' => 'published', 'class' => 'form-control']],
             ['option' => ['value' => '2007']],
             '2007',
             '/option',
@@ -3414,7 +3073,59 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $result = $this->Form->year('Contact.published', [
             'empty' => 'Published on',
         ]);
-        $this->assertContains('Published on', $result);
+        $this->assertStringContainsString('Published on', $result);
+    }
+
+    /**
+     * testTime method
+     *
+     * Test the time type.
+     *
+     * @return void
+     */
+    public function testTime() {
+        $result = $this->Form->time('start_time', [
+            'value' => '2014-03-08 16:30:00',
+        ]);
+
+        $expected = [
+            'input' => [
+                'type' => 'time',
+                'name' => 'start_time',
+                'value' => '16:30:00',
+                'step' => '1',
+                'class' => 'form-control'
+            ],
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testDate method
+     *
+     * Test the date type.
+     *
+     * @return void
+     */
+    public function testDate() {
+        $result = $this->Form->date('start_day', [
+            'value' => '2014-03-08',
+        ]);
+
+        $expected = [
+            'input' => [
+                'type' => 'date',
+                'name' => 'start_day',
+                'value' => '2014-03-08',
+                'class' => 'form-control'
+            ],
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->date('start_day', [
+            'value' => new Date('2014-03-08'),
+        ]);
+        $this->assertHtml($expected, $result);
     }
 
     /**
@@ -3425,235 +3136,17 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      * @return void
      */
     public function testDateTime() {
-        /**
-         * @var string $yearsRegex
-         * @var string $monthsRegex
-         * @var string $daysRegex
-         * @var string $hoursRegex
-         * @var string $minutesRegex
-         */
-
-        extract($this->dateRegex);
-
-        $result = $this->Form->dateTime('Contact.date', ['default' => true]);
-        $now = strtotime('now');
+        $result = $this->Form->dateTime('date', ['default' => true]);
         $expected = [
-            ['select' => ['name' => 'Contact[date][year]', 'class' => 'form-control']],
-            ['option' => ['value' => '']],
-            '/option',
-            $yearsRegex,
-            ['option' => ['value' => date('Y', $now), 'selected' => 'selected']],
-            date('Y', $now),
-            '/option',
-            '*/select',
-
-            ['select' => ['name' => 'Contact[date][month]', 'class' => 'form-control']],
-            ['option' => ['value' => '']],
-            '/option',
-            $monthsRegex,
-            ['option' => ['value' => date('m', $now), 'selected' => 'selected']],
-            date('F', $now),
-            '/option',
-            '*/select',
-
-            ['select' => ['name' => 'Contact[date][day]', 'class' => 'form-control']],
-            ['option' => ['value' => '']],
-            '/option',
-            $daysRegex,
-            ['option' => ['value' => date('d', $now), 'selected' => 'selected']],
-            date('j', $now),
-            '/option',
-            '*/select',
-
-            ['select' => ['name' => 'Contact[date][hour]', 'class' => 'form-control']],
-            ['option' => ['value' => '']],
-            '/option',
-            $hoursRegex,
-            ['option' => ['value' => date('H', $now), 'selected' => 'selected']],
-            date('G', $now),
-            '/option',
-            '*/select',
-
-            ['select' => ['name' => 'Contact[date][minute]', 'class' => 'form-control']],
-            ['option' => ['value' => '']],
-            '/option',
-            $minutesRegex,
-            ['option' => ['value' => date('i', $now), 'selected' => 'selected']],
-            date('i', $now),
-            '/option',
-            '*/select',
+            'input' => [
+                'type' => 'datetime-local',
+                'name' => 'date',
+                'value' => 'preg:/' . date('Y-m-d') . 'T\d{2}:\d{2}:\d{2}\.\d{3}/',
+                'step' => '1',
+                'class' => 'form-control'
+            ],
         ];
-        $this->assertHtml($expected, $result);
 
-        // Empty=>false implies Default=>true, as selecting the "first" dropdown value is useless
-        $result = $this->Form->dateTime('Contact.date', ['empty' => false]);
-        $now = strtotime('now');
-        $expected = [
-            ['select' => ['name' => 'Contact[date][year]', 'class' => 'form-control']],
-            $yearsRegex,
-            ['option' => ['value' => date('Y', $now), 'selected' => 'selected']],
-            date('Y', $now),
-            '/option',
-            '*/select',
-
-            ['select' => ['name' => 'Contact[date][month]', 'class' => 'form-control']],
-            $monthsRegex,
-            ['option' => ['value' => date('m', $now), 'selected' => 'selected']],
-            date('F', $now),
-            '/option',
-            '*/select',
-
-            ['select' => ['name' => 'Contact[date][day]', 'class' => 'form-control']],
-            $daysRegex,
-            ['option' => ['value' => date('d', $now), 'selected' => 'selected']],
-            date('j', $now),
-            '/option',
-            '*/select',
-
-            ['select' => ['name' => 'Contact[date][hour]', 'class' => 'form-control']],
-            $hoursRegex,
-            ['option' => ['value' => date('H', $now), 'selected' => 'selected']],
-            date('G', $now),
-            '/option',
-            '*/select',
-
-            ['select' => ['name' => 'Contact[date][minute]', 'class' => 'form-control']],
-            $minutesRegex,
-            ['option' => ['value' => date('i', $now), 'selected' => 'selected']],
-            date('i', $now),
-            '/option',
-            '*/select',
-        ];
-        $this->assertHtml($expected, $result);
-    }
-
-    /**
-     * testDatetimeEmpty method
-     *
-     * Test empty defaulting to true for datetime.
-     *
-     * @return void
-     */
-    public function testDatetimeEmpty() {
-        /**
-         * @var string $yearsRegex
-         * @var string $monthsRegex
-         * @var string $daysRegex
-         * @var string $hoursRegex
-         * @var string $minutesRegex
-         * @var string $meridianRegex
-         */
-
-        extract($this->dateRegex);
-
-        $result = $this->Form->dateTime('Contact.date', [
-            'timeFormat' => 12,
-            'empty' => true,
-            'default' => true
-        ]);
-        $expected = [
-            ['select' => ['name' => 'Contact[date][year]', 'class' => 'form-control']],
-            $yearsRegex,
-            ['option' => ['value' => '']],
-            '/option',
-            '*/select',
-
-            ['select' => ['name' => 'Contact[date][month]', 'class' => 'form-control']],
-            $monthsRegex,
-            ['option' => ['value' => '']],
-            '/option',
-            '*/select',
-
-            ['select' => ['name' => 'Contact[date][day]', 'class' => 'form-control']],
-            $daysRegex,
-            ['option' => ['value' => '']],
-            '/option',
-            '*/select',
-
-            ['select' => ['name' => 'Contact[date][hour]', 'class' => 'form-control']],
-            $hoursRegex,
-            ['option' => ['value' => '']],
-            '/option',
-            '*/select',
-
-            ['select' => ['name' => 'Contact[date][minute]', 'class' => 'form-control']],
-            $minutesRegex,
-            ['option' => ['value' => '']],
-            '/option',
-            '*/select',
-
-            ['select' => ['name' => 'Contact[date][meridian]', 'class' => 'form-control']],
-            $meridianRegex,
-            ['option' => ['value' => '']],
-            '/option',
-            '*/select'
-        ];
-        $this->assertHtml($expected, $result);
-        $this->assertNotRegExp('/<option[^<>]+value=""[^<>]+selected="selected"[^>]*>/', $result);
-    }
-
-    /**
-     * testDatetimeMinuteInterval method
-     *
-     * Test datetime with interval option.
-     *
-     * @return void
-     */
-    public function testDatetimeMinuteInterval() {
-        /**
-         * @var string $yearsRegex
-         * @var string $monthsRegex
-         * @var string $daysRegex
-         * @var string $hoursRegex
-         * @var string $minutesRegex
-         */
-
-        extract($this->dateRegex);
-
-        $result = $this->Form->dateTime('Contact.date', [
-            'interval' => 5,
-            'value' => ''
-        ]);
-        $expected = [
-            ['select' => ['name' => 'Contact[date][year]', 'class' => 'form-control']],
-            $yearsRegex,
-            ['option' => ['selected' => 'selected', 'value' => '']],
-            '/option',
-            '*/select',
-
-            ['select' => ['name' => 'Contact[date][month]', 'class' => 'form-control']],
-            $monthsRegex,
-            ['option' => ['selected' => 'selected', 'value' => '']],
-            '/option',
-            '*/select',
-
-            ['select' => ['name' => 'Contact[date][day]', 'class' => 'form-control']],
-            $daysRegex,
-            ['option' => ['selected' => 'selected', 'value' => '']],
-            '/option',
-            '*/select',
-
-            ['select' => ['name' => 'Contact[date][hour]', 'class' => 'form-control']],
-            $hoursRegex,
-            ['option' => ['selected' => 'selected', 'value' => '']],
-            '/option',
-            '*/select',
-
-            ['select' => ['name' => 'Contact[date][minute]', 'class' => 'form-control']],
-            $minutesRegex,
-            ['option' => ['selected' => 'selected', 'value' => '']],
-            '/option',
-            ['option' => ['value' => '00']],
-            '00',
-            '/option',
-            ['option' => ['value' => '05']],
-            '05',
-            '/option',
-            ['option' => ['value' => '10']],
-            '10',
-            '/option',
-            '*/select',
-        ];
         $this->assertHtml($expected, $result);
     }
 
@@ -3724,10 +3217,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      */
     public function testFormSecuredControl() {
 
-        $request = $this->Form->getView()->getRequest();
-        $this->Form->getView()->setRequest(
-            $request->withParam('_csrfToken', 'testKey')->withParam('_Token', 'stuff')
-        );
+        $this->View->setRequest($this->View->getRequest()
+            ->withAttribute('formTokenData', [])
+            ->withAttribute('csrfToken', 'testKey'));
         $this->article['schema'] = [
             'ratio' => ['type' => 'decimal', 'length' => 5, 'precision' => 6],
             'population' => ['type' => 'decimal', 'length' => 15, 'precision' => 0],
@@ -3738,7 +3230,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $expected = [
             'form' => ['method' => 'post', 'action' => '/articles/add', 'accept-charset' => $encoding],
             'div' => ['style' => 'display:none;'],
-            ['input' => ['type' => 'hidden', 'name' => '_method', 'value' => 'POST']],
             ['input' => [
                 'type' => 'hidden',
                 'name' => '_csrfToken',
@@ -3842,7 +3333,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             '/div'
         ];
         $this->assertHtml($expected, $result);
-        $result = $this->Form->fields;
+        $result = $this->Form->getFormProtector()->__debugInfo()['fields'];
         $expectedFields = [
             'ratio',
             'population',
@@ -3854,7 +3345,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertEquals($expectedFields, $result);
 
-        $result = $this->Form->secure($this->Form->fields);
+        $result = $this->Form->secure();
         $tokenDebug = urlencode(json_encode([
             '/articles/add',
             $expectedFields,
@@ -3941,6 +3432,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text', 'name' => 'title',
                 'id' => 'title', 'class' => 'is-invalid form-control',
                 'required' => 'required',
+                'data-validity-message' => 'This field cannot be left empty',
+                'oninvalid' => 'this.setCustomValidity(&#039;&#039;); if (!this.value) this.setCustomValidity(this.dataset.validityMessage)',
+                'oninput' => 'this.setCustomValidity(&#039;&#039;)',
             ],
             ['div' => ['class' => 'invalid-feedback']],
             'Custom error!',
@@ -3962,7 +3456,10 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'name' => 'title',
                 'id' => 'title',
                 'class' => 'is-invalid form-control',
-                'required' => 'required'
+                'required' => 'required',
+                'data-validity-message' => 'This field cannot be left empty',
+                'oninvalid' => 'this.setCustomValidity(&#039;&#039;); if (!this.value) this.setCustomValidity(this.dataset.validityMessage)',
+                'oninput' => 'this.setCustomValidity(&#039;&#039;)',
             ],
             ['div' => ['class' => 'invalid-feedback']],
             'Custom error!',
@@ -3981,7 +3478,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      */
     public function testControl() {
         $this->getTableLocator()->get('ValidateUsers', [
-            'className' => 'Cake\Test\TestCase\View\Helper\ValidateUsersTable'
+            'className' => ValidateUsersTable::class
         ]);
         $this->Form->create([], ['context' => ['table' => 'ValidateUsers']]);
         $result = $this->Form->control('ValidateUsers.balance');
@@ -4027,7 +3524,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      */
     public function testControlCustomization() {
         $this->getTableLocator()->get('Contacts', [
-            'className' => 'Cake\Test\TestCase\View\Helper\ContactsTable'
+            'className' => ContactsTable::class
         ]);
         $this->Form->create([], ['context' => ['table' => 'Contacts']]);
         $result = $this->Form->control('Contact.email', ['id' => 'custom']);
@@ -4291,7 +3788,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      */
     public function testControlZero() {
         $this->getTableLocator()->get('Contacts', [
-            'className' => 'Cake\Test\TestCase\View\Helper\ContactsTable'
+            'className' => ContactsTable::class
         ]);
         $this->Form->create([], ['context' => ['table' => 'Contacts']]);
         $result = $this->Form->control('0');
@@ -4300,6 +3797,32 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'label' => ['for' => '0', 'class'], '/label',
             'input' => ['type' => 'text', 'name' => '0', 'id' => '0', 'class'],
             '/div'
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlHidden method
+     *
+     * Test that control() does not create wrapping div and label tag for hidden fields.
+     *
+     * @return void
+     */
+    public function testControlHidden() {
+        $this->getTableLocator()->get('ValidateUsers', [
+            'className' => ValidateUsersTable::class,
+        ]);
+        $this->Form->create([], ['context' => ['table' => 'ValidateUsers']]);
+
+        $result = $this->Form->control('ValidateUser.id');
+        $expected = [
+            'input' => ['name', 'type' => 'hidden', 'id'],
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->control('ValidateUser.custom', ['type' => 'hidden']);
+        $expected = [
+            'input' => ['name', 'type' => 'hidden', 'id'],
         ];
         $this->assertHtml($expected, $result);
     }
@@ -4766,7 +4289,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      */
     public function testControlMagicSelectForTypeNumber() {
         $this->getTableLocator()->get('ValidateUsers', [
-            'className' => 'Cake\Test\TestCase\View\Helper\ValidateUsersTable'
+            'className' => ValidateUsersTable::class
         ]);
         $entity = new Entity(['balance' => 1]);
         $this->Form->create($entity, ['context' => ['table' => 'ValidateUsers']]);
@@ -4828,16 +4351,16 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $this->assertHtml($expected, $result);
 
         $result = $this->Form->allControls([], ['fieldset' => true, 'legend' => 'Field of Dreams']);
-        $this->assertContains('<legend>Field of Dreams</legend>', $result);
-        $this->assertContains('<fieldset class="form-group">', $result);
+        $this->assertStringContainsString('<legend>Field of Dreams</legend>', $result);
+        $this->assertStringContainsString('<fieldset class="form-group">', $result);
 
         $result = $this->Form->allControls([], ['fieldset' => false, 'legend' => false]);
-        $this->assertNotContains('<legend>', $result);
-        $this->assertNotContains('<fieldset>', $result);
+        $this->assertStringNotContainsString('<legend>', $result);
+        $this->assertStringNotContainsString('<fieldset>', $result);
 
         $result = $this->Form->allControls([], ['fieldset' => false, 'legend' => 'Hello']);
-        $this->assertNotContains('<legend>', $result);
-        $this->assertNotContains('<fieldset>', $result);
+        $this->assertStringNotContainsString('<legend>', $result);
+        $this->assertStringNotContainsString('<fieldset>', $result);
 
         $this->Form->create($this->article);
         $request = $this->Form->getView()->getRequest();
@@ -4951,7 +4474,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->create(false);
+        $this->Form->create(null);
         $expected = [
             'fieldset' => ['class' => 'form-group'],
             ['div' => ['class' => 'form-group']],
@@ -5284,26 +4807,6 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
     }
 
     /**
-     * testDateTimeLabelIdMatchesFirstControl method
-     *
-     * When changing the date format, the label should always focus the first select box when
-     * clicked.
-     *
-     * @return void
-     */
-    public function testDateTimeLabelIdMatchesFirstControl() {
-
-        $result = $this->Form->control('Model.date', ['type' => 'date']);
-        $this->assertContains('<label class="col-form-label">Date</label>', $result);
-
-        $result = $this->Form->control('Model.date', ['type' => 'date', 'dateFormat' => 'DMY']);
-        $this->assertContains('<label class="col-form-label">Date</label>', $result);
-
-        $result = $this->Form->control('Model.date', ['type' => 'date', 'dateFormat' => 'YMD']);
-        $this->assertContains('<label class="col-form-label">Date</label>', $result);
-    }
-
-    /**
      * testControlLabelFalse method
      *
      * Test the label option being set to false.
@@ -5315,8 +4818,16 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
         $result = $this->Form->control('title', ['label' => false]);
         $expected = [
             'div' => ['class' => 'form-group required'],
-            'input' => ['type' => 'text', 'required' => 'required', 'id' => 'title', 'name' => 'title',
-                'class' => 'form-control'],
+            'input' => [
+                'type' => 'text',
+                'required' => 'required',
+                'id' => 'title',
+                'name' => 'title',
+                'class' => 'form-control',
+                'data-validity-message' => 'This field cannot be left empty',
+                'oninvalid' => 'this.setCustomValidity(&#039;&#039;); if (!this.value) this.setCustomValidity(this.dataset.validityMessage)',
+                'oninput' => 'this.setCustomValidity(&#039;&#039;)',
+            ],
             '/div'
         ];
         $this->assertHtml($expected, $result);
@@ -5380,7 +4891,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      */
     public function testFormMagicControlLabel() {
         $this->getTableLocator()->get('Contacts', [
-            'className' => 'Cake\Test\TestCase\View\Helper\ContactsTable'
+            'className' => ContactsTable::class
         ]);
         $this->Form->create([], ['context' => ['table' => 'Contacts']]);
         $this->Form->setTemplates(['inputContainer' => '{{content}}']);
@@ -5645,18 +5156,18 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             'type' => 'radio',
             'options' => ['Y', 'N']
         ]);
-        $this->assertContains('<div class="rad">', $result);
+        $this->assertStringContainsString('<div class="rad">', $result);
 
         $result = $this->Form->control('Article.published', [
             'type' => 'radio',
             'options' => ['Y', 'N']
         ]);
-        $this->assertContains('<div class="rad err">', $result);
+        $this->assertStringContainsString('<div class="rad err">', $result);
 
         $result = $this->Form->control('Article.created', [
             'type' => 'datetime'
         ]);
-        $this->assertContains('<div class="dt">', $result);
+        $this->assertStringContainsString('<div class="dt">', $result);
     }
 
     /**
@@ -5707,8 +5218,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $this->Form->create($this->article);
         $result = $this->Form->control('foo');
-        $this->assertContains('class="form-control"', $result);
-        $this->assertContains('type="number"', $result);
+        $this->assertStringContainsString('class="form-control"', $result);
+        $this->assertStringContainsString('type="number"', $result);
     }
 
     /**
@@ -5728,8 +5239,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $this->Form->create($this->article);
         $result = $this->Form->control('foo');
-        $this->assertContains('class="form-control"', $result);
-        $this->assertContains('type="number"', $result);
+        $this->assertStringContainsString('class="form-control"', $result);
+        $this->assertStringContainsString('type="number"', $result);
     }
 
     /**
@@ -5764,7 +5275,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
 
         $attrs = ['disabled' => ['r']];
         $result = $this->Form->radio('Model.field', $options, $attrs);
-        $this->assertContains('disabled="disabled"', $result);
+        $this->assertStringContainsString('disabled="disabled"', $result);
     }
 
     /**
@@ -5793,7 +5304,15 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      */
     public function testButtonWithConfirm() {
         $result = $this->Form->button('Hi', ['confirm' => 'Confirm me!']);
-        $expected = ['button' => ['type' => 'submit', 'class' => 'btn btn-primary', 'onclick' => 'if (confirm(&quot;Confirm me!&quot;)) { return true; } return false;'], 'Hi', '/button'];
+        $expected = [
+            'button' => [
+                'type' => 'submit',
+                'class' => 'btn btn-primary',
+                'data-confirm-message' => 'Confirm me!',
+                'onclick' => 'if (confirm(this.dataset.confirmMessage)) { return true; } return false;',
+            ],
+            'Hi',
+            '/button'];
         $this->assertHtml($expected, $result);
     }
 
@@ -6113,7 +5632,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             ->notBlank('phone');
 
         $table = $this->getTableLocator()->get('Contacts', [
-            'className' => __NAMESPACE__ . '\ContactsTable'
+            'className' => ContactsTable::class
         ]);
         $table->setValidator('default', $validator);
         $contact = new Entity();
@@ -6132,8 +5651,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'password',
                 'value' => '',
                 'required' => 'required',
+                'data-validity-message' => 'This field cannot be left empty',
                 'oninput' => 'this.setCustomValidity(&#039;&#039;)',
-                'oninvalid' => 'this.setCustomValidity(&#039;&#039;); if (!this.validity.valid) this.setCustomValidity(&#039;This field is required&#039;)',
+                'oninvalid' => 'this.setCustomValidity(&#039;&#039;); if (!this.value) this.setCustomValidity(this.dataset.validityMessage)',
                 'class' => 'form-control'
             ]
         ];
@@ -6151,8 +5671,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'value' => '',
                 'maxlength' => 255,
                 'required' => 'required',
+                'data-validity-message' => 'This field cannot be left empty',
                 'oninput' => 'this.setCustomValidity(&#039;&#039;)',
-                'oninvalid' => 'this.setCustomValidity(&#039;&#039;); if (!this.validity.valid) this.setCustomValidity(&#039;This field cannot be left empty&#039;)',
+                'oninvalid' => 'this.setCustomValidity(&#039;&#039;); if (!this.value) this.setCustomValidity(this.dataset.validityMessage)',
                 'class' => 'form-control'
             ]
         ];
@@ -6170,8 +5691,9 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'value' => '',
                 'maxlength' => 255,
                 'required' => 'required',
+                'data-validity-message' => 'This field cannot be left empty',
                 'oninput' => 'this.setCustomValidity(&#039;&#039;)',
-                'oninvalid' => 'this.setCustomValidity(&#039;&#039;); if (!this.validity.valid) this.setCustomValidity(&#039;Custom error message&#039;)',
+                'oninvalid' => 'this.setCustomValidity(&#039;&#039;); if (!this.value) this.setCustomValidity(this.dataset.validityMessage)',
                 'class' => 'form-control'
             ]
         ];
@@ -6185,17 +5707,18 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
      */
     public function testHtml5ErrorMessageInTemplateVars() {
         $validator = (new \Cake\Validation\Validator())
-            ->requirePresence('email', true, 'Custom error "message" & entities')
+            ->notEmptyString('email', 'Custom error "message" & entities')
             ->requirePresence('password')
             ->alphaNumeric('password')
             ->notBlank('phone');
 
         $table = $this->getTableLocator()->get('Contacts', [
-            'className' => __NAMESPACE__ . '\ContactsTable'
+            'className' => ContactsTable::class,
         ]);
         $table->setValidator('default', $validator);
         $contact = new Entity();
 
+        $this->Form->setConfig('autoSetCustomValidity', false);
         $this->Form->create($contact, ['context' => ['table' => 'Contacts']]);
         $this->Form->setTemplates([
             'input' => '<input type="{{type}}" name="{{name}}"{{attrs}} data-message="{{customValidityMessage}}" {{custom}}/>',
@@ -6213,7 +5736,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'password',
                 'value' => '',
                 'required' => 'required',
-                'data-message' => 'This field is required',
+                'data-message' => 'This field cannot be left empty',
                 'class' => 'form-control'
             ]
         ];
@@ -6287,7 +5810,10 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text',
                 'required' => 'required',
                 'maxlength' => 10,
-                'class' => 'form-control'
+                'class' => 'form-control',
+                'data-validity-message' => 'This field cannot be left empty',
+                'oninvalid' => 'this.setCustomValidity(&#039;&#039;); if (!this.value) this.setCustomValidity(this.dataset.validityMessage)',
+                'oninput' => 'this.setCustomValidity(&#039;&#039;)',
             ],
             '/div',
         ];
@@ -6311,6 +5837,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             [
                 'entity' => new Entity($this->article),
                 'table' => new Table([
+                    'alias' => 'Articles',
                     'schema' => $this->article['schema'],
                     'validator' => $validator
                 ])
@@ -6330,7 +5857,10 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text',
                 'required' => 'required',
                 'maxlength' => 10,
-                'class' => 'form-control'
+                'class' => 'form-control',
+                'data-validity-message' => 'This field cannot be left empty',
+                'oninvalid' => 'this.setCustomValidity(&#039;&#039;); if (!this.value) this.setCustomValidity(this.dataset.validityMessage)',
+                'oninput' => 'this.setCustomValidity(&#039;&#039;)',
             ],
             '/div',
         ];
@@ -6344,6 +5874,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             [
                 'entity' => new Entity($this->article),
                 'table' => new Table([
+                    'alias' => 'Articles',
                     'schema' => $this->article['schema'],
                     'validator' => $validator
                 ])
@@ -6364,7 +5895,10 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text',
                 'required' => 'required',
                 'maxlength' => 55, // Length set in validator should take precedence over schema.
-                'class' => 'form-control'
+                'class' => 'form-control',
+                'data-validity-message' => 'This field cannot be left empty',
+                'oninvalid' => 'this.setCustomValidity(&#039;&#039;); if (!this.value) this.setCustomValidity(this.dataset.validityMessage)',
+                'oninput' => 'this.setCustomValidity(&#039;&#039;)',
             ],
             '/div',
         ];
@@ -6379,7 +5913,8 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'entity' => new Entity($this->article),
                 'table' => new Table([
                     'schema' => $this->article['schema'],
-                    'validator' => $validator
+                    'validator' => $validator,
+                    'alias' => 'Articles'
                 ])
 
             ]
@@ -6398,7 +5933,10 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text',
                 'required' => 'required',
                 'maxlength' => 10, // Length set in options should take highest precedence.
-                'class' => 'form-control'
+                'class' => 'form-control',
+                'data-validity-message' => 'This field cannot be left empty',
+                'oninvalid' => 'this.setCustomValidity(&#039;&#039;); if (!this.value) this.setCustomValidity(this.dataset.validityMessage)',
+                'oninput' => 'this.setCustomValidity(&#039;&#039;)',
             ],
             '/div',
         ];
@@ -6420,6 +5958,7 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
             [
                 'entity' => new Entity($this->article),
                 'table' => new Table([
+                    'alias' => 'Articles',
                     'schema' => $this->article['schema'],
                     'validator' => $validator
                 ])
@@ -6439,7 +5978,10 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text',
                 'required' => 'required',
                 'maxlength' => 10,
-                'class' => 'form-control'
+                'class' => 'form-control',
+                'data-validity-message' => 'This field cannot be left empty',
+                'oninvalid' => 'this.setCustomValidity(&#039;&#039;); if (!this.value) this.setCustomValidity(this.dataset.validityMessage)',
+                'oninput' => 'this.setCustomValidity(&#039;&#039;)',
             ],
             '/div',
         ];
@@ -6472,7 +6014,10 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
                 'type' => 'text',
                 'required' => 'required',
                 'maxlength' => 10,
-                'class' => 'form-control'
+                'class' => 'form-control',
+                'data-validity-message' => 'This field cannot be left empty',
+                'oninvalid' => 'this.setCustomValidity(&#039;&#039;); if (!this.value) this.setCustomValidity(this.dataset.validityMessage)',
+                'oninput' => 'this.setCustomValidity(&#039;&#039;)',
             ],
             '/div',
         ];
@@ -6480,47 +6025,262 @@ class FormHelperTest extends \Cake\Test\TestCase\View\Helper\FormHelperTest {
     }
 
     /**
-     * Test datetime with array empty value, ensuring
-     * empty options aren't duplicated.
+     * testControlWithFractional method
+     *
+     * Test that control() works with datetimefractional.
      *
      * @return void
      */
-    public function testDatetimeEmptyArrayForm() {
+    public function testControlWithFractional() {
 
-        /**
-         * @var string $monthsRegex
-         * @var string $daysRegex
-         */
-
-        extract($this->dateRegex);
-
-        $result = $this->Form->dateTime('Contact.date', [
-            'minYear' => '2017',
-            'maxYear' => '2019',
-            'empty' => [
-                'year' => 'pick year',
-                'month' => 'pick month',
+        $this->Form->create([
+            'schema' => [
+                'created' => ['type' => 'datetimefractional'],
             ],
-            'hour' => false,
-            'minute' => false,
-            'second' => false,
-            'meridian' => false,
+        ]);
+        $result = $this->Form->control('created', [
+            'val' => new FrozenTime('2019-09-27 02:52:43.123'),
         ]);
         $expected = [
-            ['select' => ['name' => 'Contact[date][year]', 'class' => 'form-control']],
-            ['option' => ['value' => '', 'selected' => 'selected']], 'pick year', '/option',
-            '*/select',
+            ['div' => ['class' => 'form-group']],
+            'label' => ['for' => 'created', 'class' => 'col-form-label'],
+            'Created',
+            '/label',
+            ['div' => ['class' => 'form-inline']],
+            'input' => [
+                'type' => 'datetime-local',
+                'name' => 'created',
+                'id' => 'created',
+                'value' => '2019-09-27T02:52:43.123',
+                'step' => '0.001',
+                'class' => 'form-control'
+            ],
+            '/div',
+            '/div',
+        ];
 
-            ['select' => ['name' => 'Contact[date][month]', 'class' => 'form-control']],
-            ['option' => ['value' => '', 'selected' => 'selected']], 'pick month', '/option',
-            $monthsRegex,
-            '*/select',
+        $this->assertHtml($expected, $result);
+        return;
+    }
 
-            ['select' => ['name' => 'Contact[date][day]', 'class' => 'form-control']],
-            $daysRegex,
-            '*/select',
+    /**
+     * testDateTimeWithFractional method
+     *
+     * Test that datetime() works with datetimefractional.
+     *
+     * @return void
+     */
+    public function testDateTimeWithFractional() {
+        $this->Form->create([
+            'schema' => [
+                'created' => ['type' => 'datetimefractional'],
+            ],
+        ]);
+        $result = $this->Form->datetime('created', [
+            'val' => new FrozenTime('2019-09-27 02:52:43.123'),
+        ]);
+        $expected = [
+            'input' => [
+                'type' => 'datetime-local',
+                'name' => 'created',
+                'value' => '2019-09-27T02:52:43.123',
+                'step' => '0.001',
+                'class' => 'form-control'
+            ],
+        ];
+
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testDateTimeWithGetForms method
+     *
+     * Test that datetime() works with GET style forms.
+     *
+     * @return void
+     */
+    public function testDateTimeWithGetForms() {
+        $this->Form->create($this->article, ['type' => 'get']);
+        $result = $this->Form->datetime('created');
+        $expected = [
+            'input' => [
+                'type' => 'datetime-local',
+                'name' => 'created',
+                'value' => '',
+                'step' => '1',
+                'class' => 'form-control'
+            ],
+        ];
+
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->datetime('created', ['default' => true]);
+        $expected = [
+            'input' => [
+                'type' => 'datetime-local',
+                'name' => 'created',
+                'value' => 'preg:/' . date('Y-m-d') . 'T\d{2}:\d{2}:\d{2}\.\d{3}/',
+                'step' => '1',
+                'class' => 'form-control'
+            ],
+        ];
+
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testDatetimeWithDefault method
+     *
+     * Test that datetime() and default values work.
+     *
+     * @return void
+     */
+    public function testDatetimeWithDefault() {
+        $result = $this->Form->dateTime('updated', ['value' => '2009-06-01 11:15:30']);
+        $expected = [
+            'input' => [
+                'type' => 'datetime-local',
+                'name' => 'updated',
+                'value' => '2009-06-01T11:15:30.000',
+                'step' => '1',
+                'class' => 'form-control'
+            ],
+        ];
+        $this->assertHtml($expected, $result);
+
+        $result = $this->Form->dateTime('updated', [
+            'default' => '2009-06-01 11:15:30',
+        ]);
+        $expected = [
+            'input' => [
+                'type' => 'datetime-local',
+                'name' => 'updated',
+                'value' => '2009-06-01T11:15:30.000',
+                'step' => '1',
+                'class' => 'form-control'
+            ],
         ];
         $this->assertHtml($expected, $result);
     }
 
+    public function testSelectEmptyWithRequiredFalse() {
+        $this->loadFixtures();
+        $Articles = TableRegistry::getTableLocator()->get('Articles');
+        $validator = $Articles->getValidator('default');
+        $validator->allowEmptyString('user_id');
+        $Articles->setValidator('default', $validator);
+
+        $entity = $Articles->newEmptyEntity();
+        $this->Form->create($entity);
+        $result = $this->Form->select('user_id', ['option A']);
+        $expected = [
+            'select' => [
+                'name' => 'user_id',
+                'class' => 'form-control'
+            ],
+            ['option' => ['value' => '']], '/option',
+            ['option' => ['value' => '0']], 'option A', '/option',
+            '/select',
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+
+    /**
+     * testControlDatetime method
+     *
+     * Test form->control() with datetime.
+     *
+     * @return void
+     */
+    public function testControlDatetime() {
+        $result = $this->Form->control('prueba', [
+            'type' => 'datetime',
+            'value' => new FrozenTime('2019-09-27 02:52:43'),
+        ]);
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'prueba', 'class' => 'col-form-label'],
+            'Prueba',
+            '/label',
+            ['div' => ['class' => 'form-inline']],
+            'input' => [
+                'name' => 'prueba',
+                'id' => 'prueba',
+                'type' => 'datetime-local',
+                'value' => '2019-09-27T02:52:43.000',
+                'step' => '1',
+                'class' => 'form-control'
+            ],
+            '/div',
+            '/div'
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlDatetimeIdPrefix method
+     *
+     * Test form->control() with datetime with id prefix.
+     *
+     * @return void
+     */
+    public function testControlDatetimeIdPrefix() {
+        $this->Form->create(null, ['idPrefix' => 'prefix']);
+
+        $result = $this->Form->control('prueba', [
+            'type' => 'datetime',
+        ]);
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'prefix-prueba', 'class' => 'col-form-label'],
+            'Prueba',
+            '/label',
+            ['div' => ['class' => 'form-inline']],
+            'input' => [
+                'name' => 'prueba',
+                'id' => 'prefix-prueba',
+                'type' => 'datetime-local',
+                'value' => '',
+                'step' => '1',
+                'class' => 'form-control'
+            ],
+            '/div',
+            '/div',
+        ];
+        $this->assertHtml($expected, $result);
+    }
+
+    /**
+     * testControlDatetimeStep method
+     *
+     * Test form->control() with datetime with custom step size.
+     *
+     * @return void
+     */
+    public function testControlDatetimeStep() {
+        $result = $this->Form->control('prueba', [
+            'type' => 'datetime',
+            'value' => new FrozenTime('2019-09-27 02:52:43'),
+            'step' => '0.5',
+        ]);
+        $expected = [
+            'div' => ['class' => 'form-group'],
+            'label' => ['for' => 'prueba', 'class' => 'col-form-label'],
+            'Prueba',
+            '/label',
+            ['div' => ['class' => 'form-inline']],
+            'input' => [
+                'name' => 'prueba',
+                'id' => 'prueba',
+                'type' => 'datetime-local',
+                'value' => '2019-09-27T02:52:43.000',
+                'step' => '0.5',
+                'class' => 'form-control'
+            ],
+            '/div',
+            '/div',
+        ];
+        $this->assertHtml($expected, $result);
+    }
 }

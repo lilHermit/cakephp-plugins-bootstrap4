@@ -2053,9 +2053,6 @@ class BootstrapFormHelperTest extends TestCase {
 
         $this->assertHtml([
             'form' => ['method' => 'post', 'accept-charset' => 'utf-8', 'class' => 'form-inline', 'action' => '/'],
-            ['div' => ['style' => 'display:none;']],
-            ['input' => ['type' => 'hidden', 'name' => '_method', 'value' => 'POST']],
-            '/div',
             ['label' => ['class' => 'sr-only', 'for' => 'name']],
             'Name',
             '/label',
@@ -2076,9 +2073,6 @@ class BootstrapFormHelperTest extends TestCase {
         ]);
         $this->assertHtml([
             'form' => ['method' => 'post', 'accept-charset' => 'utf-8', 'class' => 'form-inline', 'action' => '/'],
-            ['div' => ['style' => 'display:none;']],
-            ['input' => ['type' => 'hidden', 'name' => '_method', 'value' => 'POST']],
-            '/div',
             ['label' => ['class' => 'col-form-label', 'for' => 'name']],
             'Name',
             '/label',
@@ -2501,9 +2495,6 @@ class BootstrapFormHelperTest extends TestCase {
 
         $this->assertHtml([
             'form' => ['method', 'accept-charset', 'action', 'class' => 'container'],
-            ['div' => ['style']],
-            'input' => ['type' => 'hidden', 'name', 'value'],
-            '/div',
 
             // Input
             ['div' => ['class' => 'form-group row']],

@@ -85,7 +85,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return $this->_bootstrapTemplates + $this->_defaultConfig['templates'];
     }
 
-    public function create($model = null, array $options = []): string {
+    public function create($context = null, array $options = []): string {
 
         $options += [
             'customControls' => $this->getConfig('customControls'),
@@ -107,7 +107,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
         }
 
-        return parent::create($model, $options);
+        return parent::create($context, $options);
     }
 
     private function _parseGlobals(&$input) {
@@ -164,7 +164,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * @return string Completed form widget.
      * @link http://book.cakephp.org/3.0/en/views/helpers/form.html#creating-form-inputs
      */
-    public function control($fieldName, array $options = []):string {
+    public function control($fieldName, array $options = []): string {
         $options += [
             'customControls' => $this->getConfig('customControls'),
             'html5Render' => $this->getConfig('html5Render'),
@@ -399,7 +399,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return parent::select($fieldName, $options, $attributes);
     }
 
-    public function checkbox($fieldName, array $options = []): string {
+    public function checkbox($fieldName, array $options = []) {
         $options += [
             'customControls' => $this->getConfig('customControls'),
             'type' => 'checkbox'
@@ -765,7 +765,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         ]);
     }
 
-    protected function _groupTemplate($options):string {
+    protected function _groupTemplate($options): string {
         $containers = [];
         if ($this->isLayout('grid')) {
             $containers += [
@@ -890,12 +890,12 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     /**
      * Gets/sets templates to use.
      *
-     * @deprecated 3.4.0 Use setTemplates()/getTemplates() instead.
-     *
      * @param string|null|array $templates null or string allow reading templates. An array
      *                                     allows templates to be added.
      *
      * @return $this|string|array
+     * @deprecated 3.4.0 Use setTemplates()/getTemplates() instead.
+     *
      */
     public function templates($templates = null) {
         if ($templates === null || is_string($templates)) {
@@ -961,7 +961,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                         'checkboxContainer' => '{{content}}{{error}}{{help}}',
                         'checkboxContainerGrid' => '<div class="form-group row{{required}}">{{content}}{{error}}{{help}}</div>',
                         'checkboxFormGroupGrid' => "<div{{attrs}}>{{input}}{{label}}</div>",
-                        'checkboxFormGroup' =>     "<div{{attrs}}>{{input}}{{label}}</div>",
+                        'checkboxFormGroup' => "<div{{attrs}}>{{input}}{{label}}</div>",
                     ];
                     break;
                 case 'multicheckbox':
@@ -1008,7 +1008,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                     $newTemplates = [
                         'checkboxContainer' => '{{content}}{{error}}{{help}}',
                         'checkboxContainerGrid' => '<div class="form-group row{{required}}"{{attrs}}>{{content}}{{error}}{{help}}</div>',
-                        'checkboxFormGroup' =>     "<div{{attrs}}>{{input}}{{label}}</div>",
+                        'checkboxFormGroup' => "<div{{attrs}}>{{input}}{{label}}</div>",
                     ];
                     break;
                 case 'radio':
