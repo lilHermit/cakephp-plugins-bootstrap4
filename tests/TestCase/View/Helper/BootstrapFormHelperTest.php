@@ -22,7 +22,7 @@ class BootstrapFormHelperTest extends TestCase {
      *
      * @return void
      */
-    public function setUp() {
+    public function setUp(): void {
 
         parent::setUp();
 
@@ -30,7 +30,7 @@ class BootstrapFormHelperTest extends TestCase {
 
     }
 
-    public function tearDown() {
+    public function tearDown(): void {
         parent::tearDown();
 
         unset($this->Form);
@@ -2053,9 +2053,6 @@ class BootstrapFormHelperTest extends TestCase {
 
         $this->assertHtml([
             'form' => ['method' => 'post', 'accept-charset' => 'utf-8', 'class' => 'form-inline', 'action' => '/'],
-            ['div' => ['style' => 'display:none;']],
-            ['input' => ['type' => 'hidden', 'name' => '_method', 'value' => 'POST']],
-            '/div',
             ['label' => ['class' => 'sr-only', 'for' => 'name']],
             'Name',
             '/label',
@@ -2076,9 +2073,6 @@ class BootstrapFormHelperTest extends TestCase {
         ]);
         $this->assertHtml([
             'form' => ['method' => 'post', 'accept-charset' => 'utf-8', 'class' => 'form-inline', 'action' => '/'],
-            ['div' => ['style' => 'display:none;']],
-            ['input' => ['type' => 'hidden', 'name' => '_method', 'value' => 'POST']],
-            '/div',
             ['label' => ['class' => 'col-form-label', 'for' => 'name']],
             'Name',
             '/label',
@@ -2501,9 +2495,6 @@ class BootstrapFormHelperTest extends TestCase {
 
         $this->assertHtml([
             'form' => ['method', 'accept-charset', 'action', 'class' => 'container'],
-            ['div' => ['style']],
-            'input' => ['type' => 'hidden', 'name', 'value'],
-            '/div',
 
             // Input
             ['div' => ['class' => 'form-group row']],
@@ -2562,8 +2553,10 @@ class BootstrapFormHelperTest extends TestCase {
      */
     public function testDateTimeFormatWithDateTime() {
 
+        $originalRequest = $this->Form->getView()->getRequest();
+
         // Test (1)
-        $this->Form->request = $this->Form->request->withData('expiry', Chronos::parse('2017-08-02 11:12:07'));
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', Chronos::parse('2017-08-02 11:12:07')));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'datetime']],
         ]);
@@ -2575,7 +2568,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (2)
-        $this->Form->request = $this->Form->request->withData('expiry', \Cake\I18n\Time::parse('2017-08-02 11:12:07'));
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', \Cake\I18n\Time::parse('2017-08-02 11:12:07')));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'datetime']]
         ]);
@@ -2587,7 +2580,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (3)
-        $this->Form->request = $this->Form->request->withData('expiry', '2017-08-02 11:00:07');
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', '2017-08-02 11:00:07'));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'datetime']]
         ]);
@@ -2599,7 +2592,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (4)
-        $this->Form->request = $this->Form->request->withData('expiry', '2017-08-02oop14:00:07');
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', '2017-08-02oop14:00:07'));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'datetime']]
         ]);
@@ -2611,7 +2604,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (5)
-        $this->Form->request = $this->Form->request->withData('expiry', '');
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', ''));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'datetime']]
         ]);
@@ -2623,7 +2616,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (6)
-        $this->Form->request = $this->Form->request->withData('expiry', null);
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', null));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'datetime']]
         ]);
@@ -2649,8 +2642,10 @@ class BootstrapFormHelperTest extends TestCase {
      */
     public function testDateTimeFormatWithDate() {
 
+        $originalRequest = $this->Form->getView()->getRequest();
+
         // Test (1)
-        $this->Form->request = $this->Form->request->withData('expiry', Chronos::parse('2017-08-02'));
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', Chronos::parse('2017-08-02')));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'date']],
         ]);
@@ -2662,7 +2657,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (2)
-        $this->Form->request = $this->Form->request->withData('expiry', \Cake\I18n\Time::parse('2017-08-02 11:12:07'));
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', \Cake\I18n\Time::parse('2017-08-02 11:12:07')));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'date']]
         ]);
@@ -2674,7 +2669,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (3)
-        $this->Form->request = $this->Form->request->withData('expiry', '2017-08-02 11:00:07');
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', '2017-08-02 11:00:07'));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'date']]
         ]);
@@ -2686,7 +2681,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (4)
-        $this->Form->request = $this->Form->request->withData('expiry', '2017-08-02oop14:00:07');
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', '2017-08-02oop14:00:07'));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'date']]
         ]);
@@ -2698,7 +2693,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (5)
-        $this->Form->request = $this->Form->request->withData('expiry', '');
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', ''));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'date']]
         ]);
@@ -2710,7 +2705,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (6)
-        $this->Form->request = $this->Form->request->withData('expiry', null);
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', null));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'date']]
         ]);
@@ -2736,8 +2731,10 @@ class BootstrapFormHelperTest extends TestCase {
      */
     public function testDateTimeFormatWithTime() {
 
+        $originalRequest = $this->Form->getView()->getRequest();
+
         // Test (1)
-        $this->Form->request = $this->Form->request->withData('expiry', Chronos::parse('2017-08-02 11:22:07'));
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', Chronos::parse('2017-08-02 11:22:07')));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'time']],
         ]);
@@ -2749,7 +2746,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (2)
-        $this->Form->request = $this->Form->request->withData('expiry', \Cake\I18n\Time::parse('2017-08-02 11:12:07'));
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', \Cake\I18n\Time::parse('2017-08-02 11:12:07')));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'time']]
         ]);
@@ -2761,7 +2758,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (3)
-        $this->Form->request = $this->Form->request->withData('expiry', '2017-08-02 11:00:07');
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', '2017-08-02 11:00:07'));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'time']]
         ]);
@@ -2773,7 +2770,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (4)
-        $this->Form->request = $this->Form->request->withData('expiry', '2017-08-02oop14:00:07');
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', '2017-08-02oop14:00:07'));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'time']]
         ]);
@@ -2785,7 +2782,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (5)
-        $this->Form->request = $this->Form->request->withData('expiry', '');
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', ''));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'time']]
         ]);
@@ -2797,7 +2794,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (6)
-        $this->Form->request = $this->Form->request->withData('expiry', null);
+        $this->Form->getView()->setRequest($originalRequest->withData('expiry', null));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'time']]
         ]);
@@ -3339,5 +3336,16 @@ class BootstrapFormHelperTest extends TestCase {
             ],
             '/div'
         ], $result);
+    }
+
+    /**
+     * Test to check that templates in core are merged in with bootstrap ones
+     */
+    public function testCoreTemplatesMerge() {
+
+        $coreFormHelper = new \Cake\View\Helper\FormHelper(new View());
+        $coreFormStartTemplate = $coreFormHelper->getConfig('templates.formStart');
+        $bootstrapFormStartTemplate = $this->Form->getConfig('templates.formStart');
+        $this->assertSame($coreFormStartTemplate, $bootstrapFormStartTemplate);
     }
 }

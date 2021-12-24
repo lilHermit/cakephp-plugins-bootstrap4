@@ -1,17 +1,23 @@
 <?php
+
 namespace LilHermit\Bootstrap4\Test\TestCase\View;
 
-class ViewTest extends \Cake\Test\TestCase\View\ViewTest {
+use Cake\TestSuite\TestCase;
+use LilHermit\Bootstrap4\View\BootstrapView;
 
-    public function setUp()
-    {
-        parent::setUp();
+class BootstrapViewTest extends TestCase {
 
-        $this->View = $this->PostsController->createView('TestApp\View\AppView');
-        $this->View->setTemplatePath('Posts');
+    /**
+     * Test the correct (Bootstrap) Helpers are loaded
+     *
+     * @return void
+     */
+    public function testBootstrapHelpersLoaded() {
+        $View = new BootstrapView();
 
-        $this->ThemeView = $this->ThemePostsController->createView('TestApp\View\AppView');
-        $this->ThemeView->setTemplatePath('Posts');
+        $this->assertInstanceOf('LilHermit\Bootstrap4\View\Helper\HtmlHelper', $View->Html);
+        $this->assertInstanceOf('LilHermit\Bootstrap4\View\Helper\FlashHelper', $View->Flash);
+        $this->assertInstanceOf('LilHermit\Bootstrap4\View\Helper\FormHelper', $View->Form);
+        $this->assertInstanceOf('LilHermit\Bootstrap4\View\Helper\PaginatorHelper', $View->Paginator);
     }
-
 }

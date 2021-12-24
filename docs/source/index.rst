@@ -7,8 +7,8 @@
         <a href="https://v4-alpha.getbootstrap.com/">
             <img alt="Bootstrap version" src="https://img.shields.io/badge/Bootstrap%20version-4.0.0-brightgreen.svg?style=flat-square">
         </a>
-        <a href="https://bitbucket.org/lilHermit/cakephp-plugins-bootstrap4/issues?status=new&amp;status=open">
-            <img alt="Bitbucket issues" src="https://img.shields.io/bitbucket/issues/lilhermit/cakephp-plugins-bootstrap4.svg?style=flat-square">
+        <a href="https://github.com/lilHermit/cakephp-plugins-bootstrap4/issues">
+            <img alt="GitHub issues" src="https://img.shields.io/github/issues/lilHermit/cakephp-plugins-bootstrap4.svg?color=brightgreen&style=flat-square">
         </a>
         <a href="https://twitter.com/lilH3rmit">
             <img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/lilh3rmit.svg?style=social&amp;label=Follow">

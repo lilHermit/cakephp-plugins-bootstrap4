@@ -13,7 +13,8 @@ class Html5DateTimeType extends DateTimeType {
      * @param mixed $value
      * @return \Cake\I18n\Time|\DateTime|mixed
      */
-    public function marshal($value) {
+    public function marshal($value): ?DateTimeInterface
+    {
         if ($value instanceof DateTimeInterface) {
             return $value;
         }

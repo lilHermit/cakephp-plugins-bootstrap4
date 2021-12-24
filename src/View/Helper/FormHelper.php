@@ -38,41 +38,23 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         'time' => 'bootstrapTime'
     ];
 
-    protected $_templates = [
-        'button' => '<button{{attrs}}>{{text}}</button>',
+    public $_bootstrapTemplates = [
 
         'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}>',
         'checkboxFormGroup' => '{{input}}{{label}}',
         'checkboxWrapper' => '<div class="checkbox">{{label}}</div>',
         'dateWidget' => '{{year}} {{month}} {{day}} {{hour}} {{minute}} {{second}} {{meridian}}',
         'error' => '<div class="invalid-feedback">{{content}}</div>',
-        'errorList' => '<ul>{{content}}</ul>',
-        'errorItem' => '<li>{{text}}</li>',
-        'fieldset' => '<fieldset{{attrs}}>{{content}}</fieldset>',
-        'formStart' => '<form{{attrs}}>',
-        'formEnd' => '</form>',
         'formGroupGrid' => '{{label}}<div{{attrs}}>{{input}}</div>',
-        'formGroup' => '{{label}}{{input}}',
-        'hiddenBlock' => '<div style="display:none;">{{content}}</div>',
         'hidden' => '<input type="hidden" name="{{name}}"{{attrs}}/>',
-        'input' => '<input type="{{type}}" name="{{name}}"{{attrs}}/>',
-        'inputSubmit' => '<input type="{{type}}"{{attrs}}/>',
         'inputContainer' => '<div class="form-group{{required}}">{{content}}{{help}}</div>',
         'inputContainerError' => '<div class="form-group{{required}}">{{content}}{{error}}{{help}}</div>',
         'inputContainerGrid' => '<div class="form-group row{{required}}">{{content}}{{help}}</div>',
         'inputContainerGridError' => '<div class="form-group row{{required}}">{{content}}{{error}}{{help}}</div>',
-        'label' => '<label{{attrs}}>{{text}}</label>',
-        'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
-        'legend' => '<legend>{{text}}</legend>',
-        'multicheckboxTitle' => '<legend>{{text}}</legend>',
-        'multicheckboxWrapper' => '<fieldset{{attrs}}>{{content}}</fieldset>',
-        'option' => '<option value="{{value}}"{{attrs}}>{{text}}</option>',
-        'optgroup' => '<optgroup label="{{label}}"{{attrs}}>{{content}}</optgroup>',
         'radio' => '<input type="radio" name="{{name}}" value="{{value}}"{{attrs}}>',
         'radioWrapper' => '{{input}}{{label}}',
         'select' => '<select name="{{name}}"{{attrs}}>{{content}}</select>',
         'selectMultiple' => '<select name="{{name}}[]" multiple="multiple"{{attrs}}>{{content}}</select>',
-        'textarea' => '<textarea name="{{name}}"{{attrs}}>{{value}}</textarea>',
         'submitContainer' => '{{content}}',
         'datetimeFormGroup' => '{{label}}<div class="form-inline">{{input}}</div>',
         'dateFormGroup' => '{{label}}<div class="form-inline">{{input}}</div>',
@@ -87,7 +69,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     public function __construct(View $View, array $config = []) {
 
         $this->_defaultConfig = array_merge($this->_defaultConfig, [
-            'templates' => $this->_templates,
+            'templates' => $this->_mergeTemplates(),
         ], $this->bootstrapConfigDefaults);
 
         $this->_defaultWidgets =
@@ -98,7 +80,12 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         parent::__construct($View, $config);
     }
 
-    public function create($model = null, array $options = []) {
+    private function _mergeTemplates() {
+
+        return $this->_bootstrapTemplates + $this->_defaultConfig['templates'];
+    }
+
+    public function create($context = null, array $options = []): string {
 
         $options += [
             'customControls' => $this->getConfig('customControls'),
@@ -120,7 +107,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
         }
 
-        return parent::create($model, $options);
+        return parent::create($context, $options);
     }
 
     private function _parseGlobals(&$input) {
@@ -177,17 +164,18 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * @return string Completed form widget.
      * @link http://book.cakephp.org/3.0/en/views/helpers/form.html#creating-form-inputs
      */
-    public function control($fieldName, array $options = []) {
+    public function control($fieldName, array $options = []): string {
         $options += [
             'customControls' => $this->getConfig('customControls'),
             'html5Render' => $this->getConfig('html5Render'),
             'help' => false,
             'prepend' => false,
             'append' => false,
+            'required' => null,
             'gridClasses' => $this->getConfig('layout.classes.grid')
         ];
 
-        $this->_defaultConfig['templates'] = $this->_templates;
+        $this->_defaultConfig['templates'] = $this->_mergeTemplates();
 
         // Work out the type, so we can switchTemplates if required!
         $options = $this->_parseOptions($fieldName, $options);
@@ -198,12 +186,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         // Move certain options to templateVars
         $this->_parseTemplateVar($options, ['help', 'prepend', 'append', 'boom']);
 
-        if (method_exists(get_parent_class($this), 'control')) {
-            return parent::control($fieldName, $options);
-        } else {
-            /** @noinspection PhpDeprecationInspection */
-            return parent::input($fieldName, $options);
-        }
+        return parent::control($fieldName, $options);
     }
 
     private function _addLabelClass($options, $class, $index = 'label') {
@@ -227,72 +210,6 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         );
     }
 
-    /**
-     * Generates a form control element complete with label and wrapper div.
-     *
-     * @param string $fieldName This should be "modelname.fieldname"
-     * @param array  $options   Each type of input takes different options.
-     *
-     * @return string Completed form widget.
-     * @link       http://book.cakephp.org/3.0/en/views/helpers/form.html#creating-form-inputs
-     * @deprecated 3.4.0 Use FormHelper::control() instead.
-     */
-    public function input($fieldName, array $options = []) {
-        return $this->control($fieldName, $options);
-    }
-
-    /**
-     * Generate a set of controls for `$fields` wrapped in a fieldset element.
-     *
-     * You can customize individual controls through `$fields`.
-     * ```
-     * $this->Form->controls([
-     *   'name' => ['label' => 'custom label'],
-     *   'email'
-     * ]);
-     * ```
-     *
-     * @param array $fields  An array of the fields to generate. This array allows
-     *                       you to set custom types, labels, or other options.
-     * @param array $options Options array. Valid keys are:
-     *                       - `fieldset` Set to false to disable the fieldset. You can also pass an
-     *                       array of params to be applied as HTML attributes to the fieldset tag.
-     *                       If you pass an empty array, the fieldset will be enabled.
-     *                       - `legend` Set to false to disable the legend for the generated input set.
-     *                       Or supply a string to customize the legend text.
-     *
-     * @return string Completed form inputs.
-     * @link http://book.cakephp.org/3.0/en/views/helpers/form.html#generating-entire-forms
-     */
-    public function controls(array $fields, array $options = []) {
-        if (method_exists(get_parent_class($this), 'controls')) {
-            return parent::controls($fields, $options);
-        } else {
-            /** @noinspection PhpDeprecationInspection */
-            return parent::inputs($fields, $options);
-        }
-    }
-
-    /**
-     * Generate a set of controls for `$fields` wrapped in a fieldset element.
-     *
-     * @param array $fields  An array of the fields to generate. This array allows
-     *                       you to set custom types, labels, or other options.
-     * @param array $options Options array. Valid keys are:
-     *                       - `fieldset` Set to false to disable the fieldset. You can also pass an
-     *                       array of params to be applied as HTML attributes to the fieldset tag.
-     *                       If you pass an empty array, the fieldset will be enabled.
-     *                       - `legend` Set to false to disable the legend for the generated input set.
-     *                       Or supply a string to customize the legend text.
-     *
-     * @return string Completed form inputs.
-     * @link       http://book.cakephp.org/3.0/en/views/helpers/form.html#generating-entire-forms
-     * @deprecated 3.4.0 Use FormHelper::controls() instead.
-     */
-    public function inputs(array $fields, array $options = []) {
-        return $this->controls($fields, $options);
-    }
-
     protected function _getLabel($fieldName, $options) {
         if ($options['type'] === 'hidden') {
             return false;
@@ -310,82 +227,42 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return $this->_inputLabel($fieldName, $label, $options);
     }
 
-    /**
-     * Generate a set of controls for `$fields`. If $fields is empty the fields
-     * of current model will be used.
-     *
-     * You can customize individual controls through `$fields`.
-     * ```
-     * $this->Form->allControls([
-     *   'name' => ['label' => 'custom label']
-     * ]);
-     * ```
-     *
-     * You can exclude fields by specifying them as `false`:
-     *
-     * ```
-     * $this->Form->allControls(['title' => false]);
-     * ```
-     *
-     * In the above example, no field would be generated for the title field.
-     *
-     * @param array $fields  An array of customizations for the fields that will be
-     *                       generated. This array allows you to set custom types, labels, or other options.
-     * @param array $options Options array. Valid keys are:
-     *                       - `fieldset` Set to false to disable the fieldset. You can also pass an array of params to
-     *                       be applied as HTML attributes to the fieldset tag. If you pass an empty array, the
-     *                       fieldset will be enabled
-     *                       - `legend` Set to false to disable the legend for the generated control set. Or supply a
-     *                       string to customize the legend text.
-     *
-     * @return string Completed form controls.
-     * @link http://book.cakephp.org/3.0/en/views/helpers/form.html#generating-entire-forms
-     */
-    public function allControls(array $fields = [], array $options = []) {
-        if (method_exists(get_parent_class($this), 'allControls')) {
-            return parent::allControls($fields, $options);
-        } else {
-            /** @noinspection PhpDeprecationInspection */
-            return parent::allInputs($fields, $options);
-        }
-    }
-
-    /**
-     * Generate a set of controls for `$fields`. If $fields is empty the fields
-     * of current model will be used.
-     *
-     * @param array $fields  An array of customizations for the fields that will be
-     *                       generated. This array allows you to set custom types, labels, or other options.
-     * @param array $options Options array. Valid keys are:
-     *                       - `fieldset` Set to false to disable the fieldset. You can also pass an array of params to
-     *                       be applied as HTML attributes to the fieldset tag. If you pass an empty array, the
-     *                       fieldset will be enabled
-     *                       - `legend` Set to false to disable the legend for the generated control set. Or supply a
-     *                       string to customize the legend text.
-     *
-     * @return string Completed form controls.
-     * @link       http://book.cakephp.org/3.0/en/views/helpers/form.html#generating-entire-forms
-     * @deprecated 3.4.0 Use FormHelper::allControls() instead.
-     */
-    public function allInputs(array $fields = [], array $options = []) {
-        return $this->allControls($fields, $options);
-    }
-
-    public function multiCheckbox($fieldName, $options, array $attributes = []) {
+    public function multiCheckbox($fieldName, $options, array $attributes = []): string {
         $attributes += [
             'customControls' => $this->getConfig('customControls')
         ];
-        $this->_defaultConfig['templates'] = $this->_templates;
+        $this->_defaultConfig['templates'] = $this->_mergeTemplates();
         $this->setLabelClass($attributes, 'multicheckbox');
         $this->switchTemplates($attributes, 'multicheckbox');
 
         return parent::multiCheckbox($fieldName, $options, $attributes);
     }
 
-    public function select($fieldName, $options = [], array $attributes = []) {
+    public function select($fieldName, $options = [], array $attributes = []): string {
         $attributes += [
+            'multiple' => null,
+            'label' => null,
             'customControls' => $this->getConfig('customControls')
         ];
+
+        if ($attributes['multiple'] === 'checkbox') {
+            unset($attributes['multiple'], $attributes['empty']);
+            if (is_string($attributes['label'])) {
+                unset($attributes['label']);
+            }
+
+            $attributes += [
+                'multiple' => null,
+                'label' => null,
+                'customControls' => $this->getConfig('customControls')
+            ];
+
+            $this->_defaultConfig['templates'] = $this->_mergeTemplates();
+            $this->setLabelClass($attributes, 'multicheckbox');
+            $this->switchTemplates($attributes, 'multicheckbox');
+
+            return parent::multiCheckbox($fieldName, $options, $attributes);
+        }
 
         return parent::select($fieldName, $options, $attributes);
     }
@@ -396,7 +273,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             'type' => 'checkbox'
         ];
 
-        $this->_defaultConfig['templates'] = $this->_templates;
+        $this->_defaultConfig['templates'] = $this->_mergeTemplates();
         $this->setLabelClass($options, 'checkbox');
         $this->switchTemplates($options, 'checkbox');
 
@@ -404,20 +281,20 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
     }
 
 
-    public function radio($fieldName, $options = [], array $attributes = []) {
+    public function radio($fieldName, $options = [], array $attributes = []): string {
         $attributes += [
             'customControls' => $this->getConfig('customControls'),
             'type' => 'radio'
         ];
 
-        $this->_defaultConfig['templates'] = $this->_templates;
+        $this->_defaultConfig['templates'] = $this->_mergeTemplates();
         $this->setLabelClass($attributes, 'radio');
         $this->switchTemplates($attributes, 'radio');
 
         return parent::radio($fieldName, $options, $attributes);
     }
 
-    public function fieldset($fields = '', array $options = []) {
+    public function fieldset($fields = '', array $options = []): string {
         if (!isset($options['fieldset']) || $options['fieldset'] !== false) {
             $options = Html::addClass($options, 'form-group', ['useIndex' => 'fieldset.class']);
         }
@@ -425,13 +302,13 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return parent::fieldset($fields, $options);
     }
 
-    public function hidden($fieldName, array $options = []) {
+    public function hidden($fieldName, array $options = []): string {
         $options['type'] = 'hidden';
 
         return parent::hidden($fieldName, $options);
     }
 
-    public function widget($name, array $data = []) {
+    public function widget($name, array $data = []): string {
         $data = $this->_addWidgetClass($data, $name);
 
         // Clean up any elements so they don't end up as attributes
@@ -440,7 +317,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return parent::widget($name, $data);
     }
 
-    protected function cleanArray($data = [], $extras = []) {
+    protected function cleanArray($data = [], $extras = []): array {
 
         $elements = array_merge([
             'customControls',
@@ -457,19 +334,19 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return $data;
     }
 
-    public function file($fieldName, array $options = []) {
+    public function file($fieldName, array $options = []): string {
         $options += [
             'customControls' => $this->getConfig('customControls'),
             'type' => 'file'
         ];
 
-        $this->_defaultConfig['templates'] = $this->_templates;
+        $this->_defaultConfig['templates'] = $this->_mergeTemplates();
         $this->switchTemplates($options, 'file');
 
         return parent::file($fieldName, $options);
     }
 
-    protected function _initInputField($field, $options = []) {
+    protected function _initInputField($field, $options = []): array {
         $options = parent::_initInputField($field, $options);
         $options = $this->_addWidgetClass($options);
 
@@ -533,7 +410,6 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
         return $options;
     }
-
 
     /**
      *
@@ -723,7 +599,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return $this->renderPrependAppend($input, $options);
     }
 
-    protected function _inputContainerTemplate($options) {
+    protected function _inputContainerTemplate($options): string {
         $this->formatHelp($options['options']);
 
         $containers = [];
@@ -756,7 +632,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         ]);
     }
 
-    protected function _groupTemplate($options) {
+    protected function _groupTemplate($options): string {
         $containers = [];
         if ($this->isLayout('grid')) {
             $containers += [
@@ -843,16 +719,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             $this->_userChangedTemplates = array_merge(array_keys($templates), $this->_userChangedTemplates);
         }
 
-        $this->_setTemplatesWrapper($templates);
-    }
-
-    protected function _setTemplatesWrapper(array $templates) {
-        if (method_exists(get_parent_class($this), 'setTemplates')) {
-            parent::setTemplates($templates);
-        } else {
-            /** @noinspection PhpDeprecationInspection */
-            parent::templates($templates);
-        }
+        parent::setTemplates($templates);
     }
 
     /**
@@ -875,26 +742,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             }
         }
 
-        $this->_setTemplatesWrapper($templates);
-    }
-
-    /**
-     * Gets/sets templates to use.
-     *
-     * @deprecated 3.4.0 Use setTemplates()/getTemplates() instead.
-     *
-     * @param string|null|array $templates null or string allow reading templates. An array
-     *                                     allows templates to be added.
-     *
-     * @return $this|string|array
-     */
-    public function templates($templates = null) {
-        if ($templates === null || is_string($templates)) {
-            return $this->getTemplates($templates);
-        }
-
-        $this->setTemplates($templates);
-        return $this;
+        parent::setTemplates($templates);
     }
 
     /**
@@ -911,12 +759,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             $this->_userChangedTemplates = array_merge(array_keys($templates), $this->_userChangedTemplates);
         }
 
-        if (method_exists(get_parent_class($this), 'getTemplates')) {
-            return parent::getTemplates($templates);
-        } else {
-            /** @noinspection PhpDeprecationInspection */
-            return parent::templates($templates);
-        }
+        return parent::getTemplates($templates);
     }
 
     private function switchTemplates(&$options, $type = null) {
@@ -952,7 +795,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                         'checkboxContainer' => '{{content}}{{error}}{{help}}',
                         'checkboxContainerGrid' => '<div class="form-group row{{required}}">{{content}}{{error}}{{help}}</div>',
                         'checkboxFormGroupGrid' => "<div{{attrs}}>{{input}}{{label}}</div>",
-                        'checkboxFormGroup' =>     "<div{{attrs}}>{{input}}{{label}}</div>",
+                        'checkboxFormGroup' => "<div{{attrs}}>{{input}}{{label}}</div>",
                     ];
                     break;
                 case 'multicheckbox':
@@ -999,7 +842,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                     $newTemplates = [
                         'checkboxContainer' => '{{content}}{{error}}{{help}}',
                         'checkboxContainerGrid' => '<div class="form-group row{{required}}"{{attrs}}>{{content}}{{error}}{{help}}</div>',
-                        'checkboxFormGroup' =>     "<div{{attrs}}>{{input}}{{label}}</div>",
+                        'checkboxFormGroup' => "<div{{attrs}}>{{input}}{{label}}</div>",
                     ];
                     break;
                 case 'radio':
@@ -1114,7 +957,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * @return string the element.
      */
 
-    public function button($title, array $options = []) {
+    public function button($title, array $options = []): string {
 
         $options += ['type' => 'submit'];
 
@@ -1159,7 +1002,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      *
      * @return string A HTML submit button
      */
-    public function submit($caption = null, array $options = []) {
+    public function submit(?string $caption = null, array $options = []): string {
 
         if (!preg_match('/\.(jpg|jpe|jpeg|gif|png|ico)$/', $caption)) {
             $options = $this->parseButtonClass($options);
@@ -1354,7 +1197,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      *
      * @return array
      */
-    protected function _parseOptions($fieldName, $options) {
+    protected function _parseOptions($fieldName, $options): array {
 
         $needsMagicType = false;
         if (empty($options['type'])) {

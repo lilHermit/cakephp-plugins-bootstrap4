@@ -16,13 +16,28 @@ use Cake\Utility\Inflector;
 
 $fields = collection($fields)
     ->filter(function($field) use ($schema) {
-        return $schema->columnType($field) !== 'binary';
+        if(method_exists($schema, 'getColumnType')) {
+            return $schema->getColumnType($field) !== 'binary';
+        } else {
+            return $schema->columnType($field) !== 'binary';
+        }
     });
 
 if (isset($modelObject) && $modelObject->hasBehavior('Tree')) {
     $fields = $fields->reject(function ($field) {
         return $field === 'lft' || $field === 'rght';
     });
+}
+
+if (!function_exists('getColumn')) {
+    function getColumn($schema, $field) {
+
+        if (method_exists($schema, 'getColumn')) {
+            return $schema->getColumn($field);
+        } else {
+            return $schema->column($field);
+        }
+    }
 }
 %>
 <div class="container" id="<%= Inflector::underscore($pluralVar.Inflector::humanize($action)) %>">
@@ -36,7 +51,7 @@ if (isset($modelObject) && $modelObject->hasBehavior('Tree')) {
                 continue;
             }
             if (isset($keyFields[$field])) {
-                $fieldData = $schema->column($field);
+                $fieldData = getColumn($schema, $field);
                 if (!empty($fieldData['null'])) {
 %>
             echo $this->Form->control('<%= $field %>', ['options' => $<%= $keyFields[$field] %>, 'empty' => true]);
@@ -49,7 +64,7 @@ if (isset($modelObject) && $modelObject->hasBehavior('Tree')) {
                 continue;
             }
             if (!in_array($field, ['created', 'modified', 'updated'])) {
-                $fieldData = $schema->column($field);
+                $fieldData = getColumn($schema, $field);
                 if (in_array($fieldData['type'], ['date', 'datetime', 'time']) && (!empty($fieldData['null']))) {
 %>
             echo $this->Form->control('<%= $field %>', ['empty' => true]);

@@ -37,7 +37,7 @@ class HiddenWidget implements WidgetInterface {
      * @param \Cake\View\Form\ContextInterface $context The current form context.
      * @return string
      */
-    public function render(array $data, ContextInterface $context) {
+    public function render(array $data, ContextInterface $context): string {
         $data += [
             'name' => '',
             'val' => null,
@@ -60,7 +60,7 @@ class HiddenWidget implements WidgetInterface {
     /**
      * {@inheritDoc}
      */
-    public function secureFields(array $data) {
+    public function secureFields(array $data): array {
         if (!isset($data['name']) || $data['name'] === '') {
             return [];
         }

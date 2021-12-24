@@ -69,10 +69,12 @@ Configure::write('App', [
     'cssBaseUrl' => 'css/',
     'paths' => [
         'plugins' => [TEST_APP . 'Plugin' . DS],
-        'templates' => [APP . 'Template' . DS],
-        'locales' => [APP . 'Locale' . DS],
+        'templates' => [TEST_APP . 'templates' . DS],
+        'locales' => [TEST_APP . 'resources' . DS . 'locales' . DS],
     ]
 ]);
+
+error_reporting(E_ALL & ~E_USER_DEPRECATED);
 
 Cache::setConfig([
     '_cake_core_' => [
@@ -119,8 +121,6 @@ MutableDate::setTestNow(MutableDate::now());
 
 ini_set('intl.default_locale', 'en_US');
 ini_set('session.gc_divisor', '1');
-
-loadPHPUnitAliases();
 
 // Fixate sessionid early on, as php7.2+
 // does not allow the sessionid to be set after stdout
