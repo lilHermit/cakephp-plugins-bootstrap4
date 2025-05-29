@@ -2,6 +2,8 @@
 
 namespace LilHermit\Bootstrap4\View\Helper;
 
+use function Cake\Core\pluginSplit;
+
 class FlashHelper extends \Cake\View\Helper\FlashHelper {
 
     /**

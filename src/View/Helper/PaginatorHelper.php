@@ -5,7 +5,7 @@ use Cake\View\View;
 
 class PaginatorHelper extends \Cake\View\Helper\PaginatorHelper {
 
-    private $bootstrapTemplates = [
+    private array $bootstrapTemplates = [
         'prevDisabled' => '<li class="page-item disabled"><a class="page-link" href="" onclick="return false;" aria-label="{{text}}"><span aria-hidden="true"><i class="fa fa-angle-double-left"></i></span><span class="sr-only">{{text}}</span></a></li>',
         'prevActive' => '<li class="page-item"><a class="page-link" href="{{url}}" aria-label="{{text}}"><span aria-hidden="true"><i class="fa fa-angle-double-left"></i></span><span class="sr-only">{{text}}</span></a></li>',
         'nextDisabled' => '<li class="page-item disabled"><a class="page-link" href="" onclick="return false;" aria-label="{{text}}"><span aria-hidden="true"><i class="fa fa-angle-double-right"></i></span><span class="sr-only">{{text}}</span></a></li>',
