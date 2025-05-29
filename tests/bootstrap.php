@@ -14,6 +14,9 @@ use Cake\Chronos\MutableDateTime;
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\Log\Log;
+use Cake\TestSuite\ConnectionHelper;
+use Cake\TestSuite\Fixture\SchemaLoader;
+use Migrations\TestSuite\Migrator;
 
 if (!defined('DS')) {
     define('DS', DIRECTORY_SEPARATOR);
@@ -77,9 +80,9 @@ Configure::write('App', [
 error_reporting(E_ALL & ~E_USER_DEPRECATED);
 
 Cache::setConfig([
-    '_cake_core_' => [
+    '_cake_translations_' => [
         'engine' => 'File',
-        'prefix' => 'cake_core_',
+        'prefix' => 'cake_translations_',
         'serialize' => true
     ],
     '_cake_model_' => [
@@ -115,9 +118,9 @@ Log::setConfig([
 ]);
 
 Chronos::setTestNow(Chronos::now());
-MutableDateTime::setTestNow(MutableDateTime::now());
-Date::setTestNow(Date::now());
-MutableDate::setTestNow(MutableDate::now());
+//MutableDateTime::setTestNow(MutableDateTime::now());
+//Date::setTestNow(Date::now());
+//MutableDate::setTestNow(MutableDate::now());
 
 ini_set('intl.default_locale', 'en_US');
 ini_set('session.gc_divisor', '1');
@@ -126,3 +129,19 @@ ini_set('session.gc_divisor', '1');
 // does not allow the sessionid to be set after stdout
 // has been written to.
 session_id('cli');
+
+// Connection aliasing needs to happen before migrations are run.
+// Otherwise, table objects inside migrations would use the default datasource
+ConnectionHelper::addTestAliases();
+
+// Use migrations to build test database schema.
+//
+// Will rebuild the database if the migration state differs
+// from the migration history in files.
+//
+// If you are not using CakePHP's migrations you can
+// hook into your migration tool of choice here or
+// load schema from a SQL dump file with
+new SchemaLoader()->loadInternalFile(CORE_TESTS . DS . 'schema.php');
+
+new Migrator()->run();
