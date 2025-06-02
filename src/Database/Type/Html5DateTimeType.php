@@ -1,7 +1,6 @@
 <?php
 namespace LilHermit\Bootstrap4\Database\Type;
 
-
 use Cake\Database\Type\DateTimeType;
 use DateTimeInterface;
 
@@ -13,7 +12,7 @@ class Html5DateTimeType extends DateTimeType {
      * @param mixed $value
      * @return \Cake\I18n\Time|\DateTime|mixed
      */
-    public function marshal($value): ?DateTimeInterface
+    public function marshal(mixed $value): ?DateTimeInterface
     {
         if ($value instanceof DateTimeInterface) {
             return $value;

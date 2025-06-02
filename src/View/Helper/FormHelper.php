@@ -3,13 +3,16 @@
 namespace LilHermit\Bootstrap4\View\Helper;
 
 
+use Cake\I18n\Time;
 use Cake\Utility\Hash;
 use Cake\View\View;
 use LilHermit\Toolkit\Utility\Html;
+use function Cake\Core\h;
+use function Cake\I18n\__d;
 
 class FormHelper extends \Cake\View\Helper\FormHelper {
 
-    protected $bootstrapConfigDefaults = [
+    protected array $bootstrapConfigDefaults = [
         'customControls' => true,
         'html5Render' => true,
         'layout' => [
@@ -22,24 +25,23 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                 'grid' => []
             ]
         ],
-        'errorClass' => 'is-invalid'
     ];
 
-    protected $_userChangedTemplates = [];
+    protected array $_userChangedTemplates = [];
 
-    protected $_bootstrapWidgets = [
+    protected array $_bootstrapWidgets = [
         'bootstrapDateTime' => ['LilHermit/Bootstrap4.BootstrapDateTime'],
         'hidden' => ['LilHermit/Bootstrap4.Hidden']
     ];
 
-    protected $_bootstrapTypeMap = [
+    protected array $_bootstrapTypeMap = [
         'datetime' => 'bootstrapDateTime',
         'date' => 'bootstrapDate',
         'time' => 'bootstrapTime'
     ];
 
-    public $_bootstrapTemplates = [
-
+    public array $_bootstrapTemplates = [
+        'errorClass' => 'is-invalid',
         'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}>',
         'checkboxFormGroup' => '{{input}}{{label}}',
         'checkboxWrapper' => '<div class="checkbox">{{label}}</div>',
@@ -110,7 +112,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return parent::create($context, $options);
     }
 
-    private function _parseGlobals(&$input) {
+    private function _parseGlobals(&$input): void {
         if (isset($input['customControls']) && is_bool($input['customControls'])) {
             $this->setConfig('customControls', $input['customControls']);
             unset($input['customControls']);
@@ -164,7 +166,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * @return string Completed form widget.
      * @link http://book.cakephp.org/3.0/en/views/helpers/form.html#creating-form-inputs
      */
-    public function control($fieldName, array $options = []): string {
+    public function control(string $fieldName, array $options = []): string {
         $options += [
             'customControls' => $this->getConfig('customControls'),
             'html5Render' => $this->getConfig('html5Render'),
@@ -180,7 +182,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         // Work out the type, so we can switchTemplates if required!
         $options = $this->_parseOptions($fieldName, $options);
 
-        $this->setLabelClass($options, isset($options['type']) ? $options['type'] : null, true);
+        $this->setLabelClass($options, $options['type'] ?? null, true);
         $this->switchTemplates($options);
 
         // Move certain options to templateVars
@@ -189,7 +191,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return parent::control($fieldName, $options);
     }
 
-    private function _addLabelClass($options, $class, $index = 'label') {
+    private function _addLabelClass($options, $class, $index = 'label'): array|string {
 
         if (isset($options[$index])) {
             if ($options[$index] === false) {
@@ -210,7 +212,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         );
     }
 
-    protected function _getLabel($fieldName, $options) {
+    protected function _getLabel(string $fieldName, array $options): false|string {
         if ($options['type'] === 'hidden') {
             return false;
         }
@@ -267,7 +269,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return parent::select($fieldName, $options, $attributes);
     }
 
-    public function checkbox($fieldName, array $options = []) {
+    public function checkbox(string $fieldName, array $options = []): array|string {
         $options += [
             'customControls' => $this->getConfig('customControls'),
             'type' => 'checkbox'
@@ -406,9 +408,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         if ($type !== 'hidden' && $class !== null) {
             $options = Html::addClass($options, $this->getConfig('layout.classes.control'));
         }
-        $options = Html::addClass($options, $class);
-
-        return $options;
+        return Html::addClass($options, $class);
     }
 
     /**
@@ -420,7 +420,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      *
      * @return void
      */
-    private function _parseTemplateVar(&$options, $var) {
+    private function _parseTemplateVar(&$options, $var): void {
 
         if (is_array($var)) {
             foreach ($var as $item) {
@@ -434,7 +434,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         }
     }
 
-    private function _parseAndRenderPrependAppend($data, $append = false) {
+    private function _parseAndRenderPrependAppend($data, $append = false): string {
         $out = '';
         if ($data) {
             if (is_string($data)) {
@@ -479,7 +479,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return $out;
     }
 
-    private function _parsePrependAppendSize($prepend, $append) {
+    private function _parsePrependAppendSize($prepend, $append): false|int|string {
         $sizeScores = ['large' => 2, 'lg' => 2, 'normal' => 1, 'standard' => 1, 'small' => 0, 'sm' => 0];
         $data = [$prepend, $append];
 
@@ -488,7 +488,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             if (is_array($item)) {
                 $flattened = Hash::flatten($item);
                 foreach ($flattened as $key => $value) {
-                    if (strstr($key, 'size') !== false && array_key_exists($value, $sizeScores)) {
+                    if (str_contains($key, 'size') && array_key_exists($value, $sizeScores)) {
                         $foundSizes[] = $sizeScores[$value];
                     }
                 }
@@ -515,15 +515,17 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return $containerAttrs;
     }
 
-    private function _renderPrependAppendText($content, $attrs) {
+    private function _renderPrependAppendText($content, $attrs): string {
         $attrs = $this->templater()->formatAttributes($attrs, ['text', 'type', 'size', 'container']);
         return $this->templater()->format('prependAppendText', compact('content', 'attrs'));
     }
 
-    private function renderPrependAppend($input, $options) {
+    private function renderPrependAppend($input, $options): string {
 
         if (!$options['templateVars']['prepend'] && !$options['templateVars']['append']) {
-            return $input;
+            if (is_string($input)) {
+                return $input;
+            }
         }
 
         $prependOptions = $options['templateVars']['prepend'];
@@ -562,7 +564,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return $this->templater()->format('prependAppendContainer', compact('prepend', 'input', 'append', 'attrs'));
     }
 
-    private function formatHelp(&$options) {
+    private function formatHelp(&$options): void {
 
         if ($options['templateVars']['help']) {
 
@@ -592,7 +594,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
     }
 
-    protected function _getInput($fieldName, $options) {
+    protected function _getInput(string $fieldName, array $options): array|string {
         $input = parent::_getInput($fieldName, $options);
 
         // now process the prepend and append
@@ -628,7 +630,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             'error' => $options['error'],
             'required' => $options['options']['required'] ? ' required' : '',
             'type' => $options['options']['type'],
-            'templateVars' => isset($options['options']['templateVars']) ? $options['options']['templateVars'] : []
+            'templateVars' => $options['options']['templateVars'] ?? []
         ]);
     }
 
@@ -699,10 +701,10 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         }
 
         return $this->formatTemplate($groupTemplate, [
-            'input' => isset($options['input']) ? $options['input'] : [],
+            'input' => $options['input'] ?? [],
             'label' => $options['label'],
             'error' => $options['error'],
-            'templateVars' => isset($options['options']['templateVars']) ? $options['options']['templateVars'] : []
+            'templateVars' => $options['options']['templateVars'] ?? []
         ]);
     }
 
@@ -713,11 +715,9 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      *
      * @return void
      */
-    public function setTemplates(array $templates) {
+    public function setTemplates(array $templates): void {
 
-        if ($templates !== null && is_array($templates)) {
-            $this->_userChangedTemplates = array_merge(array_keys($templates), $this->_userChangedTemplates);
-        }
+        $this->_userChangedTemplates = array_merge(array_keys($templates), $this->_userChangedTemplates);
 
         parent::setTemplates($templates);
     }
@@ -730,18 +730,14 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      *
      * @return void
      */
-    protected function _setTemplatesInternal(array $templates) {
+    protected function _setTemplatesInternal(array $templates): void {
 
-        if (is_array($templates)) {
+        foreach ($this->_userChangedTemplates as $key) {
 
-            foreach ($this->_userChangedTemplates as $key) {
-
-                if (array_key_exists($key, $templates)) {
-                    unset($templates[$key]);
-                }
+            if (array_key_exists($key, $templates)) {
+                unset($templates[$key]);
             }
         }
-
         parent::setTemplates($templates);
     }
 
@@ -753,16 +749,16 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      *
      * @return $this|string|array
      */
-    public function getTemplates($templates = null) {
+    public function getTemplates(?string $template = null): array|string {
 
-        if ($templates !== null && !is_string($templates)) {
-            $this->_userChangedTemplates = array_merge(array_keys($templates), $this->_userChangedTemplates);
+        if ($template !== null && !is_string($template)) {
+            $this->_userChangedTemplates = array_merge(array_keys($template), $this->_userChangedTemplates);
         }
 
-        return parent::getTemplates($templates);
+        return parent::getTemplates($template);
     }
 
-    private function switchTemplates(&$options, $type = null) {
+    private function switchTemplates(&$options, $type = null): void {
 
         if (!isset($options['templateType'])) {
             $options['templateType'] = $type;
@@ -831,11 +827,11 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
                         'checkboxWrapper' => '<div class="form-check{{required}}">{{label}}</div>',
 
                         // Reset incase custom was previously used
-                        'selectContainer' => null,
-                        'selectContainerError' => null,
-                        'selectContainerGrid' => null,
-                        'selectContainerGridError' => null,
-                        'selectFormGroupGrid' => null,
+                        'selectContainer' => '',
+                        'selectContainerError' => '',
+                        'selectContainerGrid' => '',
+                        'selectContainerGridError' => '',
+                        'selectFormGroupGrid' => '',
                     ];
                     break;
                 case 'checkbox':
@@ -880,7 +876,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return $type;
     }
 
-    private function setLabelClass(&$options, $type = null, $fromInput = false) {
+    private function setLabelClass(&$options, $type = null, $fromInput = false): void {
         $type = $this->decodeType($options, $type);
         $customControls = $this->isControlControls($options);
 
@@ -957,7 +953,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      * @return string the element.
      */
 
-    public function button($title, array $options = []): string {
+    public function button(string $title, array $options = []): string {
 
         $options += ['type' => 'submit'];
 
@@ -1004,6 +1000,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      */
     public function submit(?string $caption = null, array $options = []): string {
 
+        $caption ??= __d('cake', 'Submit');
         if (!preg_match('/\.(jpg|jpe|jpeg|gif|png|ico)$/', $caption)) {
             $options = $this->parseButtonClass($options);
         }
@@ -1024,7 +1021,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return parent::submit($caption, $options);
     }
 
-    private function parseButtonClass(&$options) {
+    private function parseButtonClass(&$options): array|string {
 
         $options = $options + [
                 'size' => 'normal',
@@ -1054,32 +1051,10 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
 
         unset($options['size'], $options['secondary'], $options['outline']);
 
-        $options = Html::addClass($options, $newClasses);
-
-        return $options;
+        return Html::addClass($options, $newClasses);
     }
 
-    /**
-     *
-     * This is where we add the class for each select control in the
-     * datetime
-     *
-     * @param array $options
-     *
-     * @return array This options with new added class
-     */
-    protected function _datetimeOptions($options) {
-        $options = parent::_datetimeOptions($options);
-
-        foreach ($this->_datetimeParts as $type) {
-            if (is_array($options[$type])) {
-                $options[$type] = Html::addClass($options[$type], 'form-control');
-            }
-        }
-        return $options;
-    }
-
-    private function formatDateTimes(&$options) {
+    private function formatDateTimes(&$options): void {
 
         if (empty($options['val'])) {
             return;
@@ -1096,8 +1071,8 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         if (is_string($options['val'])) {
 
             try {
-                $options['val'] = \Cake\I18n\Time::parse($options['val']);
-            } catch (\Exception $exception) {
+                $options['val'] = Time::parse($options['val']);
+            } catch (\Exception) {
                 $options['val'] = '';
             }
         }
@@ -1138,7 +1113,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         }
     }
 
-    public function bootstrapDate($fieldName, array $options = []) {
+    public function bootstrapDate($fieldName, array $options = []): string {
         $options['type'] = 'date';
         $options = $this->_initInputField($fieldName, $options);
         $this->formatDateTimes($options);
@@ -1146,7 +1121,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return $this->widget('bootstrapDateTime', $options);
     }
 
-    public function bootstrapDateTime($fieldName, array $options = []) {
+    public function bootstrapDateTime($fieldName, array $options = []): string {
         $options['type'] = 'datetime-local';
         $options = $this->_initInputField($fieldName, $options);
 
@@ -1161,7 +1136,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
         return $this->widget('bootstrapDateTime', $options);
     }
 
-    public function bootstrapTime($fieldName, array $options = []) {
+    public function bootstrapTime($fieldName, array $options = []): string {
         $options['type'] = 'time';
         $options = $this->_initInputField($fieldName, $options);
 
@@ -1183,10 +1158,10 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      *
      * @return mixed|string
      */
-    protected function _bootstrapTypeMap($type) {
+    protected function _bootstrapTypeMap($type): mixed {
         $map = $this->_bootstrapTypeMap;
 
-        return isset($map[$type]) ? $map[$type] : 'text';
+        return $map[$type] ?? 'text';
     }
 
     /**
@@ -1197,7 +1172,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      *
      * @return array
      */
-    protected function _parseOptions($fieldName, $options): array {
+    protected function _parseOptions(string $fieldName, array $options): array {
 
         $needsMagicType = false;
         if (empty($options['type'])) {
@@ -1216,9 +1191,7 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
             }
         }
 
-        $options = $this->_magicOptions($fieldName, $options, $needsMagicType);
-
-        return $options;
+        return $this->_magicOptions($fieldName, $options, $needsMagicType);
     }
 
     /**
@@ -1228,15 +1201,15 @@ class FormHelper extends \Cake\View\Helper\FormHelper {
      *
      * @return bool if we should use the HTML5 (else its the CakePHP select boxes)
      */
-    private function isHtml5Render($options) {
+    private function isHtml5Render($options): bool {
         return (!isset($options['html5Render']) || $options['html5Render']);
     }
 
-    protected function isLayout($type) {
-        return strstr($this->getConfig('layout.type'), $type) !== false;
+    protected function isLayout($type): bool {
+        return str_contains($this->getConfig('layout.type'), $type);
     }
 
-    protected function isControlControls($options) {
+    protected function isControlControls($options): bool {
         return isset($options['customControls']) && is_bool($options['customControls']) && $options['customControls'];
     }
 }

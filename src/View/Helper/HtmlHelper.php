@@ -5,10 +5,11 @@ namespace LilHermit\Bootstrap4\View\Helper;
 use Cake\View\View;
 use LilHermit\Bootstrap4\Configure\Assets;
 use LilHermit\Toolkit\Utility\Html;
+use function Cake\Core\h;
 
 class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
 
-    private $bootstrapTemplates = [
+    private array $bootstrapTemplates = [
         'breadCrumbOl' => '<ol{{attrs}}>{{content}}</ol>',
         'breadCrumbLi' => '<li{{attrs}}>{{content}}</li>',
     ];
@@ -43,7 +44,7 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
      *
      * @return string the element.
      */
-    public function button($title, $url = null, array $options = []) {
+    public function button($title, $url = null, array $options = []): string {
         $options = $options + [
                 'size' => 'normal',
                 'type' => 'link',
@@ -96,7 +97,7 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
      *
      * @return string|null the full css tag
      */
-    public function bootstrapCss($version = null) {
+    public function bootstrapCss(mixed $version = null): ?string {
         $versions = Assets::css();
 
         if ($version === null) {
@@ -133,7 +134,7 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
      *
      * @return string The full script tag or blank if `own` is false and `version` doesn't exist
      */
-    public function bootstrapScript($options = []) {
+    public function bootstrapScript(array $options = []): string {
 
         $versions = Assets::javascript();
         $latestVersion = array_slice($versions, -1, 1, true);
@@ -196,7 +197,7 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
      *
      * @return string the rendered html
      */
-    public function progress($values, $options = []) {
+    public function progress(int|float|array $values, array $options = []): string {
 
         $options += [
             'label' => false,
@@ -211,7 +212,7 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
         foreach ((array)$values as $item) {
 
             if (!is_array($item)) {
-                $item = ['value' => $item];
+                $item = ['value' => intval($item)];
             }
 
             $item += [
@@ -228,7 +229,7 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
             );
 
             // No minus numbers
-            $value = round($value < 0 ? 0 : $value);
+            $value = round(max($value, 0));
 
             // Make sure the accumulativeVales don't exceed the max
             $accumulativeValue += $value;
@@ -287,7 +288,7 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper {
         return $this->tag('div', $progressBar, $options);
     }
 
-    private function array_filter_keys($array, $keys) {
+    private function array_filter_keys($array, $keys): array {
         return array_filter($array, function ($key) use ($keys) {
             return !in_array($key, $keys);
         }, ARRAY_FILTER_USE_KEY);

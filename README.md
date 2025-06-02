@@ -3,3 +3,23 @@
 # Bootstrap4 plugin
 
 The documentation for the plugin can be [found here](https://projects.lilhermit.co.uk/cakephp-plugins-bootstrap4)
+
+## Running unit tests
+
+### Full suite
+
+```bash
+docker compose run test
+```
+
+### Running a specific test file
+
+```bash
+docker compose run test composer test -- tests/TestCase/View/Helper/BootstrapFormHelperTest.php
+```
+
+### Running a specific unit test
+
+```bash
+docker compose run test composer test -- tests/TestCase/View/Helper/BootstrapFormHelperTest.php --filter 'testDateTimeFormatWithTime$'
+```
