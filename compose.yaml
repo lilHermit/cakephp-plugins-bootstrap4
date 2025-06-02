@@ -1,0 +1,15 @@
+services:
+  test:
+    build: devops/docker/test
+    command:
+      - composer
+      - test
+    volumes:
+      - ./:/app
+    working_dir: /app
+
+  test-cli:
+    build: devops/docker/test
+    volumes:
+      - ./:/app
+    working_dir: /app

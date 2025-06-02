@@ -4,7 +4,7 @@ namespace LilHermit\Bootstrap4\View;
 
 trait BootstrapViewTrait {
 
-    public function initializeBootstrap(array $options = []) {
+    public function initializeBootstrap(array $options = []): void {
         $this->loadHelper('Html', ['className' => 'LilHermit/Bootstrap4.Html']);
         $this->loadHelper('Flash', ['className' => 'LilHermit/Bootstrap4.Flash']);
         $this->loadHelper('Form', ['className' => 'LilHermit/Bootstrap4.Form']);
@@ -17,7 +17,7 @@ trait BootstrapViewTrait {
      *
      * @inheritdoc
      */
-    protected function _getElementFileName(string $name, bool $pluginCheck = true) {
+    protected function _getElementFileName(string $name, bool $pluginCheck = true): false|string {
         [$plugin, $name] = $this->pluginSplit($name, $pluginCheck);
 
         $paths = $this->_paths($plugin);

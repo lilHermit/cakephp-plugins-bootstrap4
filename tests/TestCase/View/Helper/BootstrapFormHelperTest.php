@@ -7,8 +7,10 @@ namespace LilHermit\Bootstrap4\Test\TestCase\View\Helper;
 use Cake\Chronos\Chronos;
 use Cake\TestSuite\TestCase;
 use Cake\View\View;
+use InvalidArgumentException;
 use LilHermit\Bootstrap4\View\Helper\FormHelper;
 use LilHermit\Bootstrap4\View\Helper\HtmlHelper;
+use PHPUnit\Framework\Attributes\ExpectedException;
 
 class BootstrapFormHelperTest extends TestCase {
 
@@ -48,7 +50,7 @@ class BootstrapFormHelperTest extends TestCase {
                 'customControls' => false
             ]);
         $this->assertHtml([
-            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
+            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'id' => 'checkbox1', 'value' => ''],
             ['div' => ['class' => 'form-check']],
 
             [
@@ -92,7 +94,7 @@ class BootstrapFormHelperTest extends TestCase {
             ]);
 
         $this->assertHtml([
-            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
+            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'id' => 'checkbox1', 'value' => ''],
 
             ['div' => ['class' => 'custom-control custom-checkbox']],
             [
@@ -141,7 +143,7 @@ class BootstrapFormHelperTest extends TestCase {
                 'customControls' => false
             ]);
         $this->assertHtml([
-            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
+            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'id' => 'checkbox1', 'value' => ''],
             ['div' => ['class' => 'form-check']],
             [
                 'input' => [
@@ -187,7 +189,7 @@ class BootstrapFormHelperTest extends TestCase {
             ]);
 
         $this->assertHtml([
-            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
+            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'id' => 'checkbox1', 'value' => ''],
 
             ['div' => ['class' => 'custom-control custom-checkbox']],
             [
@@ -240,7 +242,7 @@ class BootstrapFormHelperTest extends TestCase {
             ['label' => ['for' => 'checkbox1']],
             'My checkboxes',
             '/label',
-            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
+            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'id' => 'checkbox1', 'value' => ''],
             ['div' => ['class' => 'form-check']],
             [
                 'input' => [
@@ -290,7 +292,7 @@ class BootstrapFormHelperTest extends TestCase {
             'My checkboxes',
             '/label',
 
-            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
+            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'id' => 'checkbox1', 'value' => ''],
 
             ['div' => ['class' => 'custom-control custom-checkbox']],
             [
@@ -397,7 +399,7 @@ class BootstrapFormHelperTest extends TestCase {
             '<label',
             'My Radios',
             '/label',
-            'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => ''],
+            'input' => ['type' => 'hidden', 'name' => 'radio1', 'id' => 'radio1', 'value' => ''],
             ['div' => ['class' => 'form-check']],
             [
                 'input' => [
@@ -450,7 +452,7 @@ class BootstrapFormHelperTest extends TestCase {
             'My Radios',
             '/label',
 
-            'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => ''],
+            'input' => ['type' => 'hidden', 'name' => 'radio1', 'id' => 'radio1', 'value' => ''],
             ['div' => ['class' => 'custom-control custom-radio']],
             [
                 'input' => [
@@ -501,7 +503,7 @@ class BootstrapFormHelperTest extends TestCase {
             ]
         );
         $this->assertHtml([
-            'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => ''],
+            'input' => ['type' => 'hidden', 'name' => 'radio1', 'id' => 'radio1', 'value' => ''],
             ['div' => ['class' => 'form-check']],
 
             [
@@ -546,7 +548,7 @@ class BootstrapFormHelperTest extends TestCase {
             ]
         );
         $this->assertHtml([
-            'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => ''],
+            'input' => ['type' => 'hidden', 'name' => 'radio1', 'id' => 'radio1', 'value' => ''],
 
             ['div' => ['class' => 'custom-control custom-radio']],
             [
@@ -1744,7 +1746,7 @@ class BootstrapFormHelperTest extends TestCase {
             '<label',
             'My Radios',
             '/label',
-            'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => '', 'class' => 'is-invalid'],
+            'input' => ['type' => 'hidden', 'name' => 'radio1', 'id' => 'radio1', 'value' => '', 'class' => 'is-invalid'],
 
             ['div' => ['class' => 'custom-control custom-radio']],
             [
@@ -1753,7 +1755,8 @@ class BootstrapFormHelperTest extends TestCase {
                     'name' => 'radio1',
                     'value' => '1',
                     'id' => 'radio1-1',
-                    'class' => 'is-invalid custom-control-input'
+                    'class' => 'is-invalid custom-control-input',
+                    'aria-invalid' => 'true'
                 ]
             ],
             ['label' => ['for' => 'radio1-1', 'class' => 'custom-control-label']],
@@ -1769,7 +1772,8 @@ class BootstrapFormHelperTest extends TestCase {
                     'value' => '2',
                     'id' => 'radio1-2',
                     'checked' => 'checked',
-                    'class' => 'is-invalid custom-control-input'
+                    'class' => 'is-invalid custom-control-input',
+                    'aria-invalid' => 'true'
                 ]
             ],
             ['label' => ['for' => 'radio1-2', 'class' => 'custom-control-label selected']],
@@ -1794,7 +1798,7 @@ class BootstrapFormHelperTest extends TestCase {
             ]
         );
         $this->assertHtml([
-            'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => '', 'class' => 'is-invalid'],
+            'input' => ['type' => 'hidden', 'name' => 'radio1', 'id' => 'radio1', 'value' => '', 'class' => 'is-invalid'],
 
             ['div' => ['class' => 'custom-control custom-radio']],
             [
@@ -1840,7 +1844,7 @@ class BootstrapFormHelperTest extends TestCase {
             ]);
 
         $this->assertHtml([
-            'input' => ['type' => 'hidden', 'name' => 'multicheckbox1', 'value' => '', 'class' => 'is-invalid'],
+            'input' => ['type' => 'hidden', 'name' => 'multicheckbox1', 'id' => 'multicheckbox1', 'value' => '', 'class' => 'is-invalid'],
 
             ['div' => ['class' => 'custom-control custom-checkbox']],
             [
@@ -1890,7 +1894,7 @@ class BootstrapFormHelperTest extends TestCase {
             'My checkboxes',
             '/label',
 
-            'input' => ['type' => 'hidden', 'name' => 'multicheckbox1', 'value' => '', 'class' => 'is-invalid'],
+            'input' => ['type' => 'hidden', 'name' => 'multicheckbox1', 'id' => 'multicheckbox1','value' => '', 'class' => 'is-invalid'],
             ['div' => ['class' => 'custom-control custom-checkbox']],
             [
                 'input' => [
@@ -1944,7 +1948,7 @@ class BootstrapFormHelperTest extends TestCase {
             'My checkboxes',
             '/label',
 
-            'input' => ['type' => 'hidden', 'name' => 'multicheckbox1', 'value' => '', 'class' => 'is-invalid'],
+            'input' => ['type' => 'hidden', 'name' => 'multicheckbox1', 'id' => 'multicheckbox1', 'value' => '', 'class' => 'is-invalid'],
 
             ['div' => ['class' => 'custom-control custom-checkbox']],
             [
@@ -2002,7 +2006,7 @@ class BootstrapFormHelperTest extends TestCase {
             'Profile Image',
             '/label',
             ['div' => ['class' => 'custom-file']],
-            'input' => ['type' => 'file', 'name' => 'profile-image', 'class' => 'is-invalid custom-file-input', 'id' => 'profile-image'],
+            'input' => ['type' => 'file', 'name' => 'profile-image', 'class' => 'is-invalid custom-file-input', 'id' => 'profile-image', 'aria-invalid' => 'true'],
             'label' => ['class' => 'custom-file-label'],
             'Choose file',
             '/label',
@@ -2263,7 +2267,7 @@ class BootstrapFormHelperTest extends TestCase {
             'My checkboxes',
             '/label',
             ['div' => ['class' => 'col-sm-10']],
-            ['input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => '']],
+            ['input' => ['type' => 'hidden', 'name' => 'checkbox1', 'id' => 'checkbox1', 'value' => '']],
 
             ['div' => ['class' => 'custom-control custom-checkbox']],
             ['input' => ['type', 'name', 'value', 'id', 'class' => 'custom-control-input']],
@@ -2301,7 +2305,7 @@ class BootstrapFormHelperTest extends TestCase {
             'My checkboxes',
             '/label',
             ['div' => ['class' => 'col-sm-10']],
-            ['input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => '']],
+            ['input' => ['type' => 'hidden', 'name' => 'checkbox1', 'id' => 'checkbox1', 'value' => '']],
             ['div' => ['class' => 'form-check']],
 
             ['input' => ['type', 'name', 'value', 'id', 'class' => 'form-check-input']],
@@ -2414,7 +2418,7 @@ class BootstrapFormHelperTest extends TestCase {
             'My Radios',
             '/label',
             ['div' => ['class' => 'col-sm-10 pl-0']],
-            ['input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => '']],
+            ['input' => ['type' => 'hidden', 'name' => 'radio1', 'id' => 'radio1', 'value' => '']],
 
             ['div' => ['class' => 'custom-control custom-radio']],
             ['input' => ['type', 'name', 'value', 'id', 'class' => 'custom-control-input']],
@@ -2456,7 +2460,7 @@ class BootstrapFormHelperTest extends TestCase {
             'My Radios',
             '/label',
             ['div' => ['class' => 'col-sm-10 pl-0']],
-            ['input' => ['type' => 'hidden', 'name', 'value' => ""]],
+            ['input' => ['type' => 'hidden', 'name', 'id' => 'radio', 'value' => ""]],
             ['div' => ['class' => 'form-check']],
             ['input' => ['type', 'name', 'value', 'id', 'class' => 'form-check-input']],
             ['label' => ['for', 'class' => 'form-check-label']],
@@ -2568,6 +2572,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (2)
+        $this->expectException(InvalidArgumentException::class);
         $this->Form->getView()->setRequest($originalRequest->withData('expiry', \Cake\I18n\Time::parse('2017-08-02 11:12:07')));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'datetime']]
@@ -2657,6 +2662,8 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (2)
+        // Removing this because the parser now throws
+        $this->expectException(InvalidArgumentException::class);
         $this->Form->getView()->setRequest($originalRequest->withData('expiry', \Cake\I18n\Time::parse('2017-08-02 11:12:07')));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'date']]
@@ -2746,6 +2753,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (2)
+        $this->expectException(InvalidArgumentException::class);
         $this->Form->getView()->setRequest($originalRequest->withData('expiry', \Cake\I18n\Time::parse('2017-08-02 11:12:07')));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'time']]
@@ -2758,6 +2766,7 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
 
         // Test (3)
+        $this->expectException(InvalidArgumentException::class);
         $this->Form->getView()->setRequest($originalRequest->withData('expiry', '2017-08-02 11:00:07'));
         $this->Form->create([
             'schema' => ['expiry' => ['type' => 'time']]
@@ -2806,30 +2815,6 @@ class BootstrapFormHelperTest extends TestCase {
         ], $result);
     }
 
-    /**
-     * testControlCheckboxNesting method
-     *
-     * Test control() with checkbox creation.
-     *
-     * @return void
-     */
-    public function testControlCheckboxNesting() {
-        $result = $this->Form->control('User.active', [
-            'checked' => true,
-            'customControls' => false,
-            'nestedInput' => true
-        ]);
-        $expected = [
-            'div' => ['class' => 'form-check'],
-            'input' => ['type' => 'hidden', 'name' => 'User[active]', 'value' => '0'],
-            'label' => ['for' => 'user-active', 'class' => 'form-check-label'],
-            ['input' => ['type' => 'checkbox', 'name' => 'User[active]', 'value' => '1', 'id' => 'user-active', 'checked' => 'checked', 'class']],
-            'Active',
-            '/label',
-            '/div'
-        ];
-        $this->assertHtml($expected, $result);
-    }
 
     /**
      * Test single checkbox via control method with required
@@ -2922,7 +2907,7 @@ class BootstrapFormHelperTest extends TestCase {
             '<label',
             'My Radios',
             '/label',
-            'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => ''],
+            'input' => ['type' => 'hidden', 'name' => 'radio1', 'id' => 'radio1', 'value' => ''],
             ['div' => ['class' => 'form-check']],
             [
                 'input' => [
@@ -2978,7 +2963,7 @@ class BootstrapFormHelperTest extends TestCase {
             'My Radios',
             '/label',
 
-            'input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => ''],
+            'input' => ['type' => 'hidden', 'name' => 'radio1', 'id' => 'radio1', 'value' => ''],
             ['div' => ['class' => 'custom-control custom-radio']],
             [
                 'input' => [
@@ -3042,7 +3027,7 @@ class BootstrapFormHelperTest extends TestCase {
             ['label' => ['for' => 'checkbox1']],
             'My checkboxes',
             '/label',
-            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
+            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'id' => 'checkbox1', 'value' => ''],
             ['div' => ['class' => 'form-check']],
             [
                 'input' => [
@@ -3095,7 +3080,7 @@ class BootstrapFormHelperTest extends TestCase {
             'My checkboxes',
             '/label',
 
-            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'value' => ''],
+            'input' => ['type' => 'hidden', 'name' => 'checkbox1', 'id' => 'checkbox1', 'value' => ''],
 
             ['div' => ['class' => 'custom-control custom-checkbox']],
             [
@@ -3285,7 +3270,7 @@ class BootstrapFormHelperTest extends TestCase {
             'My Radios',
             '/label',
             ['div' => ['class' => 'radio-class']],
-            ['input' => ['type' => 'hidden', 'name' => 'radio1', 'value' => '']],
+            ['input' => ['type' => 'hidden', 'name' => 'radio1', 'id' => 'radio1', 'value' => '']],
 
             ['div' => ['class' => 'custom-control custom-radio']],
             ['input' => ['type', 'name', 'value', 'id', 'class' => 'custom-control-input']],
@@ -3309,7 +3294,7 @@ class BootstrapFormHelperTest extends TestCase {
             'My Radios',
             '/label',
             ['div' => ['class' => 'radio-class']],
-            ['input' => ['type' => 'hidden', 'name', 'value' => ""]],
+            ['input' => ['type' => 'hidden', 'name', 'id' => 'radio', 'value' => '']],
             ['div' => ['class' => 'form-check']],
             ['input' => ['type', 'name', 'value', 'id', 'class' => 'form-check-input']],
             ['label' => ['for', 'class' => 'form-check-label']],

@@ -1,5 +1,6 @@
 <?php
 use LilHermit\Toolkit\Utility\Html;
+use function Cake\Core\h;
 
 if (!isset($params['escape']) || $params['escape'] !== false) {
     $message = h($message);

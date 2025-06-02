@@ -4,7 +4,7 @@ namespace LilHermit\Bootstrap4\Configure;
 
 class Assets {
 
-    public static function css() {
+    public static function css(): array {
         return [
             '4.0.0-alpha.5' => [
                 'href' => 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css',
@@ -33,7 +33,7 @@ class Assets {
         ];
     }
 
-    public static function javascript() {
+    public static function javascript(): array {
         return [
             '4.0.0-alpha.5' => [
                 'src' => 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js',
@@ -62,7 +62,7 @@ class Assets {
         ];
     }
 
-    public static function popperJavascript() {
+    public static function popperJavascript(): array {
         return [
             '4.0.0-alpha.5' => [
                 'src' => 'https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js',

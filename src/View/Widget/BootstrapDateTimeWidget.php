@@ -2,6 +2,7 @@
 namespace LilHermit\Bootstrap4\View\Widget;
 
 use Cake\View\Form\ContextInterface;
+use Cake\View\StringTemplate;
 use Cake\View\Widget\WidgetInterface;
 
 class BootstrapDateTimeWidget implements WidgetInterface {
@@ -85,7 +86,7 @@ class BootstrapDateTimeWidget implements WidgetInterface {
      *
      * @return mixed Config value being read.
      */
-    private function getTemplateConfig($key) {
+    private function getTemplateConfig(?string $key): mixed {
         if (method_exists($this->_templates, 'getConfig')) {
             return $this->_templates->getConfig($key);
         } else {
